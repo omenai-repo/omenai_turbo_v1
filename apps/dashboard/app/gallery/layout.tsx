@@ -46,6 +46,12 @@ export default function GalleryDashboardLayout({
   const isGalleryVerified = account.gallery_verified;
   const val = isNotStripeConnected && isGalleryVerified;
 
+  if (!isGalleryVerified)
+    return (
+      <VerificationBlockerModal
+        open={user && user.role === "gallery" && !isGalleryVerified}
+      />
+    );
   return (
     <>
       {width < 1280 ? (
@@ -53,39 +59,32 @@ export default function GalleryDashboardLayout({
       ) : (
         <div className="flex h-full overflow-hidden">
           <NextTopLoader color="#0f172a" height={6} />
-          {!isGalleryVerified ? (
-            <VerificationBlockerModal
-              open={user && user.role === "gallery" && !isGalleryVerified}
-            />
-          ) : (
-            <main>
-              <DesktopSidebar />
-              <GlobalCommandMenu />
 
-              <div className="flex flex-1 flex-col md:ml-64">
-                {/* Mobile header */}
-                <header className="flex items-center gap-4 border-b bg-white px-4 py-3 md:hidden">
-                  <MobileSidebar />
-                  <span className="text-sm font-medium">Dashboard</span>
-                </header>
-                <MainContent>
-                  {val ? (
-                    <GetStartedWithStripe />
-                  ) : (
-                    <>
-                      <UploadOrderRejectionReason />
-                      <UpdatePasswordModal />
-                      <DeleteAccountConfirmationModal />
-                      <UpdateAddressModal />
-                      <UpdateLogoModal />
+          <DesktopSidebar />
+          <GlobalCommandMenu />
 
-                      {children}
-                    </>
-                  )}
-                </MainContent>
-              </div>
-            </main>
-          )}
+          <div className="flex flex-1 flex-col md:ml-64">
+            {/* Mobile header */}
+            <header className="flex items-center gap-4 border-b bg-white px-4 py-3 md:hidden">
+              <MobileSidebar />
+              <span className="text-sm font-medium">Dashboard</span>
+            </header>
+            <MainContent>
+              {val ? (
+                <GetStartedWithStripe />
+              ) : (
+                <>
+                  <UploadOrderRejectionReason />
+                  <UpdatePasswordModal />
+                  <DeleteAccountConfirmationModal />
+                  <UpdateAddressModal />
+                  <UpdateLogoModal />
+
+                  {children}
+                </>
+              )}
+            </MainContent>
+          </div>
         </div>
       )}
     </>
