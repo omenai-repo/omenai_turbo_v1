@@ -36,6 +36,7 @@ export default function GalleryDashboardLayout({
       else return acc.data;
     },
     refetchOnWindowFocus: false,
+    enabled: !!user.gallery_id && !!csrf,
   });
 
   if (isLoading) {
@@ -46,14 +47,9 @@ export default function GalleryDashboardLayout({
   const isGalleryVerified = account.gallery_verified;
   const val = isNotStripeConnected && isGalleryVerified;
 
-  if (!isGalleryVerified)
-    return (
-      <VerificationBlockerModal
-        open={user && user.role === "gallery" && !isGalleryVerified}
-      />
-    );
   return (
     <>
+      {!isGalleryVerified && <VerificationBlockerModal open={true} />}
       {width < 1280 ? (
         <NoMobileView />
       ) : (

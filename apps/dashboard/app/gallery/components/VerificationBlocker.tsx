@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
 export default function VerificationBlockerModal({ open }: { open: boolean }) {
-  const router = useRouter();
   const { signOut } = useAuth({ requiredRole: "gallery" });
 
   async function handleSignOut() {

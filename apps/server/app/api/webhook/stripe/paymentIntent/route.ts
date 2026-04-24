@@ -637,7 +637,7 @@ async function processSubscriptionSuccess(paymentIntent: any, meta: any) {
           subscription_status: {
             type: plan.name,
             active: true,
-            discount: { active: false, plan: null },
+            discount: { active: false, plan: plan.name.toLowerCase() },
           },
         },
       },
