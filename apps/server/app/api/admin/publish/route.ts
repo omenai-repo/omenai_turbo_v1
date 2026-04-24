@@ -15,7 +15,6 @@ import {
   GalleryEventType,
   GallerySchemaTypes,
   SessionData,
-  SessionDataType,
 } from "@omenai/shared-types";
 import { redis } from "@omenai/upstash-config";
 import { NextResponse } from "next/server";
@@ -28,6 +27,7 @@ import {
   serverDatabases,
   sQuery,
 } from "@omenai/appwrite-config/serverAppwrite"; // ADDED sQuery here
+import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 
 const config: CombinedConfig = {
   ...standardRateLimit,
@@ -54,7 +54,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     if (!curation_type) {
       throw new Error("Curation type is required");
     }
-
+    await connectMongoDB();
     // 1. Fetch current draft
     const curationDoc = (await Curation.findOne({
       curation_type,

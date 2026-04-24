@@ -5,6 +5,7 @@ import { NextResponse } from "next/server";
 import { Curation } from "@omenai/shared-models/models/curation/CurationSchema";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 import { createErrorRollbarReport } from "../../util";
+import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 
 const config: CombinedConfig = {
   ...standardRateLimit,
@@ -22,6 +23,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       throw new Error("Curation type and draft items are required");
     }
 
+    await connectMongoDB();
     // Upsert the document: update draft items or create if missing
     const updatedCuration = await Curation.findOneAndUpdate(
       { curation_type },

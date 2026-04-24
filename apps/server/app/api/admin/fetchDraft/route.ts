@@ -13,6 +13,7 @@ import {
   serverDatabases,
   sQuery,
 } from "@omenai/appwrite-config/serverAppwrite";
+import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 
 const databaseId = process.env.APPWRITE_EDITORIAL_DATABASE_ID!;
 const tableId = process.env.APPWRITE_EDITORIAL_COLLECTION_ID!;
@@ -27,6 +28,7 @@ export const GET = withRateLimit(standardRateLimit)(async function GET(
     if (!curation_type) {
       throw new Error("Curation type query parameter is required");
     }
+    await connectMongoDB();
 
     // 1. Fetch the raw draft pointers
     const curation = (await Curation.findOne({
@@ -58,8 +60,6 @@ export const GET = withRateLimit(standardRateLimit)(async function GET(
       }
     });
 
-    // 3. Fire parallel queries to hydrate data
-    // 3. Fire parallel queries to hydrate data with STRICT field selection
     const [
       artworksData,
       galleriesData,

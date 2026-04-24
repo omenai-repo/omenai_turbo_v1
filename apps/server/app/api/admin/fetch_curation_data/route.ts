@@ -12,6 +12,7 @@ import {
   sQuery,
 } from "@omenai/appwrite-config/serverAppwrite";
 import { PromotionalModel } from "@omenai/shared-models/models/promotionals/PromotionalSchema";
+import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 
 const databaseId = process.env.APPWRITE_EDITORIAL_DATABASE_ID!;
 const tableId = process.env.APPWRITE_EDITORIAL_COLLECTION_ID!;
@@ -38,6 +39,7 @@ export const GET = withRateLimit(standardRateLimit)(async function GET(
     let data: any[] = [];
     let totalItems = 0; // We need this to tell the frontend how many pages there are
 
+    await connectMongoDB();
     switch (type) {
       case "artwork":
         // Create a search query object. If search exists, do a case-insensitive regex match on the title.

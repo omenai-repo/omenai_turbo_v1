@@ -301,7 +301,7 @@ function FeaturedPromotionalCard({ promotional }: { promotional: any }) {
             src={safeImage(url)}
             alt={promotional.headline}
             fill
-            className="object-cover opacity-75 transition-transform duration-700 group-hover/card:scale-[1.04]"
+            className="object-cover transition-transform duration-700 group-hover/card:scale-[1.04]"
           />
         }
       >
