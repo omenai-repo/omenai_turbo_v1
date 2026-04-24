@@ -10,6 +10,8 @@ import {
 import { getEditorialFileView } from "@omenai/shared-lib/storage/getEditorialCoverFileView";
 import { getPromotionalOptimizedImage } from "@omenai/shared-lib/storage/getPromotionalsFileView";
 import { BUTTON_CLASS } from "../styles/inputClasses";
+import { ArtworkSchemaTypes } from "@omenai/shared-types";
+import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
 
 const safeImage = (url: string | undefined | null) =>
   url || "/images/placeholder-omenai.jpg";
@@ -33,16 +35,21 @@ const safeImage = (url: string | undefined | null) =>
      align at the same baseline across a row of varying-height cards
    ===================================================================== */
 
-export function PublicArtworkCard({ artwork }: { artwork: any }) {
+export function PublicArtworkCard({
+  artwork,
+}: {
+  artwork: ArtworkSchemaTypes;
+}) {
   if (!artwork) return null;
 
   const optimizedUrl = artwork.url
     ? getOptimizedImage(artwork.url, "medium")
     : null;
+  const isAvailable = Boolean(artwork.availability);
 
   return (
     <Link
-      href={`/artwork/${artwork.art_id || artwork._id}`}
+      href={`/artwork/${artwork.art_id}`}
       className="group/card flex flex-col w-full transition-all duration-300"
       // No h-full — height is dictated entirely by the image's natural aspect ratio
     >
@@ -70,6 +77,36 @@ export function PublicArtworkCard({ artwork }: { artwork: any }) {
           <span className="font-sans uppercase text-[0.62rem] text-[#7A8FA6] font-light tracking-[0.1em]">
             {artwork.medium}
           </span>
+        </div>
+
+        <div className="flex items-center justify-between gap-2 pt-0.5">
+          <span
+            className={`
+                      text-[9px] uppercase tracking-[0.18em] font-medium font-sans
+                      px-2 py-1 border leading-none shrink-0
+                      ${
+                        isAvailable
+                          ? "border-black text-black"
+                          : "border-neutral-300 text-neutral-400"
+                      }
+                    `}
+          >
+            {isAvailable ? "Available" : "Sold"}
+          </span>
+
+          {isAvailable && (
+            <div className="text-right min-w-0">
+              {artwork.pricing.shouldShowPrice === "Yes" ? (
+                <span className="font-sans text-[12px] font-medium text-black leading-none">
+                  {formatPrice(artwork.pricing.usd_price)}
+                </span>
+              ) : (
+                <span className="font-sans text-[10px] font-light italic text-neutral-400 leading-none">
+                  Request Price
+                </span>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </Link>

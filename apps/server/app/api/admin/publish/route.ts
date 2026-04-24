@@ -103,6 +103,8 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
               url: a.url,
               medium: a.medium,
               year: a.year,
+              pricing: a.pricing,
+              availability: a.availability,
             })),
           )
         : Promise.resolve([]),

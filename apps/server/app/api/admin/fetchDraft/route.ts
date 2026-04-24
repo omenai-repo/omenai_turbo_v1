@@ -77,6 +77,8 @@ export const GET = withRateLimit(standardRateLimit)(async function GET(
               url: a.url,
               medium: a.medium,
               year: a.year,
+              pricing: a.pricing,
+              availability: a.availability,
             })),
           )
         : Promise.resolve([]),
