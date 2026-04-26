@@ -1,5 +1,32 @@
 import { vi } from "vitest";
 
+export function buildWorkflowServeMock() {
+  return {
+    serve: (handler: any) => ({
+      POST: async (req: Request) => {
+        try {
+          const body = await req.json();
+          const ctx = {
+            requestPayload: body,
+            run: async (_name: string, fn: () => any) => fn(),
+          };
+          const result = await handler(ctx);
+          if (result instanceof Response) return result;
+          return new Response(JSON.stringify({ data: result ?? null }), {
+            status: 200,
+            headers: { "Content-Type": "application/json" },
+          });
+        } catch (error: any) {
+          return new Response(
+            JSON.stringify({ message: error?.message ?? "Internal Server Error" }),
+            { status: 500, headers: { "Content-Type": "application/json" } },
+          );
+        }
+      },
+    }),
+  };
+}
+
 class BadRequestError extends Error {
   constructor(message: string) {
     super(message);
