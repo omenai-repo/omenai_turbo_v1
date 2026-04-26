@@ -31,11 +31,12 @@ vi.mock(
   }),
 );
 
-vi.mock("resend", () => ({
-  Resend: vi.fn().mockImplementation(() => ({
+const MockResend = vi.hoisted(() =>
+  vi.fn().mockImplementation(() => ({
     batch: { send: vi.fn().mockResolvedValue({ data: {}, error: null }) },
   })),
-}));
+);
+vi.mock("resend", () => ({ Resend: MockResend }));
 
 vi.mock("@react-email/render", () => ({
   render: vi.fn().mockResolvedValue("<html>Invite Email</html>"),

@@ -43,13 +43,12 @@ vi.mock("@omenai/shared-models/models/auth/ArtistSchema", () => ({
   },
 }));
 
-vi.mock("resend", () => ({
-  Resend: vi.fn().mockImplementation(() => ({
-    batch: {
-      send: vi.fn().mockResolvedValue({ data: [], error: null }),
-    },
+const MockResend = vi.hoisted(() =>
+  vi.fn().mockImplementation(() => ({
+    batch: { send: vi.fn().mockResolvedValue({ data: [], error: null }) },
   })),
-}));
+);
+vi.mock("resend", () => ({ Resend: MockResend }));
 
 vi.mock("@react-email/render", () => ({
   render: vi.fn().mockResolvedValue("<html>Email</html>"),

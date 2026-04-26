@@ -32,10 +32,10 @@ vi.mock("@omenai/shared-models/models/subscriptions/SubscriptionSchema", () => (
 const mockBatchSend = vi.hoisted(() =>
   vi.fn().mockResolvedValue({ data: null, error: null }),
 );
-
-vi.mock("resend", () => ({
-  Resend: vi.fn(() => ({ batch: { send: mockBatchSend } })),
-}));
+const MockResend = vi.hoisted(() =>
+  vi.fn().mockImplementation(() => ({ batch: { send: mockBatchSend } })),
+);
+vi.mock("resend", () => ({ Resend: MockResend }));
 
 vi.mock("@react-email/render", () => ({
   render: vi.fn().mockResolvedValue("<html></html>"),
