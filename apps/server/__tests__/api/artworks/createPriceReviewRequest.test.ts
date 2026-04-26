@@ -21,14 +21,11 @@ vi.mock("@omenai/shared-lib/mongo_connect/mongoConnect", () => ({
 vi.mock("@omenai/shared-models/models/auth/ArtistSchema", () => ({
   AccountArtist: { findOne: vi.fn() },
 }));
-const MockPriceReview = vi.hoisted(() =>
-  vi.fn().mockImplementation((data: any) => ({
-    ...data,
-    save: vi.fn().mockResolvedValue(undefined),
-  })),
-);
 vi.mock("@omenai/shared-models/models/artworks/ArtworkPriceReviewSchema", () => ({
-  PriceReview: MockPriceReview,
+  PriceReview: class {
+    constructor(_data: any) {}
+    save() { return Promise.resolve(); }
+  },
 }));
 vi.mock("../../../app/api/services/uploadArtwork.service", () => ({
   uploadArtworkLogic: vi.fn().mockResolvedValue({ message: "uploaded" }),
