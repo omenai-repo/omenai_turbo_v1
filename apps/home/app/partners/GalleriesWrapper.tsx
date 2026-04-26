@@ -53,10 +53,10 @@ export default function AllGalleriesDirectory() {
     <div className="w-full max-w-[1600px] mx-auto p-4 md:p-8">
       {/* Page Header */}
       <div className="mb-16 border-b border-neutral-100 pb-12">
-        <h1 className="font-serif text-3xl md:text-4xl lg:text-5xl text-dark font-light mb-4">
+        <h1 className="font-serif text-2xl md:text-3xl lg:text-4xl text-dark font-light mb-4">
           Gallery Directory
         </h1>
-        <p className="font-sans text-sm text-neutral-500 uppercase tracking-widest">
+        <p className="font-sans text-sm text-neutral-500 tracking-wide">
           Explore our global Gallery partners
         </p>
       </div>

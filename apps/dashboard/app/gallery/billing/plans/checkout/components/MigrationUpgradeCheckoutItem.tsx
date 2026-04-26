@@ -69,7 +69,7 @@ export default function MigrationUpgradeCheckoutItem({
   const capitalize = (word = "") =>
     word ? word[0].toUpperCase() + word.slice(1) : "";
   return (
-    <div className="fixed inset-0 flex flex-col md:flex-row bg-white overflow-hidden">
+    <div className="fixed inset-0 z-50 flex flex-col md:flex-row bg-white overflow-hidden">
       {/* LEFT PANE: Order Summary & Context (Dark Theme) */}
       <div className="w-full md:w-[45%] lg:w-[40%] bg-[#0f172a] text-white py-4 px-16 flex flex-col justify-between overflow-y-auto">
         <div className="space-y-6 p-8">

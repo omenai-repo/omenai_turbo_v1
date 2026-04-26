@@ -81,6 +81,7 @@ export default function ArtistDashboardLayout({
       ) : (
         <div className="flex h-screen overflow-hidden">
           <NextTopLoader color="#0f172a" height={6} />
+
           <VerificationBlockerModal
             open={user && user.role === "artist" && !data?.isArtistVerified}
           />

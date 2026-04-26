@@ -17,6 +17,7 @@ import { DesktopSidebar } from "./features/Sidebar";
 import { MobileSidebar } from "./features/MobileLayout";
 import { MainContent } from "./features/MainContent";
 import { GlobalCommandMenu } from "./features/GlobalCommandMenu";
+import VerificationBlockerModal from "./components/VerificationBlocker";
 export default function GalleryDashboardLayout({
   children,
 }: {
@@ -35,6 +36,7 @@ export default function GalleryDashboardLayout({
       else return acc.data;
     },
     refetchOnWindowFocus: false,
+    enabled: !!user.gallery_id && !!csrf,
   });
 
   if (isLoading) {
@@ -47,6 +49,7 @@ export default function GalleryDashboardLayout({
 
   return (
     <>
+      {!isGalleryVerified && <VerificationBlockerModal open={true} />}
       {width < 1280 ? (
         <NoMobileView />
       ) : (

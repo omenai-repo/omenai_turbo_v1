@@ -67,7 +67,7 @@ export const SalesActivityChart = ({
   const categories = data.map((serie) => serie.id);
 
   return (
-    <Card className="h-[450px] w-full rounded-sm  bg-white p-6 shadow-sm border border-neutral-100">
+    <Card className="h-[450px] w-full rounded-sm  bg-white p-6 shadow-sm ring-1 ring-neutral-100">
       <Flex justifyContent="between" alignItems="center">
         <div>
           <Title className="text-md font-semibold text-neutral-900">

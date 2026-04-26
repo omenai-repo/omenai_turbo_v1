@@ -53,8 +53,6 @@ export default function Plans() {
 
   return (
     <div className="min-h-screen w-full flex flex-col">
-      <PageTitle title="Pricing plans" />
-
       {isLoading ? (
         <div className="flex-1 w-full grid place-items-center">
           <Load />
@@ -62,7 +60,7 @@ export default function Plans() {
       ) : (
         <div className="flex flex-col flex-1 w-full">
           {/* ── Page header ──────────────────────────────────────── */}
-          <div className="px-4 py-8 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
+          <div className="p-4 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
             <div>
               <p className="text-[10px] tracking-[0.25em] uppercase text-[#A8A09A] mb-2">
                 Subscription

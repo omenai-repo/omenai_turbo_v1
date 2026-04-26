@@ -48,8 +48,6 @@ export default function SubscriptionCheckout() {
 
   return (
     <div>
-      <PageTitle title="Checkout" />
-
       {isLoading ? (
         <div className="h-[50vh] w-full grid place-items-center">
           <Load />

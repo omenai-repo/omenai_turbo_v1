@@ -36,7 +36,7 @@ export default function CheckoutItem({
   const totalDue = displayBasePrice - displayDiscountAmount;
 
   return (
-    <div className="fixed inset-0 flex flex-col md:flex-row bg-white overflow-auto">
+    <div className="fixed inset-0 z-50 flex flex-col md:flex-row bg-white overflow-auto">
       {/* LEFT PANE: Brand, Welcome & Value (Dark Aesthetic) */}
       <div className="w-full md:w-[45%] lg:w-[40%] bg-[#0f172a] text-white px-16 py-8 flex flex-col justify-between overflow-y-auto">
         <div className="space-y-4 p-8">
@@ -98,10 +98,7 @@ export default function CheckoutItem({
           <div className="bg-white/5 border border-white/10 rounded-sm  p-6 space-y-4">
             {/* Line Item: Base Cost */}
             <div className="flex justify-between text-sm text-gray-400">
-              <span>
-                {plan.name} Plan{" "}
-                {discountEligible ? "(14 days Value)" : `(${interval})`}
-              </span>
+              <span>{plan.name} Plan </span>
               <span>{formatPrice(displayBasePrice, currency)}</span>
             </div>
 
