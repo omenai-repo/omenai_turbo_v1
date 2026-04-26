@@ -10,16 +10,6 @@ vi.mock("@omenai/shared-lib/auth/configs/rate_limit_configs", () => ({
   lenientRateLimit: {},
 }));
 
-vi.mock("next/server", () => ({
-  NextResponse: {
-    json: (body: unknown, init?: ResponseInit) =>
-      new Response(JSON.stringify(body), {
-        ...init,
-        headers: { "Content-Type": "application/json" },
-      }),
-  },
-}));
-
 vi.mock("next/headers", () => ({
   cookies: vi.fn().mockResolvedValue({}),
 }));
@@ -27,10 +17,6 @@ vi.mock("next/headers", () => ({
 vi.mock("@omenai/shared-lib/auth/session", () => ({
   getSessionFromCookie: vi.fn(),
   destroySession: vi.fn().mockResolvedValue(undefined),
-}));
-
-vi.mock("@omenai/rollbar-config", () => ({
-  rollbarServerInstance: { error: vi.fn() },
 }));
 
 vi.mock("../../../../app/api/util", () => ({

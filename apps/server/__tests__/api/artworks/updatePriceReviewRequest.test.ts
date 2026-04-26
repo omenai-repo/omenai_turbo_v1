@@ -1,14 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
-vi.mock("next/server", () => ({
-  NextResponse: {
-    json: (body: unknown, init?: ResponseInit) =>
-      new Response(JSON.stringify(body), {
-        ...init,
-        headers: { "Content-Type": "application/json" },
-      }),
-  },
-}));
 vi.mock("@omenai/shared-lib/mongo_connect/mongoConnect", () => ({
   connectMongoDB: vi.fn().mockResolvedValue(undefined),
 }));
@@ -20,9 +11,6 @@ vi.mock("../../../app/api/services/uploadArtwork.service", () => ({
 }));
 vi.mock("../../../app/api/util", () => ({
   createErrorRollbarReport: vi.fn(),
-}));
-vi.mock("@omenai/rollbar-config", () => ({
-  rollbarServerInstance: { error: vi.fn() },
 }));
 
 import { PATCH } from "../../../app/api/artworks/updatePriceReviewRequest/route";

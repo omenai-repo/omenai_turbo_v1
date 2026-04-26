@@ -6,15 +6,6 @@ vi.mock("@omenai/shared-lib/auth/middleware/combined_middleware", () => ({
 vi.mock("@omenai/shared-lib/auth/configs/rate_limit_configs", () => ({
   strictRateLimit: {},
 }));
-vi.mock("next/server", () => ({
-  NextResponse: {
-    json: (body: unknown, init?: ResponseInit) =>
-      new Response(JSON.stringify(body), {
-        ...init,
-        headers: { "Content-Type": "application/json" },
-      }),
-  },
-}));
 vi.mock("@omenai/shared-lib/mongo_connect/mongoConnect", () => ({
   connectMongoDB: vi.fn().mockResolvedValue(undefined),
 }));
@@ -36,41 +27,15 @@ vi.mock("bcrypt", () => ({
 vi.mock("@omenai/shared-lib/hash/hashPassword", () => ({
   hashPassword: vi.fn().mockResolvedValue("$2b$10$hashed_new"),
 }));
-vi.mock("@omenai/rollbar-config", () => ({
-  rollbarServerInstance: { error: vi.fn() },
-}));
 vi.mock("../../../../app/api/requests/utils", async () => {
   const z = (await import("zod")).default;
   return {
     ResetPasswordSchema: z.object({ password: z.string(), id: z.string() }),
   };
 });
-vi.mock("../../../../app/api/util", () => {
-  class BadRequestError extends Error {
-    constructor(message: string) {
-      super(message);
-      this.name = "BadRequestError";
-    }
-  }
-  return {
-    validateRequestBody: vi.fn().mockImplementation(async (request: Request, schema: any) => {
-      let body: unknown;
-      try {
-        body = await request.json();
-      } catch {
-        throw new BadRequestError("Invalid JSON syntax: Request body could not be parsed.");
-      }
-      const result = schema.safeParse(body);
-      if (!result.success) {
-        const msg = result.error.issues
-          .map((e: any) => `${e.path.join(".")}: ${e.message}`)
-          .join(", ");
-        throw new BadRequestError(`Validation Failed: ${msg}`);
-      }
-      return result.data;
-    }),
-    createErrorRollbarReport: vi.fn(),
-  };
+vi.mock("../../../../app/api/util", async () => {
+  const { buildValidateRequestBodyMock } = await import("../../../helpers/util-mock");
+  return buildValidateRequestBodyMock();
 });
 
 import { POST } from "../../../../app/api/requests/gallery/resetPassword/route";

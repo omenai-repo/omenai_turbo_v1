@@ -8,16 +8,6 @@ vi.mock("@omenai/shared-lib/auth/configs/rate_limit_configs", () => ({
   lenientRateLimit: {},
 }));
 
-vi.mock("next/server", () => ({
-  NextResponse: {
-    json: (body: unknown, init?: ResponseInit) =>
-      new Response(JSON.stringify(body), {
-        ...init,
-        headers: { "Content-Type": "application/json" },
-      }),
-  },
-}));
-
 vi.mock("@omenai/shared-lib/mongo_connect/mongoConnect", () => ({
   connectMongoDB: vi.fn(),
 }));

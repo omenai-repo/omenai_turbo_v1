@@ -9,20 +9,6 @@ vi.mock("@omenai/shared-lib/auth/configs/rate_limit_configs", () => ({
   strictRateLimit: {},
 }));
 
-vi.mock("next/server", () => ({
-  NextResponse: {
-    json: (body: unknown, init?: ResponseInit) =>
-      new Response(JSON.stringify(body), {
-        ...init,
-        headers: { "Content-Type": "application/json" },
-      }),
-  },
-}));
-
-vi.mock("@omenai/rollbar-config", () => ({
-  rollbarServerInstance: { error: vi.fn() },
-}));
-
 vi.mock("@omenai/shared-utils/src/getFutureShipmentDate", () => ({
   getFutureShipmentDate: vi.fn(),
 }));

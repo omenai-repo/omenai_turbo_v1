@@ -1,14 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
-vi.mock("next/server", () => ({
-  NextResponse: {
-    json: (body: unknown, init?: ResponseInit) =>
-      new Response(JSON.stringify(body), {
-        ...init,
-        headers: { "Content-Type": "application/json" },
-      }),
-  },
-}));
 vi.mock("@omenai/shared-lib/mongo_connect/mongoConnect", () => ({
   connectMongoDB: vi.fn().mockResolvedValue(undefined),
 }));
@@ -17,24 +8,9 @@ vi.mock("@omenai/shared-models/models/auth/IndividualSchema", () => ({
     findOne: vi.fn(),
   },
 }));
-vi.mock("@omenai/rollbar-config", () => ({
-  rollbarServerInstance: { error: vi.fn() },
-}));
-vi.mock("../../../../app/api/util", () => {
-  class BadRequestError extends Error {
-    constructor(message: string) {
-      super(message);
-      this.name = "BadRequestError";
-    }
-  }
-  return {
-    validateGetRouteParams: vi.fn().mockImplementation((schema: any, data: any) => {
-      const result = schema.safeParse(data);
-      if (!result.success) throw new BadRequestError("Invalid URL parameters");
-      return data;
-    }),
-    createErrorRollbarReport: vi.fn(),
-  };
+vi.mock("../../../../app/api/util", async () => {
+  const { buildValidateGetRouteParamsMock } = await import("../../../helpers/util-mock");
+  return buildValidateGetRouteParamsMock();
 });
 
 import { GET } from "../../../../app/api/requests/individual/getUser/route";

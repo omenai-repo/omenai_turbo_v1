@@ -6,15 +6,6 @@ vi.mock("@omenai/shared-lib/auth/middleware/combined_middleware", () => ({
 vi.mock("@omenai/shared-lib/auth/configs/rate_limit_configs", () => ({
   standardRateLimit: {},
 }));
-vi.mock("next/server", () => ({
-  NextResponse: {
-    json: (body: unknown, init?: ResponseInit) =>
-      new Response(JSON.stringify(body), {
-        ...init,
-        headers: { "Content-Type": "application/json" },
-      }),
-  },
-}));
 vi.mock("@omenai/shared-lib/mongo_connect/mongoConnect", () => ({
   connectMongoDB: vi.fn().mockResolvedValue(undefined),
 }));
@@ -23,9 +14,6 @@ vi.mock("@omenai/shared-models/models/artworks/ArtworkPriceReviewSchema", () => 
 }));
 vi.mock("@omenai/shared-models/models/auth/ArtistSchema", () => ({
   AccountArtist: { exists: vi.fn() },
-}));
-vi.mock("@omenai/rollbar-config", () => ({
-  rollbarServerInstance: { error: vi.fn() },
 }));
 
 import { GET } from "../../../app/api/artworks/fetchPriceReviewRequests/route";

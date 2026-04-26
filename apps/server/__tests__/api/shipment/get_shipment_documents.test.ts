@@ -27,10 +27,6 @@ vi.mock("next/server", () => ({
   },
 }));
 
-vi.mock("@omenai/rollbar-config", () => ({
-  rollbarServerInstance: { error: vi.fn() },
-}));
-
 vi.mock("../../../app/api/shipment/resources", () => ({
   getDhlHeaders: vi.fn().mockReturnValue(new Headers()),
   OMENAI_INC_DHL_EXPRESS_IMPORT_ACCOUNT: "TEST_ACCOUNT",

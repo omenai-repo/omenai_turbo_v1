@@ -6,15 +6,6 @@ vi.mock("@omenai/shared-lib/auth/middleware/combined_middleware", () => ({
 vi.mock("@omenai/shared-lib/auth/configs/rate_limit_configs", () => ({
   lenientRateLimit: {},
 }));
-vi.mock("next/server", () => ({
-  NextResponse: {
-    json: (body: unknown, init?: ResponseInit) =>
-      new Response(JSON.stringify(body), {
-        ...init,
-        headers: { "Content-Type": "application/json" },
-      }),
-  },
-}));
 vi.mock("@omenai/shared-lib/mongo_connect/mongoConnect", () => ({
   connectMongoDB: vi.fn().mockResolvedValue(undefined),
 }));
@@ -33,27 +24,9 @@ vi.mock("@omenai/shared-lib/configcat/configCatFetch", () => ({
 vi.mock("@omenai/upstash-config", () => ({
   redis: { get: vi.fn(), set: vi.fn().mockResolvedValue(undefined) },
 }));
-vi.mock("@omenai/rollbar-config", () => ({
-  rollbarServerInstance: { error: vi.fn() },
-}));
-vi.mock("../../../app/api/util", () => {
-  class BadRequestError extends Error {
-    constructor(message: string) {
-      super(message);
-      this.name = "BadRequestError";
-    }
-  }
-  return {
-    createErrorRollbarReport: vi.fn(),
-    validateGetRouteParams: vi.fn().mockImplementation((schema: any, data: any) => {
-      const result = schema.safeParse(data);
-      if (!result.success) {
-        const msg = result.error.issues.map((e: any) => `${e.path.join(".")}: ${e.message}`).join(", ");
-        throw new BadRequestError(`Validation Failed: ${msg}`);
-      }
-      return result.data;
-    }),
-  };
+vi.mock("../../../app/api/util", async () => {
+  const { buildValidateGetRouteParamsMock } = await import("../../helpers/util-mock");
+  return buildValidateGetRouteParamsMock();
 });
 
 import { GET } from "../../../app/api/artworks/getArtworkPriceForArtist/route";

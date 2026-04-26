@@ -8,16 +8,6 @@ vi.mock("@omenai/shared-lib/auth/configs/rate_limit_configs", () => ({
   standardRateLimit: {},
 }));
 
-vi.mock("next/server", () => ({
-  NextResponse: {
-    json: (body: unknown, init?: ResponseInit) =>
-      new Response(JSON.stringify(body), {
-        ...init,
-        headers: { "Content-Type": "application/json" },
-      }),
-  },
-}));
-
 vi.mock("@omenai/shared-lib/mongo_connect/mongoConnect", () => ({
   connectMongoDB: vi.fn().mockResolvedValue(undefined),
 }));
@@ -27,10 +17,6 @@ vi.mock("@omenai/shared-models/models/wallet/WalletSchema", () => ({
     findOne: vi.fn(),
     updateOne: vi.fn(),
   },
-}));
-
-vi.mock("@omenai/rollbar-config", () => ({
-  rollbarServerInstance: { error: vi.fn() },
 }));
 
 vi.mock("../../../app/api/util", () => ({

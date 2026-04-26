@@ -8,16 +8,6 @@ vi.mock("@omenai/shared-lib/auth/configs/rate_limit_configs", () => ({
   lenientRateLimit: {},
 }));
 
-vi.mock("next/server", () => ({
-  NextResponse: {
-    json: (body: unknown, init?: ResponseInit) =>
-      new Response(JSON.stringify(body), {
-        ...init,
-        headers: { "Content-Type": "application/json" },
-      }),
-  },
-}));
-
 vi.mock("@omenai/shared-lib/mongo_connect/mongoConnect", () => ({
   connectMongoDB: vi.fn(),
 }));
@@ -59,10 +49,6 @@ vi.mock("../../../../custom/errors/handler/errorHandler", () => ({
   handleErrorEdgeCases: vi
     .fn()
     .mockReturnValue({ status: 500, message: "Internal Server Error" }),
-}));
-
-vi.mock("@omenai/rollbar-config", () => ({
-  rollbarServerInstance: { error: vi.fn() },
 }));
 
 import { GET } from "../../../../app/api/cron/subscriptions/change_expired_subs_status/route";
