@@ -32,21 +32,30 @@ vi.mock("@omenai/shared-models/models/orders/CreateOrderSchema", () => ({
   CreateOrder: { findOne: vi.fn(), create: vi.fn() },
 }));
 
-vi.mock("@omenai/shared-models/models/device_management/DeviceManagementSchema", () => ({
-  DeviceManagement: { find: vi.fn() },
-}));
+vi.mock(
+  "@omenai/shared-models/models/device_management/DeviceManagementSchema",
+  () => ({
+    DeviceManagement: { find: vi.fn() },
+  }),
+);
 
-vi.mock("@omenai/shared-models/models/artworks/ArtworkPriceRequestSchema", () => ({
-  PriceRequest: { updateOne: vi.fn() },
-}));
+vi.mock(
+  "@omenai/shared-models/models/artworks/ArtworkPriceRequestSchema",
+  () => ({
+    PriceRequest: { updateOne: vi.fn() },
+  }),
+);
 
 vi.mock("@omenai/shared-lib/workflow_runs/createWorkflow", () => ({
   createWorkflow: vi.fn().mockResolvedValue(undefined),
 }));
 
-vi.mock("@omenai/shared-emails/src/models/orders/orderRequestToGallery", () => ({
-  sendOrderRequestToGalleryMail: vi.fn().mockResolvedValue(undefined),
-}));
+vi.mock(
+  "@omenai/shared-emails/src/models/orders/orderRequestToGallery",
+  () => ({
+    sendOrderRequestToGalleryMail: vi.fn().mockResolvedValue(undefined),
+  }),
+);
 
 vi.mock("@omenai/shared-emails/src/models/orders/orderRequestReceived", () => ({
   sendOrderRequestReceivedMail: vi.fn().mockResolvedValue(undefined),
@@ -65,7 +74,8 @@ vi.mock("@omenai/shared-utils/src/generateToken", () => ({
 }));
 
 vi.mock("../../../app/api/util", async () => {
-  const { buildValidateRequestBodyMock } = await import("../../helpers/util-mock");
+  const { buildValidateRequestBodyMock } =
+    await import("../../helpers/util-mock");
   return buildValidateRequestBodyMock();
 });
 
@@ -78,16 +88,36 @@ import { DeviceManagement } from "@omenai/shared-models/models/device_management
 import { PriceRequest } from "@omenai/shared-models/models/artworks/ArtworkPriceRequestSchema";
 import { validateDHLAddress } from "../../../app/api/util";
 
-const ngAddress = { address_line: "1 Lagos St", city: "Lagos", state: "Lagos", stateCode: "LA", country: "NG", countryCode: "NG", zip: "10001" };
+const ngAddress = {
+  address_line: "1 Lagos St",
+  city: "Lagos",
+  state: "Lagos",
+  stateCode: "LA",
+  country: "NG",
+  countryCode: "NG",
+  zip: "10001",
+};
 
-const mockBuyer = { name: "John Doe", email: "buyer@test.com", user_id: "user-1", phone: "+1234", address: ngAddress };
-const mockArtist = { name: "Test Artist", email: "artist@test.com", user_id: "artist-1", phone: "+5678", address: ngAddress };
+const mockBuyer = {
+  name: "John Doe",
+  email: "buyer@test.com",
+  user_id: "user-1",
+  phone: "+1234",
+  address: ngAddress,
+};
+const mockArtist = {
+  name: "Test Artist",
+  email: "artist@test.com",
+  user_id: "artist-1",
+  phone: "+5678",
+  address: ngAddress,
+};
 const mockArtwork = {
   art_id: "art-123",
   title: "Test Art",
   artist: "Test Artist",
   pricing: { usd_price: 1000 },
-  url: "http://img",
+  url: "https://img",
   availability: true,
 };
 const mockCreatedOrder = { order_id: "order-new-1" };
@@ -127,8 +157,12 @@ describe("POST /api/orders/createOrder", () => {
       lean: vi.fn().mockResolvedValue(null),
     } as any);
     vi.mocked(CreateOrder.create).mockResolvedValue(mockCreatedOrder as any);
-    vi.mocked(AccountIndividual.updateOne).mockResolvedValue({ modifiedCount: 1 } as any);
-    vi.mocked(PriceRequest.updateOne).mockResolvedValue({ modifiedCount: 1 } as any);
+    vi.mocked(AccountIndividual.updateOne).mockResolvedValue({
+      modifiedCount: 1,
+    } as any);
+    vi.mocked(PriceRequest.updateOne).mockResolvedValue({
+      modifiedCount: 1,
+    } as any);
     vi.mocked(DeviceManagement.find).mockReturnValue({
       select: vi.fn().mockReturnValue({
         lean: vi.fn().mockResolvedValue([]),

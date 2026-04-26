@@ -16,24 +16,34 @@ vi.mock("@omenai/shared-models/models/orders/CreateOrderSchema", () => ({
   CreateOrder: { updateOne: vi.fn(), findOne: vi.fn() },
 }));
 
-vi.mock("@omenai/shared-emails/src/models/shipment/sendShipmentSuccessEmailToBuyer", () => ({
-  sendBuyerShipmentSuccessEmail: vi.fn().mockResolvedValue(undefined),
-}));
+vi.mock(
+  "@omenai/shared-emails/src/models/shipment/sendShipmentSuccessEmailToBuyer",
+  () => ({
+    sendBuyerShipmentSuccessEmail: vi.fn().mockResolvedValue(undefined),
+  }),
+);
 
-vi.mock("@omenai/shared-emails/src/models/shipment/sendShipmentSuccessEmailToArtist", () => ({
-  sendArtistShipmentSuccessEmail: vi.fn().mockResolvedValue(undefined),
-}));
+vi.mock(
+  "@omenai/shared-emails/src/models/shipment/sendShipmentSuccessEmailToArtist",
+  () => ({
+    sendArtistShipmentSuccessEmail: vi.fn().mockResolvedValue(undefined),
+  }),
+);
 
-vi.mock("@omenai/shared-emails/src/models/shipment/sendShipmentSuccessEmailToGallery", () => ({
-  sendGalleryShipmentSuccessEmail: vi.fn().mockResolvedValue(undefined),
-}));
+vi.mock(
+  "@omenai/shared-emails/src/models/shipment/sendShipmentSuccessEmailToGallery",
+  () => ({
+    sendGalleryShipmentSuccessEmail: vi.fn().mockResolvedValue(undefined),
+  }),
+);
 
 vi.mock("@omenai/shared-utils/src/priceFormatter", () => ({
   formatPrice: vi.fn().mockReturnValue("$1,000.00"),
 }));
 
 vi.mock("../../../app/api/util", async () => {
-  const { buildValidateRequestBodyMock } = await import("../../helpers/util-mock");
+  const { buildValidateRequestBodyMock } =
+    await import("../../helpers/util-mock");
   return buildValidateRequestBodyMock();
 });
 
@@ -47,7 +57,12 @@ const mockArtistOrder = {
   seller_designation: "artist",
   buyer_details: { name: "John", email: "buyer@test.com" },
   seller_details: { name: "Artist", email: "artist@test.com" },
-  artwork_data: { title: "Art", artist: "The Artist", url: "http://img", pricing: { usd_price: 1000 } },
+  artwork_data: {
+    title: "Art",
+    artist: "The Artist",
+    url: "https://img",
+    pricing: { usd_price: 1000 },
+  },
 };
 
 const mockGalleryOrder = { ...mockArtistOrder, seller_designation: "gallery" };
@@ -63,12 +78,16 @@ function makeRequest(body: object): Request {
 describe("POST /api/orders/confirmOrderDelivery", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.mocked(CreateOrder.updateOne).mockResolvedValue({ modifiedCount: 1 } as any);
+    vi.mocked(CreateOrder.updateOne).mockResolvedValue({
+      modifiedCount: 1,
+    } as any);
     vi.mocked(CreateOrder.findOne).mockResolvedValue(mockArtistOrder as any);
   });
 
   it("returns 200 and sends artist email for artist order", async () => {
-    const response = await POST(makeRequest({ order_id: "order-abc", confirm_delivery: "confirmed" }));
+    const response = await POST(
+      makeRequest({ order_id: "order-abc", confirm_delivery: "confirmed" }),
+    );
     const body = await response.json();
 
     expect(response.status).toBe(200);
@@ -79,7 +98,9 @@ describe("POST /api/orders/confirmOrderDelivery", () => {
   it("returns 200 and sends gallery email for gallery order", async () => {
     vi.mocked(CreateOrder.findOne).mockResolvedValue(mockGalleryOrder as any);
 
-    const response = await POST(makeRequest({ order_id: "order-abc", confirm_delivery: "confirmed" }));
+    const response = await POST(
+      makeRequest({ order_id: "order-abc", confirm_delivery: "confirmed" }),
+    );
     const body = await response.json();
 
     expect(response.status).toBe(200);
@@ -89,7 +110,9 @@ describe("POST /api/orders/confirmOrderDelivery", () => {
   it("returns 500 when order not found after update", async () => {
     vi.mocked(CreateOrder.findOne).mockResolvedValue(null);
 
-    const response = await POST(makeRequest({ order_id: "order-abc", confirm_delivery: "confirmed" }));
+    const response = await POST(
+      makeRequest({ order_id: "order-abc", confirm_delivery: "confirmed" }),
+    );
     const body = await response.json();
 
     expect(response.status).toBe(500);
