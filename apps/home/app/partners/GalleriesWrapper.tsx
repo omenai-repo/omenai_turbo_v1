@@ -82,6 +82,9 @@ export default function AllGalleriesDirectory() {
                 .filter(Boolean)
                 .join(", ");
 
+              const isOmitGallery =
+                gallery.name.toLowerCase() === "omenai gallery";
+              if (isOmitGallery) return null;
               return (
                 <Link
                   href={`/partners/${gallery.gallery_id}`}
