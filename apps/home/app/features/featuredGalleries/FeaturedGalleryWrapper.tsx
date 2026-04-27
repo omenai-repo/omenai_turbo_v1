@@ -92,63 +92,71 @@ export const FeaturedGalleriesSection = () => {
           <div className="relative group">
             <div className="overflow-hidden w-full" ref={emblaRef}>
               <div className="flex touch-pan-y space-x-6">
-                {galleries?.data.map((gallery: GallerySchemaTypes) => (
-                  <div
-                    key={gallery.gallery_id}
-                    className="flex-[0_0_85%] sm:flex-[0_0_45%] md:flex-[0_0_30%] lg:flex-[0_0_25%] min-w-0"
-                  >
-                    <div className="flex flex-col h-full border border-neutral-100 bg-white hover:border-neutral-200 hover:shadow-sm transition-all duration-300 rounded-sm group/card">
-                      {/* 4:3 Image Container (Wrapped in Link) */}
-                      <Link
-                        href={`/partners/${gallery.gallery_id}`}
-                        className="block relative w-full aspect-[4/3] bg-neutral-50 overflow-hidden rounded-t-sm"
-                      >
-                        {gallery.logo ? (
-                          <img
-                            src={getOptimizedLogoImage(gallery.logo, "medium")}
-                            alt={`${gallery.name} logo`}
-                            // object-cover provides the fill effect inside the 4:3 box
-                            className="w-full h-full object-contain transition-transform duration-700 ease-out group-hover/card:scale-105"
-                          />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center bg-neutral-100">
-                            <span className="font-serif text-sm text-neutral-300 uppercase">
-                              {gallery.name.charAt(0)}
-                            </span>
-                          </div>
-                        )}
-                      </Link>
-
-                      {/* Info & Button Container */}
-                      <div className="p-5 flex items-center justify-between w-full gap-4">
-                        {/* Text (Wrapped in Link) */}
+                {galleries?.data.map((gallery: GallerySchemaTypes) => {
+                  const isOmitGallery =
+                    gallery.name.toLowerCase() === "omenai gallery";
+                  if (isOmitGallery) return null;
+                  return (
+                    <div
+                      key={gallery.gallery_id}
+                      className="flex-[0_0_85%] sm:flex-[0_0_45%] md:flex-[0_0_30%] lg:flex-[0_0_25%] min-w-0"
+                    >
+                      <div className="flex flex-col h-full border border-neutral-100 bg-white hover:border-neutral-200 hover:shadow-sm transition-all duration-300 rounded-sm group/card">
+                        {/* 4:3 Image Container (Wrapped in Link) */}
                         <Link
-                          href={`/gallery/${gallery.gallery_id}`}
-                          className="flex flex-col gap-1 flex-1 min-w-0"
+                          href={`/partners/${gallery.gallery_id}`}
+                          className="block relative w-full aspect-[4/3] bg-neutral-50 overflow-hidden rounded-t-sm"
                         >
-                          <h3 className="font-serif text-lg text-dark truncate">
-                            {gallery.name}
-                          </h3>
-                          {gallery.address?.city && (
-                            <p className="font-sans text-[10px] uppercase tracking-[0.2em] text-neutral-400 font-medium truncate">
-                              {gallery.address.city}
-                              {gallery.address.country
-                                ? `, ${gallery.address.country}`
-                                : ""}
-                            </p>
+                          {gallery.logo ? (
+                            <img
+                              src={getOptimizedLogoImage(
+                                gallery.logo,
+                                "medium",
+                              )}
+                              alt={`${gallery.name} logo`}
+                              // object-cover provides the fill effect inside the 4:3 box
+                              className="w-full h-full object-contain transition-transform duration-700 ease-out group-hover/card:scale-105"
+                            />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center bg-neutral-100">
+                              <span className="font-serif text-sm text-neutral-300 uppercase">
+                                {gallery.name.charAt(0)}
+                              </span>
+                            </div>
                           )}
                         </Link>
 
-                        {/* Follow Button (Isolated outside the Link) */}
-                        <FollowComponent
-                          followerCount={gallery.followerCount}
-                          entityId={gallery.gallery_id}
-                          entityType="gallery"
-                        />
+                        {/* Info & Button Container */}
+                        <div className="p-5 flex items-center justify-between w-full gap-4">
+                          {/* Text (Wrapped in Link) */}
+                          <Link
+                            href={`/gallery/${gallery.gallery_id}`}
+                            className="flex flex-col gap-1 flex-1 min-w-0"
+                          >
+                            <h3 className="font-serif text-lg text-dark truncate">
+                              {gallery.name}
+                            </h3>
+                            {gallery.address?.city && (
+                              <p className="font-sans text-[10px] uppercase tracking-[0.2em] text-neutral-400 font-medium truncate">
+                                {gallery.address.city}
+                                {gallery.address.country
+                                  ? `, ${gallery.address.country}`
+                                  : ""}
+                              </p>
+                            )}
+                          </Link>
+
+                          {/* Follow Button (Isolated outside the Link) */}
+                          <FollowComponent
+                            followerCount={gallery.followerCount}
+                            entityId={gallery.gallery_id}
+                            entityType="gallery"
+                          />
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
 
