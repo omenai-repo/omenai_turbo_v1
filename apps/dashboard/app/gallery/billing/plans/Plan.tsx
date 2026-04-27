@@ -88,7 +88,7 @@ const ForfeitWarning = ({ targetPlan }: { targetPlan: string }) => (
       <span className="text-amber-600">⚠️</span>
       <p className="text-[11px] leading-relaxed font-medium text-amber-800">
         Selecting this plan will <span className="font-bold">forfeit</span> your
-        one-time <span className="font-bold">1-month free trial</span> on the
+        one-time <span className="font-bold">14 days free trial</span> on the
         monthly <span className="capitalize font-bold">{targetPlan}</span> plan.
       </p>
     </div>

@@ -49,7 +49,7 @@ export default function CuratorsPicksSection() {
 
   return (
     <section className="  overflow-hidden">
-      <div className="max-w-[1700px] mx-auto relative">
+      <div className="max-w-full mx-auto relative">
         <header className="mb-16 flex flex-col items-start max-w-[600px]">
           <h2 className="font-serif text-2xl md:text-3xl font-medium tracking-tight text-[#1C1917] mb-3">
             Curator's Picks

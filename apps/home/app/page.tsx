@@ -59,9 +59,9 @@ export default function Home() {
         <CuratorsPicksSection />
         <FairsAndEventsSection />
         <FeaturedGalleriesSection />
-        <LatestArtworkWrapper
+        {/* <LatestArtworkWrapper
           sessionId={user && user.role === "user" ? user.id : undefined}
-        />
+        /> */}
         <FeaturedShowsSection />
         <Collections />
         <TrendingArtworkWrapper

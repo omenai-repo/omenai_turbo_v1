@@ -40,7 +40,7 @@ export default function EditorialItemCard({
       href={`${base_url()}/articles/${editorial.slug}?id=${editorial.$id}`}
       className="group block h-full w-full cursor-pointer"
     >
-      <article className="relative h-full w-full overflow-hidden rounded border border-neutral-200 bg-neutral-900 transition-all duration-500 hover:shadow-xl hover:border-neutral-500">
+      <article className="relative h-full w-full overflow-hidden rounded-sm border border-neutral-200 bg-neutral-900 transition-all duration-500 hover:shadow-xl hover:border-neutral-500">
         {/* 1. BACKGROUND IMAGE (Full Bleed for ALL cards) */}
         <div className="absolute inset-0 z-0">
           {url ? (

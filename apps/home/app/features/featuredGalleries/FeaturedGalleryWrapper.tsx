@@ -64,7 +64,7 @@ export const FeaturedGalleriesSection = () => {
 
   return (
     <section className="w-full bg-white">
-      <div className="max-w-[1600px] mx-auto">
+      <div className="max-w-full mx-auto">
         {/* Header Strip */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10 border-b border-neutral-200 pb-4">
           <div>

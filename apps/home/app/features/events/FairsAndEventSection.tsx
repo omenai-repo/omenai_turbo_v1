@@ -65,7 +65,7 @@ export const FairsAndEventsSection = () => {
 
   return (
     <section className="w-full">
-      <div className="max-w-[1600px] mx-auto">
+      <div className="max-w-full mx-auto">
         {/* Header Strip */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10 pb-4">
           <div>

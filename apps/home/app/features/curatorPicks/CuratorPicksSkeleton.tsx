@@ -30,7 +30,7 @@ export function CuratorsPicksSkeleton() {
 export function FeaturedFeedSkeleton() {
   return (
     <section className="py-24 px-6 md:px-12 lg:px-20 bg-[#FAF8F5] animate-pulse">
-      <div className="max-w-[1700px] mx-auto">
+      <div className="max-w-full mx-auto">
         <header className="mb-16 max-w-[600px]">
           <div className="h-10 w-48 bg-[#E8E4DF] rounded-[2px] mb-4"></div>
           <div className="w-[60px] h-[3px] bg-[#E8E4DF] mb-5"></div>

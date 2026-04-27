@@ -66,7 +66,7 @@ export const FeaturedShowsSection = () => {
 
   return (
     <section className="w-full bg-white overflow-hidden">
-      <div className=" max-w-[1800px] mx-auto">
+      <div className=" max-w-full mx-auto">
         {/* Responsive Header Strip */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 border-b border-neutral-200 pb-6">
           <div>
