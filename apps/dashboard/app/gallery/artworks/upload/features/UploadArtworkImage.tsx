@@ -186,19 +186,19 @@ export default function UploadArtworkImage() {
             <img
               src={URL.createObjectURL(image)}
               alt="uploaded artwork"
-              className="w-auto h-auto max-h-[300px] max-w-full object-contain rounded shadow-lg transition-all duration-200"
+              className="w-auto h-auto max-h-[300px] max-w-full object-contain rounded-sm  shadow-lg transition-all duration-200"
             />
-            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center rounded transition-opacity cursor-pointer text-white font-medium">
+            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center rounded-sm  transition-opacity cursor-pointer text-white font-medium">
               Click to Remove
             </div>
           </button>
         ) : (
           <button
             type="button"
-            className="w-full max-w-[300px] aspect-square border-2 border-dashed border-slate-300 bg-slate-50 rounded -xl flex flex-col items-center justify-center p-8 hover:border-dark hover:bg-slate-100 transition-all group"
+            className="w-full max-w-[300px] aspect-square border-2 border-dashed border-slate-300 bg-slate-50 rounded-sm  flex flex-col items-center justify-center p-8 hover:border-dark hover:bg-slate-100 transition-all group"
             onClick={() => imagePickerRef.current?.click()}
           >
-            <div className="p-4 bg-white rounded -full shadow-sm mb-4 group-hover:scale-110 transition-transform">
+            <div className="p-4 bg-white rounded-sm  -full shadow-sm mb-4 group-hover:scale-110 transition-transform">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -232,7 +232,7 @@ export default function UploadArtworkImage() {
       </div>
 
       {/* 2. Shipping Configuration Section */}
-      <div className="bg-white p-6 rounded -lg border border-slate-200 mb-10 shadow-sm">
+      <div className="bg-white p-6 rounded-sm  -lg border border-slate-200 mb-10 shadow-sm">
         <h3 className="text-sm font-bold text-slate-900 mb-4">
           Shipping Configuration
         </h3>
@@ -268,7 +268,7 @@ export default function UploadArtworkImage() {
                   </Text>
                 </div>
               }
-              className="p-4 border cursor-pointer border-slate-200 rounded -md hover:bg-slate-50 flex-1 transition-colors"
+              className="p-4 border cursor-pointer border-slate-200 rounded-sm  hover:bg-slate-50 flex-1 transition-colors"
               styles={{
                 root: { alignItems: "flex-start" },
                 radio: { cursor: "pointer" },
@@ -292,7 +292,7 @@ export default function UploadArtworkImage() {
                   </Text>
                 </div>
               }
-              className="p-4 border cursor-pointer border-slate-200 rounded -md hover:bg-slate-50 flex-1 transition-colors"
+              className="p-4 border cursor-pointer border-slate-200 rounded-sm  hover:bg-slate-50 flex-1 transition-colors"
               styles={{
                 root: { alignItems: "flex-start" },
                 radio: { cursor: "pointer" },

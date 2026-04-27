@@ -40,7 +40,7 @@ export default function TextStep({
 
   return (
     <div className="flex flex-col items-center w-full max-w-xl">
-      <h2 className="text-fluid-xs font-light text-slate-800 mb-8 text-center">
+      <h2 className="text-fluid-xs font-normal text-slate-800 mb-8 text-center">
         {question}
       </h2>
       {isBio ? (

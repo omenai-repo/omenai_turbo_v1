@@ -70,7 +70,7 @@ export default function PromotionalCard({
 
             {/* Typography */}
             <div>
-              <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-white leading-[1.1] mb-3 md:mb-4 drop-shadow-md md:drop-shadow-none">
+              <h2 className="font -serif text-3xl md:text-4xl lg:text-5xl text-white leading-[1.1] mb-3 md:mb-4 drop-shadow-md md:drop-shadow-none">
                 {headline}
               </h2>
               <p className="font-sans text-sm text-neutral-300 leading-relaxed line-clamp-2 md:line-clamp-4 max-w-md drop-shadow-sm md:drop-shadow-none">

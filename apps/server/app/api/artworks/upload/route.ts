@@ -4,9 +4,9 @@ import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middlewar
 import { CombinedConfig } from "@omenai/shared-types";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 import { createErrorRollbarReport, validateRequestBody } from "../../util";
-import { uploadArtworkLogic } from "../../uploadArtwork.service";
 import { UploadArtworkInput } from "@omenai/shared-lib/upload/uploadArtwork.schema";
 import z from "zod";
+import { uploadArtworkLogic } from "../../services/uploadArtwork.service";
 
 const config: CombinedConfig = {
   ...standardRateLimit,

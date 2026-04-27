@@ -21,8 +21,8 @@ export default function Orders() {
   });
 
   return (
-    <div className="p-4 min-h-[300px] flex flex-col gap-y-4 bg-white rounded shadown-sm">
-      <div className="w-full h-full p-6 rounded">
+    <div className="p-4 min-h-[300px] flex flex-col gap-y-4 bg-white rounded-sm  border border-neutral-100 shadown-sm">
+      <div className="w-full h-full p-6 rounded-sm ">
         <h1 className="font-medium self-start">Order Requests</h1>
         <div className="py-5 w-full h-full">
           {isLoading ? (

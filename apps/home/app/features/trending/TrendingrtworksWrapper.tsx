@@ -30,8 +30,8 @@ export default function TrendingArtworkWrapper({
   if (isLoading) return <SectionLoaderContainers title="Loading Trends" />;
 
   return (
-    <section className="w-full py-16 md:py-24 bg-white border-t border-neutral-100">
-      <div className="px-4">
+    <section className="w-full bg-white ">
+      <div className="">
         {/* 1. MARKETPLACE HEADER */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
           <div>
@@ -39,14 +39,13 @@ export default function TrendingArtworkWrapper({
               <span className="flex items-center justify-center h-6 w-6 rounded -full bg-[#091830]/10 text-dark ">
                 <HiArrowTrendingUp size={14} />
               </span>
-              <span className="text-xs font-sans font-bold text-dark  tracking-wide uppercase">
+              <span className="font-serif text-2xl md:text-3xl font-light text-black leading-none tracking-tight">
                 Trending works
               </span>
             </div>
-            <h2 className="text-2xl md:text-3xl font-serif text-dark ">
-              Trending Now
-            </h2>
-            <p className="mt-2 font-sans text-sm text-neutral-500 max-w-lg">
+
+            <div className="w-[60px] h-[3px] bg-[#C9A96E] my-5"></div>
+            <p className="mt-4 text-sm text-neutral-500 max-w-lg">
               Works capturing collector attention this week.
             </p>
           </div>

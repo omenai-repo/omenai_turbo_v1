@@ -127,6 +127,7 @@ export default function ArtworkPricing() {
           shouldShowPrice,
           currency: pricing?.currency,
           packaging_type: packagingType,
+          artist_id: user.artist_id as string,
         },
         file.fileId,
         user.artist_id,

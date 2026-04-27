@@ -105,7 +105,7 @@ export default function EditArtworkWrapper({
       </div>
 
       {/* Main Edit Form Card */}
-      <div className="overflow-hidden rounded -xl border border-slate-200 bg-white shadow-sm">
+      <div className="overflow-hidden rounded-sm  border border-slate-200 bg-white shadow-sm">
         <div className="border-b border-slate-100 bg-slate-50/50 px-6 py-4">
           <h2 className="text-base font-medium text-slate-800">
             Artwork Description
@@ -144,7 +144,7 @@ export default function EditArtworkWrapper({
                 onChange={(e) => setAvailability(!e.target.checked)}
                 disabled={loading}
               />
-              <div className="h-6 w-11 rounded-full bg-slate-200 peer-checked:bg-slate-900 peer-focus-visible:ring-2 peer-focus-visible:ring-slate-900 peer-focus-visible:ring-offset-2 after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:bg-white after:shadow-lg after:transition-all after:duration-200 peer-checked:after:translate-x-5 after:content-['']" />
+              <div className="h-6 w-11 rounded-sm -full bg-slate-200 peer-checked:bg-slate-900 peer-focus-visible:ring-2 peer-focus-visible:ring-slate-900 peer-focus-visible:ring-offset-2 after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-sm -full after:bg-white after:shadow-lg after:transition-all after:duration-200 peer-checked:after:translate-x-5 after:content-['']" />
             </label>
           </div>
 
@@ -156,7 +156,7 @@ export default function EditArtworkWrapper({
                   artwork.availability === availability)
               }
               type="submit"
-              className={`${BUTTON_CLASS} inline-flex min-w-[140px] items-center justify-center rounded -md bg-slate-900 px-6 py-2.5 text-sm font-medium text-white transition-all hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-400`}
+              className={`${BUTTON_CLASS} inline-flex min-w-[140px] items-center justify-center rounded-sm  bg-slate-900 px-6 py-2.5 text-sm font-medium text-white transition-all hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-400`}
             >
               {loading ? <LoadSmall /> : "Save Changes"}
             </button>
@@ -165,7 +165,7 @@ export default function EditArtworkWrapper({
       </div>
 
       {/* Danger Zone Card */}
-      <div className="overflow-hidden rounded -xl border border-red-200 bg-red-50/30">
+      <div className="overflow-hidden rounded-sm  border border-red-200 bg-red-50/30">
         <div className="px-6 py-6 sm:flex sm:items-center sm:justify-between">
           <div className="sm:pr-8">
             <h3 className="text-base font-medium text-red-800">Danger Zone</h3>
@@ -180,7 +180,7 @@ export default function EditArtworkWrapper({
               onClick={deleteUploadArtwork}
               disabled={deleteLoading}
               type="button"
-              className="inline-flex min-w-[140px] items-center justify-center rounded -md border border-red-200 bg-white px-6 py-2.5 text-sm font-medium text-red-600 shadow-sm transition-colors hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              className="inline-flex min-w-[140px] items-center justify-center rounded-sm  border border-red-200 bg-white px-6 py-2.5 text-sm font-medium text-red-600 shadow-sm transition-colors hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {deleteLoading ? <LoadSmall /> : "Delete Artwork"}
             </button>

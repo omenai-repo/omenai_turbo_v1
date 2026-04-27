@@ -31,7 +31,7 @@ export default function ChangePasswordModal({
           user.admin_id,
           newPassword,
           currentPassword,
-          csrf || ""
+          csrf || "",
         );
 
         if (!response.isOk) {

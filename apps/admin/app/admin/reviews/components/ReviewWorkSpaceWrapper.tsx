@@ -80,7 +80,7 @@ export default function AdminPricingTriage() {
   const selectedReview = reviews.find((r: any) => r._id === selectedReviewId);
 
   return (
-    <div className="w-full h-[calc(100dvh-40px)] max-h-[1000px] flex rounded -2xl border border-neutral-200 shadow-xl overflow-hidden bg-white mx-auto max-w-[88rem]">
+    <div className="w-full h-[calc(100dvh-40px)] max-h-[1000px] flex rounded border border-neutral-200 shadow-xl overflow-hidden bg-white mx-auto max-w-[88rem]">
       {/* Left Column: The Queue (35% width) */}
       <div className="w-full md:w-[35%] lg:w-[30%] h-full shrink-0">
         <ReviewSidebar

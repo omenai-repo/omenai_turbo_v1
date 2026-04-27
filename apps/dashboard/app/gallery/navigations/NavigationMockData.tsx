@@ -1,74 +1,55 @@
-import { Headphones, LucideIcon } from "lucide-react";
-
-export type SidebarSection = "core" | "finance" | "account";
+export type SidebarSection =
+  | "general"
+  | "inventory"
+  | "programming"
+  | "operations"
+  | "configuration";
 
 export type SidebarItem = {
   label: string;
   href: string;
-  icon: LucideIcon;
   section: SidebarSection;
 };
 
-// config/sidebar.ts
-import {
-  LayoutDashboard,
-  Package,
-  Image,
-  CreditCard,
-  Wallet,
-  User,
-  Settings,
-} from "lucide-react";
-
 export const sidebarItems: SidebarItem[] = [
-  {
-    label: "Overview",
-    href: "/gallery/overview",
-    icon: LayoutDashboard,
-    section: "core",
-  },
-  {
-    label: "Orders",
-    href: "/gallery/orders",
-    icon: Package,
-    section: "core",
-  },
-  {
-    label: "My Artworks",
-    href: "/gallery/artworks",
-    icon: Image,
-    section: "core",
-  },
+  // General
+  { label: "Overview", href: "/gallery/overview", section: "general" },
 
+  // Inventory
+  { label: "Artworks", href: "/gallery/artworks", section: "inventory" },
+  { label: "Artist Roster", href: "/gallery/roster", section: "inventory" },
+
+  // Programming (Pre-populating for what we will build next)
+  {
+    label: "Shows, Fairs and Events",
+    href: "/gallery/programming",
+    section: "programming",
+  },
+  // { label: "Art Fairs", href: "/gallery/fairs", section: "programming" },
+
+  // Operations
+  {
+    label: "Orders & Shipping",
+    href: "/gallery/orders",
+    section: "operations",
+  },
   {
     label: "Subscription & Billing",
     href: "/gallery/billing",
-    icon: CreditCard,
-    section: "finance",
+    section: "operations",
   },
+  { label: "Payouts", href: "/gallery/payouts", section: "operations" },
   {
-    label: "Payouts",
-    href: "/gallery/payouts",
-    icon: Wallet,
-    section: "finance",
+    label: "Support Tickets",
+    href: "/gallery/support",
+    section: "operations",
   },
 
+  // Configuration
   {
-    label: "Profile",
+    label: "Profile Management",
     href: "/gallery/profile",
-    icon: User,
-    section: "account",
+    section: "configuration",
   },
-  {
-    label: "Support tickets",
-    href: "/gallery/support",
-    icon: Headphones,
-    section: "account",
-  },
-  {
-    label: "Settings",
-    href: "/gallery/settings",
-    icon: Settings,
-    section: "account",
-  },
+  { label: "Settings", href: "/gallery/settings", section: "configuration" },
 ];

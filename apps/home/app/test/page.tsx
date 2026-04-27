@@ -129,7 +129,7 @@ const CurrencySetupPanel = ({
       >
         <div className="flex items-center gap-3">
           {/* FlagCDN Image Injection */}
-          <div className="w-8 h-6 overflow-hidden rounded-sm shadow-sm flex-shrink-0 bg-neutral-200 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700">
+          <div className="w-8 h-6 overflow-hidden rounded  shadow-sm flex-shrink-0 bg-neutral-200 dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700">
             <img
               src={`https://flagcdn.com/w40/${getCountryCode(activeCurrency.code)}.png`}
               srcSet={`https://flagcdn.com/w80/${getCountryCode(activeCurrency.code)}.png 2x`}
@@ -237,7 +237,7 @@ const CurrencySetupPanel = ({
               setPriceValue(e.target.value);
               setResult(null);
             }}
-            className="flex-1 h-14 px-4 text-3xl font-light bg-transparent text-neutral-900 dark:text-neutral-100 outline-none placeholder-neutral-300 dark:placeholder-neutral-700"
+            className="flex-1 h-14 px-4 text-3xl font-normal bg-transparent text-neutral-900 dark:text-neutral-100 outline-none placeholder-neutral-300 dark:placeholder-neutral-700"
           />
         </div>
 
@@ -280,7 +280,7 @@ const ConversionDisplay = ({ result, activeCurrency }: any) => (
     <h2 className="text-xs tracking-widest uppercase text-neutral-400 dark:text-neutral-500 font-semibold mb-4">
       2. Converted Global Value
     </h2>
-    <div className="text-5xl font-light text-neutral-900 dark:text-neutral-100 tracking-tight mb-2">
+    <div className="text-5xl font-normal text-neutral-900 dark:text-neutral-100 tracking-tight mb-2">
       {result ? `$${result.formatted}` : "—"}
     </div>
     <div className="text-sm text-neutral-500 dark:text-neutral-400">

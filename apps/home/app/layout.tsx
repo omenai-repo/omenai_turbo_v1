@@ -1,7 +1,6 @@
-// apps/web/app/layout.tsx
 import "./globals.css";
 import type { Metadata } from "next";
-import { PT_Serif, Work_Sans } from "next/font/google";
+import { PT_Serif, Work_Sans, DM_Sans } from "next/font/google";
 import NextTopLoader from "nextjs-toploader";
 import { Toaster } from "sonner";
 import { Provider as RollbarProvider } from "@rollbar/react";
@@ -32,9 +31,10 @@ export const metadata: Metadata = {
   manifest: "/site.webmanifest",
 };
 
-const work_sans = Work_Sans({
+const work_sans = DM_Sans({
   subsets: ["latin"],
   variable: "--font-work_sans",
+  weight: ["300", "400", "500", "600"],
   display: "swap",
 });
 const pt_serif = PT_Serif({
@@ -49,14 +49,10 @@ export default async function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   const initialSessionData = await getServerSession();
 
-  // 1. Get the Nonce
-  const headersList = await headers();
-  const nonce = headersList.get("x-nonce") || "";
-
   return (
     <html lang="en" {...mantineHtmlProps}>
       <head>
-        <meta name="color-scheme" content="light" nonce={nonce} />
+        <meta name="color-scheme" content="light" />
 
         <link rel="icon" href="/favicon.ico" />
         <link rel="shortcut icon" href="/favicon.ico" />
@@ -70,7 +66,7 @@ export default async function RootLayout({
         <RollbarProvider config={clientConfig}>
           <HighRiskProvider>
             {/* 4. Pass nonce to TopLoader (Critical for CSP) */}
-            <NextTopLoader color="#0f172a" height={6} nonce={nonce} />
+            <NextTopLoader color="#0f172a" height={6} />
 
             <Toaster
               position="top-right"

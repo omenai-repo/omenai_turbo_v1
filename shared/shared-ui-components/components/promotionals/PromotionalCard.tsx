@@ -1,10 +1,21 @@
 "use client";
 
+/**
+ * PromotionalCard — Luxury Art Gallery Edition
+ *
+ * Font setup (add to your layout.tsx or globals.css):
+ *   import { Cormorant_Garamond, DM_Sans } from 'next/font/google'
+ * Or in globals.css:
+ *   @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400&family=DM+Sans:opsz,wght@9..40,300;400&display=swap');
+ */
+
 import { getPromotionalOptimizedImage } from "@omenai/shared-lib/storage/getPromotionalsFileView";
 import { PromotionalSchemaTypes } from "@omenai/shared-types";
 import Image from "next/image";
 import Link from "next/link";
-import { MdArrowRightAlt } from "react-icons/md";
+
+// Warm gallery parchment — used for the card bg and the gradient bleed target
+const PARCHMENT = "#ffffff";
 
 export default function PromotionalCard({
   headline,
@@ -17,70 +28,148 @@ export default function PromotionalCard({
   return (
     <Link
       href={cta}
-      //Kept the shorter desktop height from previous iteration
-      className="group flex h-[500px] w-full flex-col overflow-hidden border border-neutral-200 bg-[#FCFCFA] md:h-[420px] md:flex-row"
+      className="group relative flex w-full flex-col items-center justify-center overflow-hidden md:h-[420px] md:flex-row"
+      style={{ backgroundColor: "transparent" }}
     >
-      {/* 1. THE ARTWORK SECTION */}
-      {/* Added relative and overflow-hidden to contain the blurred background */}
-      <div className="relative flex h-[55%] w-full items-center justify-center overflow-hidden p-8 md:h-full md:w-[60%] md:p-10 lg:p-12">
-        {/* --- NEW: Blurred Ambient Background --- */}
-        {/* Sits behind the main image (z-0). Low opacity and slight desaturation keep it elegant. */}
+      {/* ══════════════════════════════════════════
+          IMAGE PANEL
+          Mobile  → full-width, aspect-[4/3], no padding, object-cover
+          Desktop → fills h-[420px] parent, 60% width, object-contain (artwork safe)
+         ══════════════════════════════════════════ */}
+      <div className="relative w-full overflow-hidden md:p-6 aspect-[4/3] md:aspect-auto md:h-full md:w-[60%]">
+        {/* Ambient blur — bleeds colour edge-to-edge behind the artwork */}
         <div className="absolute inset-0 z-0">
           <Image
             src={image_url}
             alt=""
             fill
-            className="scale-125 object-cover blur-2xl opacity-25 saturate-75 transition-opacity duration-700 group-hover:opacity-40"
+            className="scale-125 object-cover blur-3xl opacity-30 saturate-50 transition-opacity duration-700 group-hover:opacity-45"
             aria-hidden="true"
+            priority={false}
           />
-          {/* Optional: A very light white overlay to ensure it remains high-key and bright */}
-          <div className="absolute inset-0 bg-white/30 mix-blend-overlay" />
         </div>
-        {/* --------------------------------------- */}
 
-        {/* --- Foreground Main Image --- */}
-        {/* Added z-10 to ensure it sits on top of the blur */}
+        {/* Main artwork image */}
         <div className="relative z-10 h-full w-full">
           <Image
             src={image_url}
             alt={headline}
             fill
-            className="object-contain drop-shadow-[0_15px_35px_rgba(0,0,0,0.15)] transition-transform duration-1000 ease-out group-hover:scale-[1.02]"
+            // Mobile: cover fills edge-to-edge. Desktop: contain preserves artwork proportions.
+            className="object-cover object-top md:object-contain  transition-transform duration-1000 ease-out group-hover:scale-[1.025]"
             sizes="(max-width: 768px) 100vw, 60vw"
+            priority
           />
         </div>
+
+        {/* Gradient bleed — image fades seamlessly into the text panel below (mobile only) */}
+        <div
+          className="absolute bottom-0 left-0 right-0 z-20 h-24 md:hidden"
+          style={{}}
+        />
       </div>
 
-      {/* 2. THE TYPOGRAPHY SECTION (Placard) */}
-      {/* Kept exactly the same as the previous atelier version */}
-      <div className="flex h-[45%] w-full flex-col justify-center bg-[#FCFCFA] p-8 md:h-full md:w-[40%] md:px-12 lg:px-16 z-20">
-        <div className="flex flex-col items-start gap-5">
-          {/* Subtle Metadata */}
-          <div className="flex items-center gap-4 text-neutral-400">
-            <span className="h-[1px] w-8 bg-neutral-300 transition-all duration-500 group-hover:w-12" />
-            <span className="text-[10px] font-medium uppercase tracking-[0.2em]">
-              Featured
-            </span>
-          </div>
+      {/* ══════════════════════════════════════════
+          TEXT PANEL
+         ══════════════════════════════════════════ */}
+      <div className="relative flex w-full flex-col justify-center px-7 pb-10 pt-3 md:h-full md:w-[40%] md:px-12 lg:px-16">
+        {/* Thin vertical divider separating panels on desktop */}
+        <div className="absolute left-0 top-1/2 hidden h-20 w-px -translate-y-1/2 bg-stone-300/70 md:block" />
 
-          {/* High-End Typography */}
-          <div className="space-y-3">
-            <h2 className="font-serif text-3xl font-normal leading-[1.1] tracking-tight text-neutral-900 lg:text-4xl">
-              {headline}
-            </h2>
-            <p className="line-clamp-3 max-w-sm font-sans text-sm font-light leading-relaxed text-neutral-500">
-              {subheadline}
-            </p>
-          </div>
+        {/* ── Meta row ── */}
+        <div className="mb-5 flex items-center gap-3">
+          <span
+            className="block h-px bg-stone-400 transition-[width] duration-500 ease-out group-hover:w-14"
+            style={{ width: "2rem" }}
+          />
+          <span
+            className="text-[9px] font-medium uppercase text-stone-400"
+            style={{
+              fontFamily: "'DM Sans', 'Helvetica Neue', sans-serif",
+              letterSpacing: "0.28em",
+            }}
+          >
+            Featured
+          </span>
+        </div>
 
-          {/* Minimalist CTA */}
-          <div className="mt-2 flex items-center gap-2 text-xs font-medium uppercase tracking-[0.15em] text-neutral-900">
-            <span className="relative pb-1">
-              Discover
-              <span className="absolute bottom-0 left-0 h-[1px] w-0 bg-neutral-900 transition-all duration-500 group-hover:w-full" />
-            </span>
-            <MdArrowRightAlt className="text-lg transition-transform duration-500 group-hover:translate-x-2" />
-          </div>
+        {/* ── Headline — Cormorant Garamond, light weight ── */}
+        <h2
+          className="mb-4 leading-[1.04] text-stone-900"
+          style={{
+            fontFamily: "'Cormorant Garamond', 'Cormorant', Georgia, serif",
+            fontWeight: 300,
+            fontSize: "clamp(1.9rem, 3.5vw, 2.65rem)",
+            letterSpacing: "-0.015em",
+          }}
+        >
+          {headline}
+        </h2>
+
+        {/* ── Subheadline ── */}
+        <p
+          className="mb-8 line-clamp-3 max-w-xs leading-relaxed text-stone-500"
+          style={{
+            fontFamily: "'DM Sans', 'Helvetica Neue', sans-serif",
+            fontWeight: 300,
+            fontSize: "0.8rem",
+            letterSpacing: "0.01em",
+          }}
+        >
+          {subheadline}
+        </p>
+
+        {/* ── CTA ── */}
+        <div className="flex items-center gap-3 text-stone-900">
+          <span
+            className="relative pb-[2px] text-[10px] font-medium uppercase"
+            style={{
+              fontFamily: "'DM Sans', 'Helvetica Neue', sans-serif",
+              letterSpacing: "0.24em",
+            }}
+          >
+            Discover
+            {/* Animated underline */}
+            <span className="absolute bottom-0 left-0 block h-px w-0 bg-stone-800 transition-[width] duration-500 ease-out group-hover:w-full" />
+          </span>
+
+          {/* Minimal custom arrow — more refined than icon libraries */}
+          <svg
+            width="30"
+            height="9"
+            viewBox="0 0 30 9"
+            fill="none"
+            className="translate-y-[0.5px] transition-transform duration-500 ease-out group-hover:translate-x-2"
+            aria-hidden="true"
+          >
+            <line
+              x1="0"
+              y1="4.5"
+              x2="26.5"
+              y2="4.5"
+              stroke="currentColor"
+              strokeWidth="0.75"
+            />
+            <polyline
+              points="22.5,1 26.5,4.5 22.5,8"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="0.75"
+            />
+          </svg>
+        </div>
+
+        {/* ── Corner bracket — subtle decorative element, desktop only ── */}
+        <div className="absolute bottom-5 right-5 hidden opacity-[0.18] md:block">
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 20 20"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path d="M20 0 L20 20 L0 20" stroke="#78716c" strokeWidth="0.75" />
+          </svg>
         </div>
       </div>
     </Link>

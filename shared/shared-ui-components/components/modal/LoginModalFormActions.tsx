@@ -16,7 +16,7 @@ export default function LoginModalFormActions({
     <>
       <div className="flex w-full flex-col mt-[1rem] space-y-8">
         <div className="flex justify-end w-full my-3">
-          <p className="font-light text-fluid-xxs">
+          <p className="font-normal text-fluid-xxs">
             Forgot password?{" "}
             <button
               type="button"

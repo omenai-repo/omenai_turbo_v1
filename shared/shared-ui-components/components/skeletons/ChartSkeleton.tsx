@@ -8,7 +8,7 @@ export const ChartSkeleton = () => {
     // Only randomize on client-side after mount
     const randomHeights = Array.from(
       { length: 12 },
-      () => Math.floor(Math.random() * 60) + 20
+      () => Math.floor(Math.random() * 60) + 20,
     );
     setBarHeights(randomHeights);
   }, []);

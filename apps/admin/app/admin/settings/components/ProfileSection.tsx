@@ -26,7 +26,7 @@ export default function ProfileSection() {
         const response = await updateAdminProfile(
           user.admin_id,
           name,
-          csrf || ""
+          csrf || "",
         );
 
         if (!response.isOk) {

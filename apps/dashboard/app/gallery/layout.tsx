@@ -16,6 +16,9 @@ import NoMobileView from "../artist/components/NoMobileView";
 import { DesktopSidebar } from "./features/Sidebar";
 import { MobileSidebar } from "./features/MobileLayout";
 import { MainContent } from "./features/MainContent";
+import { GlobalCommandMenu } from "./features/GlobalCommandMenu";
+import VerificationBlockerModal from "./components/VerificationBlocker";
+
 export default function GalleryDashboardLayout({
   children,
 }: {
@@ -24,28 +27,43 @@ export default function GalleryDashboardLayout({
   const { user, csrf } = useAuth({ requiredRole: "gallery" });
   const { width } = useWindowSize();
 
-  const { data: account, isLoading } = useQuery({
-    queryKey: ["get_account_info"],
+  // 1. Switched to isPending and added dependencies to the queryKey
+  const {
+    data: account,
+    isPending,
+    isLoading,
+  } = useQuery({
+    queryKey: ["get_account_info", user?.gallery_id, csrf],
     queryFn: async () => {
       const acc = await getAccountId(user.gallery_id as string, csrf || "");
 
-      if (!acc?.isOk)
+      if (!acc?.isOk) {
         toast_notif("Something went wrong, Please refresh the page", "error");
-      else return acc.data;
+        return null; // Return null instead of implicitly returning undefined
+      }
+      return acc.data;
     },
     refetchOnWindowFocus: false,
+    enabled: !!user?.gallery_id && !!csrf,
   });
 
-  if (isLoading) {
+  // 2. Check isPending (v5) or if account data simply isn't available yet
+  if (isPending || isLoading || account === undefined) {
     return <Load />;
   }
 
-  const isNotStripeConnected = account.connected_account_id === null;
-  const isGalleryVerified = account.gallery_verified;
+  // 3. Optional chaining just in case 'account' is null from an error state
+  const isNotStripeConnected = account?.connected_account_id === null;
+
+  // Force a strict boolean check so undefined/null don't accidentally trigger things
+  const isGalleryVerified = account?.gallery_verified === true;
   const val = isNotStripeConnected && isGalleryVerified;
 
   return (
     <>
+      {!isGalleryVerified && (
+        <VerificationBlockerModal open={!isGalleryVerified} />
+      )}
       {width < 1280 ? (
         <NoMobileView />
       ) : (
@@ -53,14 +71,13 @@ export default function GalleryDashboardLayout({
           <NextTopLoader color="#0f172a" height={6} />
 
           <DesktopSidebar />
+          <GlobalCommandMenu />
 
-          <div className="flex flex-1 flex-col md:ml-16">
-            {/* Mobile header */}
+          <div className="flex flex-1 flex-col md:ml-64">
             <header className="flex items-center gap-4 border-b bg-white px-4 py-3 md:hidden">
               <MobileSidebar />
               <span className="text-sm font-medium">Dashboard</span>
             </header>
-
             <MainContent>
               {val ? (
                 <GetStartedWithStripe />

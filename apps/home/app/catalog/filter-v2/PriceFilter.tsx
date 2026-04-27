@@ -34,7 +34,7 @@ export default function PriceFilter({
             </span>
           )}
         </div>
-        <span className="text-xl font-light text-neutral-400 group-hover:text-dark transition-colors">
+        <span className="text-xl font-normal text-neutral-400 group-hover:text-dark transition-colors">
           {open ? "−" : "+"}
         </span>
       </div>

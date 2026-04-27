@@ -17,7 +17,7 @@ export default function ProfileAvatar({
 
   return (
     <div className="relative inline-block">
-      <div className="w-24 h-24 md:w-32 md:h-32 rounded bg-slate-900 text-white flex items-center justify-center text-2xl md:text-4xl font-light tracking-widest shadow-xl shadow-slate-200 ring-4 ring-white">
+      <div className="w-24 h-24 md:w-32 md:h-32 rounded bg-slate-900 text-white flex items-center justify-center text-2xl md:text-4xl font-normal tracking-widest shadow-xl shadow-slate-200 ring-4 ring-white">
         {getInitials(name).toUpperCase()}
       </div>
       {verified && (

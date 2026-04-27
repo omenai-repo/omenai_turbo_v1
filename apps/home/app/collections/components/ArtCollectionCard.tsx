@@ -44,7 +44,7 @@ export default function ArtCollectionCard({
 
         {/* 2. METADATA */}
         <div className="flex flex-col gap-1 px-1">
-          <h3 className="font-serif text-xl text-dark  leading-tight group-hover:underline">
+          <h3 className="font -serif text-xl text-dark  leading-tight group-hover:underline">
             {title}
           </h3>
           {/* <p className="font-sans text-xs font-medium text-neutral-500 uppercase tracking-wide">

@@ -18,7 +18,7 @@ export default function EditEditorialPageWrapper({
 }>) {
   const { user } = useAuth({ requiredRole: "admin" });
 
-  if (!canAccessRoute(user.access_role, "editorials")) {
+  if (!canAccessRoute(user.access_role, "mid_level_access")) {
     return <ForbiddenPage userRole={user.access_role} />;
   }
   const { data: editorial, isLoading: loading } = useQuery({
@@ -53,7 +53,7 @@ export default function EditEditorialPageWrapper({
           <h1 className="text-xl font-medium tracking-normal text-neutral-900">
             Editorial Workspace
           </h1>
-          <p className="text-sm text-neutral-500 font-light mt-0.5">
+          <p className="text-sm text-neutral-500 font-normal mt-0.5">
             Edit an existing editorial
           </p>
         </div>

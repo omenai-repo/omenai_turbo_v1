@@ -23,13 +23,13 @@ export default function UpdateLogoModalForm() {
           <button
             onClick={() => updateLogoModalPopup(false)}
             className="flex-1 px-4 py-2.5 bg-gray-300 text-dark rounded hover:bg-gray-400 
-                       transition-all duration-300 text-fluid-xxs font-light"
+                       transition-all duration-300 text-fluid-xxs font-normal"
           >
             Cancel
           </button>
           <button
             className="flex-1 px-4 py-2.5 bg-dark text-white rounded hover:bg-dark/90 
-                             transition-all duration-300 text-fluid-xxs font-light"
+                             transition-all duration-300 text-fluid-xxs font-normal"
           >
             Upload
           </button>

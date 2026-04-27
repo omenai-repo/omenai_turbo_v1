@@ -52,7 +52,7 @@ export function SidebarContent({ expanded }: { expanded: boolean }) {
                           "flex items-center rounded px-3 py-2.5 text-sm transition-colors",
                           active
                             ? "bg-dark text-white"
-                            : "text-neutral-600 hover:bg-neutral-100"
+                            : "text-neutral-600 hover:bg-neutral-100",
                         )}
                       >
                         <Icon className="h-4 w-4 shrink-0" />

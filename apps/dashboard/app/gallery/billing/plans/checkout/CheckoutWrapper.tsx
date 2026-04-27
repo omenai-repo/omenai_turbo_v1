@@ -44,12 +44,10 @@ export default function SubscriptionCheckout() {
   });
 
   const isEligibleForDiscount = (data?.discount &&
-    data?.plan.name.toLowerCase() === "pro") as boolean;
+    data?.plan.name.toLowerCase() === "gallery") as boolean;
 
   return (
     <div>
-      <PageTitle title="Checkout" />
-
       {isLoading ? (
         <div className="h-[50vh] w-full grid place-items-center">
           <Load />

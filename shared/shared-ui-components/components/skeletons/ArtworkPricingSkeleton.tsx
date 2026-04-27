@@ -7,7 +7,7 @@ export default function ArtworkPricingSkeleton() {
       {/* Left Column: The Workspace (65%) */}
       <div className="lg:col-span-7 xl:col-span-8 flex flex-col gap-6">
         {/* Price Reveal & Trigger Card Skeleton */}
-        <div className="bg-white border border-neutral-200 rounded -2xl overflow-hidden shadow-sm flex flex-col">
+        <div className="bg-white border border-neutral-200 rounded overflow-hidden shadow-sm flex flex-col">
           <div className="p-8 sm:p-12 flex flex-col items-center justify-center gap-5">
             <Skeleton h={14} w={"30%"} radius="md" />
             <Skeleton h={64} w={"50%"} radius="md" />
@@ -23,7 +23,7 @@ export default function ArtworkPricingSkeleton() {
         </div>
 
         {/* Price Visibility Skeleton */}
-        <div className="bg-white border border-neutral-200 rounded -2xl p-6 sm:p-8 shadow-sm flex flex-col gap-5">
+        <div className="bg-white border border-neutral-200 rounded p-6 sm:p-8 shadow-sm flex flex-col gap-5">
           <div className="space-y-2">
             <Skeleton h={20} w={"30%"} radius="md" />
             <Skeleton h={14} w={"50%"} radius="md" />
@@ -35,7 +35,7 @@ export default function ArtworkPricingSkeleton() {
       {/* Right Column: Commitment Panel (35%) */}
       <div className="lg:col-span-5 xl:col-span-4 flex flex-col gap-6">
         {/* Agreements Skeleton */}
-        <div className="bg-white border border-neutral-200 rounded -2xl overflow-hidden shadow-sm flex flex-col">
+        <div className="bg-white border border-neutral-200 rounded overflow-hidden shadow-sm flex flex-col">
           <div className="bg-neutral-50 px-5 py-4 border-b border-neutral-200 flex gap-3 items-center">
             <Skeleton h={20} w={20} radius="sm" />
             <Skeleton h={16} w={"50%"} radius="md" />

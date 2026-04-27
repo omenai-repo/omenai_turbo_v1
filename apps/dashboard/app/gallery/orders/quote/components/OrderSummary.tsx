@@ -34,7 +34,7 @@ export default function OrderSummary({ order_data }: OrderSummaryProps) {
   );
 
   return (
-    <div className="bg-white rounded shadow-[0_4px_20px_-8px_rgba(0,0,0,0.1)] border border-gray-100 overflow-hidden sticky top-8">
+    <div className="bg-white rounded-sm  shadow-[0_4px_20px_-8px_rgba(0,0,0,0.1)] border border-gray-100 overflow-hidden sticky top-8">
       {/* Card Header */}
       <div className="bg-dark px-6 py-6 text-white relative overflow-hidden">
         <div className="relative z-10 flex items-center justify-between">
@@ -42,17 +42,17 @@ export default function OrderSummary({ order_data }: OrderSummaryProps) {
             <BoxIcon className="w-5 h-5 text-white" />
             Order Summary
           </h3>
-          <span className="text-white text-xs font-mono bg-white/10 px-2 py-1 rounded">
+          <span className="text-white text-xs font-mono bg-white/10 px-2 py-1 rounded-sm ">
             #{order_data.order_id.toUpperCase()}
           </span>
         </div>
-        <div className="absolute -bottom-8 -right-8 w-32 h-32 bg-white/10 rounded blur-2xl pointer-events-none" />
+        <div className="absolute -bottom-8 -right-8 w-32 h-32 bg-white/10 rounded-sm  blur-2xl pointer-events-none" />
       </div>
 
       {/* Body */}
       <div className="p-6">
         {/* Artwork Image */}
-        <div className="relative aspect-[4/3] rounded overflow-hidden bg-gray-100 shadow-inner mb-6 group">
+        <div className="relative aspect-[4/3] rounded-sm  overflow-hidden bg-gray-100 shadow-inner mb-6 group">
           <Image
             src={image_url}
             alt={order_data.artwork_data.title}
@@ -90,7 +90,7 @@ export default function OrderSummary({ order_data }: OrderSummaryProps) {
             </span>
           </div>
 
-          <div className="bg-gray-50 rounded p-4 space-y-3">
+          <div className="bg-gray-50 rounded-sm  p-4 space-y-3">
             <div>
               <span className="text-xs uppercase tracking-wider text-gray-500 font-semibold">
                 Destination
@@ -113,8 +113,8 @@ export default function OrderSummary({ order_data }: OrderSummaryProps) {
 
         {/* Status Badge */}
         <div className="mt-6">
-          <div className="flex items-center justify-center gap-2 w-full py-2.5 bg-amber-50 text-amber-700 text-sm font-medium rounded border border-amber-100/50">
-            <div className="w-2 h-2 rounded bg-amber-500 animate-pulse" />
+          <div className="flex items-center justify-center gap-2 w-full py-2.5 bg-amber-50 text-amber-700 text-sm font-medium rounded-sm  border border-amber-100/50">
+            <div className="w-2 h-2 rounded-sm  bg-amber-500 animate-pulse" />
             Status: Awaiting Dimensions
           </div>
         </div>

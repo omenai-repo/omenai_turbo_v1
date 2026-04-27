@@ -47,7 +47,7 @@ export function PaymentForm({
       let baseError;
       if (isDiscounted) {
         const returnUrl = new URL(
-          `${dashboard_url()}/gallery/billing/plans/checkout/verification`
+          `${dashboard_url()}/gallery/billing/plans/checkout/verification`,
         );
 
         returnUrl.searchParams.set("isDiscounted", String(isDiscounted));
@@ -77,7 +77,7 @@ export function PaymentForm({
       }
     } catch (err) {
       setError(
-        err instanceof Error ? err.message : "An unexpected error occurred"
+        err instanceof Error ? err.message : "An unexpected error occurred",
       );
     }
 
@@ -86,7 +86,7 @@ export function PaymentForm({
 
   if (success) {
     return (
-      <div className="p-6 bg-green-50 rounded">
+      <div className="p-6 bg-green-50 rounded-sm ">
         <h3 className="text-green-800 font-semibold">Subscription Created!</h3>
         <p className="text-green-600">
           Your subscription has been successfully activated.
@@ -102,7 +102,7 @@ export function PaymentForm({
       </div>
 
       {error && (
-        <div className="p-3 bg-red-50 border border-red-200 rounded text-red-600">
+        <div className="p-3 bg-red-50 border border-red-200 rounded-sm  text-red-600">
           {error}
         </div>
       )}
@@ -110,7 +110,7 @@ export function PaymentForm({
       <button
         type="submit"
         disabled={!stripe || isProcessing}
-        className="bg-dark hover:bg-dark/80 disabled:cursor-not-allowed disabled:bg-dark/30 text-white focus:ring ring-1 border-0 ring-dark/20 focus:ring-white duration-300 outline-none focus:outline-none  rounded h-[35px] p-6 w-full text-center text-fluid-xs flex items-center justify-center hover:ring-white cursor-pointer mb-4"
+        className="bg-dark hover:bg-dark/80 disabled:cursor-not-allowed disabled:bg-dark/30 text-white focus:ring ring-1 border-0 ring-dark/20 focus:ring-white duration-300 outline-none focus:outline-none  rounded-sm  h-[35px] p-6 w-full text-center text-fluid-xs flex items-center justify-center hover:ring-white cursor-pointer mb-4"
       >
         {isProcessing
           ? "Processing..."

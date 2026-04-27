@@ -19,16 +19,29 @@ const artistSchemaDef = new Schema<ArtistSchemaTypes>(
       max: 50,
     },
 
+    profile_status: {
+      type: String,
+      enum: ["claimed", "ghost"],
+      default: "claimed",
+      index: true,
+    },
+
     email: {
       type: String,
-      required: true,
+      sparse: true,
       unique: true,
+      required: function (this: any) {
+        return this.profile_status === "claimed";
+      },
     },
-    phone: { type: String, default: () => "" },
     password: {
       type: String,
-      required: true,
+      required: function (this: any) {
+        return this.profile_status === "claimed";
+      },
     },
+
+    phone: { type: String, default: () => "" },
 
     artist_id: {
       type: String,
@@ -51,44 +64,45 @@ const artistSchemaDef = new Schema<ArtistSchemaTypes>(
     },
     logo: {
       type: String,
-      required: true,
+      default: () => "",
+      required: function (this: any) {
+        return this.profile_status === "claimed";
+      },
+    },
+    birthyear: { type: String, default: () => "" },
+    country_of_origin: { type: String, default: () => "" },
+
+    bio_video_link: { type: String, default: () => "" },
+    bio: { type: String, default: () => "" },
+    algo_data_id: { type: String, default: () => "" },
+    wallet_id: { type: String, default: () => "" },
+
+    base_currency: {
+      type: String,
+      default: "USD",
+      required: function (this: any) {
+        return this.profile_status === "claimed";
+      },
     },
 
-    bio_video_link: {
-      type: String,
-      default: () => "",
-    },
-    bio: {
-      type: String,
-      default: () => "",
-    },
+    role: { type: String, default: "artist" },
 
-    algo_data_id: {
-      type: String,
-      default: () => "",
-    },
-    wallet_id: {
-      type: String,
-      default: () => "",
-    },
-    base_currency: { type: String, required: true },
-
-    role: {
-      type: String,
-      default: "artist",
-    },
     address: {
       type: Schema.Types.Mixed,
-      required: true,
+      required: function (this: any) {
+        return this.profile_status === "claimed";
+      },
     },
-    categorization: {
-      type: String,
-      default: () => "",
-    },
+    categorization: { type: String, default: () => "" },
+
     art_style: {
       type: Schema.Types.Mixed,
-      required: true,
+      default: [],
+      required: function (this: any) {
+        return this.profile_status === "claimed";
+      },
     },
+
     documentation: {
       type: Schema.Types.Mixed,
       default: (): ArtistDocumentationTypes => {
@@ -112,6 +126,7 @@ const artistSchemaDef = new Schema<ArtistSchemaTypes>(
       auto_approvals_used: { type: Number, default: 0 },
       last_reset_date: { type: Date, default: toUTCDate(resetDate) },
     },
+    // Typo maintained per your database constraints
     registeration_tracking: {
       type: Schema.Types.Mixed,
       default: () => ({
@@ -124,6 +139,7 @@ const artistSchemaDef = new Schema<ArtistSchemaTypes>(
         referrer: "direct",
       }),
     },
+    followerCount: { type: Number, default: 0 },
   },
   { timestamps: true },
 );

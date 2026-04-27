@@ -39,7 +39,7 @@ export default function ProductItem({
       {/* 3. METADATA */}
       <div className="space-y-6">
         <div className="text-center">
-          <h1 className="font-serif text-xl italic text-dark leading-tight">
+          <h1 className="font -serif text-xl italic text-dark leading-tight">
             {artwork.title}
           </h1>
           <p className="font-sans text-xs text-neutral-500 mt-1">

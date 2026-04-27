@@ -70,7 +70,7 @@ const gallerySignupSchema = new Schema<GallerySchemaTypes>(
           active: false,
           discount: {
             active: true,
-            plan: "pro",
+            plan: "gallery",
           },
         };
       },
@@ -96,6 +96,11 @@ const gallerySignupSchema = new Schema<GallerySchemaTypes>(
         referrer: "direct",
       }),
     },
+    represented_artists: {
+      type: [String],
+      default: () => [],
+    },
+    followerCount: { type: Number, default: 0 },
   },
   { timestamps: true },
 );

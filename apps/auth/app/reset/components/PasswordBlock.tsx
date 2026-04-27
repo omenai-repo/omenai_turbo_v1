@@ -12,7 +12,7 @@ export default function PasswordBlock({ token, route }: TokenProps) {
       {/* LEFT SIDE: Visual & Security Info (Hidden on smaller screens) */}
       <div className="hidden w-full flex-col justify-center bg-slate-950 p-12 text-white lg:flex lg:w-1/2 xl:p-24">
         <div className="max-w-md space-y-8">
-          <div className="inline-flex h-12 w-12 items-center justify-center rounded -xl bg-indigo-500/20 text-indigo-400">
+          <div className="inline-flex h-12 w-12 items-center justify-center rounded bg-indigo-500/20 text-indigo-400">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"

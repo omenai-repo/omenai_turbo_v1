@@ -9,68 +9,67 @@ function useLikedState(
   initialImpressions: number,
   initialLikeIds: string[],
   sessionId: string | undefined,
-  art_id: string
+  art_id: string,
 ) {
   const queryClient = useQueryClient();
 
-  // Initialize stateful data copy of likes data
   const [likedState, setLikedState] = useState({
     count: initialImpressions,
     ids: initialLikeIds,
   });
-  const { csrf } = useAuth({ requiredRole: "user" });
 
-  // Import login toggle store
+  const { csrf } = useAuth({ requiredRole: "user" });
   const { toggleLoginModal } = actionStore();
 
   useEffect(() => {
     setLikedState({ count: initialImpressions, ids: initialLikeIds });
   }, [initialImpressions, initialLikeIds]);
 
-  // Make async call to update liked state in db
   const { mutateAsync: updateLikesMutation } = useMutation({
     mutationFn: (options: { state: boolean; sessionId: string }) =>
       updateArtworkImpressions(
         art_id,
         options.state,
         options.sessionId,
-        csrf || ""
+        csrf || "",
       ),
-
     onSuccess: async (data) => {
       if (data?.isOk) {
-        queryClient.invalidateQueries();
+        // CORRECTION 1: Only invalidate this specific artwork's query
+        queryClient.invalidateQueries({ queryKey: ["artwork", art_id] });
       } else {
+        // Rollback
         setLikedState({ count: initialImpressions, ids: initialLikeIds });
       }
     },
+    // CORRECTION 3: Rollback on network errors
+    onError: () => {
+      setLikedState({ count: initialImpressions, ids: initialLikeIds });
+    },
   });
 
-  // handle onClick like button
   const handleLike = async (state: boolean) => {
-    // Pop up login modal
-
     if (sessionId === undefined) {
       toggleLoginModal(true);
-    } else {
-      if (state) {
-        setLikedState((prev) => ({
-          count: prev.count + 1,
-          ids: [...likedState.ids, sessionId],
-        }));
-      } else {
-        setLikedState((prev) => ({
-          count: prev.count - 1,
-          ids: likedState.ids.filter((id) => id !== sessionId),
-        }));
-      }
-
-      // Call useQuery mutation
-      await updateLikesMutation({ state, sessionId });
+      return; // Exit early
     }
+
+    if (state) {
+      setLikedState((prev) => ({
+        count: prev.ids.includes(sessionId) ? prev.count : prev.count + 1,
+        // CORRECTION 2 & 4: Use prev.ids and prevent duplicates
+        ids: prev.ids.includes(sessionId) ? prev.ids : [...prev.ids, sessionId],
+      }));
+    } else {
+      setLikedState((prev) => ({
+        count: !prev.ids.includes(sessionId) ? prev.count : prev.count - 1,
+        ids: prev.ids.filter((id) => id !== sessionId),
+      }));
+    }
+
+    await updateLikesMutation({ state, sessionId });
   };
 
-  // Return stateful copy of like data
   return { likedState, handleLike };
 }
 

@@ -49,10 +49,10 @@ export default function PromotionalCard({
 
           {/* High-End Typography */}
           <div className="space-y-4">
-            <h2 className="font-serif text-3xl font-normal leading-[1.1] tracking-tight text-neutral-900 md:text-4xl lg:text-5xl">
+            <h2 className="font -serif text-3xl font-normal leading-[1.1] tracking-tight text-neutral-900 md:text-4xl lg:text-5xl">
               {headline}
             </h2>
-            <p className="line-clamp-3 max-w-sm font-sans text-sm font-light leading-relaxed text-neutral-500 md:text-base md:leading-loose">
+            <p className="line-clamp-3 max-w-sm font-sans text-sm font-normal leading-relaxed text-neutral-500 md:text-base md:leading-loose">
               {subheadline}
             </p>
           </div>

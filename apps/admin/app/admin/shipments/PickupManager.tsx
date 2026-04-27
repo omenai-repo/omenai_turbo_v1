@@ -8,7 +8,7 @@ import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 
 // Skeleton Component for individual items
 const PickupSkeleton = () => (
-  <div className="bg-white border border-slate-200 rounded -xl p-5 shadow-sm animate-pulse">
+  <div className="bg-white border border-slate-200 rounded p-5 shadow-sm animate-pulse">
     <div className="flex flex-col lg:flex-row justify-between gap-4">
       <div className="space-y-4 flex-1">
         <div className="flex items-center gap-3">
@@ -16,7 +16,7 @@ const PickupSkeleton = () => (
           <div className="h-6 w-12 bg-slate-200 rounded" />
           <div className="h-4 w-32 bg-slate-100 rounded" />
         </div>
-        <div className="h-12 w-full bg-slate-100 rounded -md" />
+        <div className="h-12 w-full bg-slate-100 rounded" />
         <div className="grid grid-cols-2 gap-4 mt-2">
           <div className="space-y-2">
             <div className="h-3 w-20 bg-slate-100 rounded" />
@@ -147,7 +147,7 @@ export default function PickupManager() {
         <div className="bg-slate-100 p-1 rounded -lg flex space-x-1">
           <button
             onClick={() => setActiveTab("pending")}
-            className={`px-4 py-2 text-sm font-medium rounded -md transition-colors ${
+            className={`px-4 py-2 text-sm font-medium rounded transition-colors ${
               activeTab === "pending"
                 ? "bg-white text-red-600 shadow-sm"
                 : "text-slate-500 hover:text-slate-700"
@@ -157,7 +157,7 @@ export default function PickupManager() {
           </button>
           <button
             onClick={() => setActiveTab("resolved")}
-            className={`px-4 py-2 text-sm font-medium rounded -md transition-colors ${
+            className={`px-4 py-2 text-sm font-medium rounded transition-colors ${
               activeTab === "resolved"
                 ? "bg-white text-green-600 shadow-sm"
                 : "text-slate-500 hover:text-slate-700"
@@ -176,7 +176,7 @@ export default function PickupManager() {
           ))}
         </div>
       ) : pickups.length === 0 ? (
-        <div className="py-20 text-center bg-slate-50 rounded -xl border border-dashed border-slate-300">
+        <div className="py-20 text-center bg-slate-50 rounded border border-dashed border-slate-300">
           <p className="text-slate-500">No {activeTab} pickups found.</p>
         </div>
       ) : (
@@ -184,7 +184,7 @@ export default function PickupManager() {
           {pickups.map((pickup) => (
             <div
               key={pickup._id}
-              className={`bg-white border rounded -xl p-5 shadow-sm transition-all hover:shadow-md ${
+              className={`bg-white border rounded p-5 shadow-sm transition-all hover:shadow-md ${
                 activeTab === "pending"
                   ? "border-l-4 border-l-red-500"
                   : "border-l-4 border-l-green-500"
@@ -215,7 +215,7 @@ export default function PickupManager() {
                   </div>
 
                   {/* The Error - Making it prominent */}
-                  <div className="bg-red-50 text-red-700 p-3 rounded -md text-sm font-medium border border-red-100 flex items-start gap-2">
+                  <div className="bg-red-50 text-red-700 p-3 rounded text-sm font-medium border border-red-100 flex items-start gap-2">
                     <svg
                       className="w-5 h-5 text-red-500 shrink-0"
                       fill="none"

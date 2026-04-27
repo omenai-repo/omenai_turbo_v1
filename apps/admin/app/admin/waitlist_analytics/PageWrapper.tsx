@@ -79,7 +79,7 @@ export default function EnterpriseDashboard() {
           <div className="flex bg-slate-100 p-1 rounded -lg border border-slate-200">
             <button
               onClick={() => setViewMode("analytics")}
-              className={`px-4 py-1.5 text-sm font-medium rounded -md transition-all ${
+              className={`px-4 py-1.5 text-sm font-medium rounded transition-all ${
                 viewMode === "analytics"
                   ? "bg-white shadow-sm text-slate-900"
                   : "text-slate-500 hover:text-slate-700"
@@ -89,7 +89,7 @@ export default function EnterpriseDashboard() {
             </button>
             <button
               onClick={() => setViewMode("survey")}
-              className={`px-4 py-1.5 text-sm font-medium rounded -md transition-all ${
+              className={`px-4 py-1.5 text-sm font-medium rounded transition-all ${
                 viewMode === "survey"
                   ? "bg-white shadow-sm text-slate-900"
                   : "text-slate-500 hover:text-slate-700"
@@ -99,7 +99,7 @@ export default function EnterpriseDashboard() {
             </button>
             <button
               onClick={() => setViewMode("crm")}
-              className={`px-4 py-1.5 text-sm font-medium rounded -md transition-all ${
+              className={`px-4 py-1.5 text-sm font-medium rounded transition-all ${
                 viewMode === "crm"
                   ? "bg-white shadow-sm text-slate-900"
                   : "text-slate-500 hover:text-slate-700"
@@ -168,7 +168,7 @@ export default function EnterpriseDashboard() {
           {/* Bento Grid Visuals */}
           <div className="grid grid-cols-12 gap-6">
             {/* ROW A: Ecosystem & Geo */}
-            <div className="col-span-12 md:col-span-4 bg-white p-5 rounded -xl border border-slate-200 shadow-sm h-80">
+            <div className="col-span-12 md:col-span-4 bg-white p-5 rounded border border-slate-200 shadow-sm h-80">
               <h3 className="text-sm font-semibold uppercase tracking-wider text-slate-500 mb-4">
                 Ecosystem Balance
               </h3>
@@ -189,7 +189,7 @@ export default function EnterpriseDashboard() {
               </div>
             </div>
 
-            <div className="col-span-12 md:col-span-8 bg-white p-5 rounded -xl border border-slate-200 shadow-sm h-80">
+            <div className="col-span-12 md:col-span-8 bg-white p-5 rounded border border-slate-200 shadow-sm h-80">
               <h3 className="text-sm font-semibold uppercase tracking-wider text-slate-500 mb-4">
                 Global Heatmap
               </h3>
@@ -199,7 +199,7 @@ export default function EnterpriseDashboard() {
             </div>
 
             {/* ROW B: Collector Intelligence */}
-            <div className="col-span-12 md:col-span-6 bg-white p-5 rounded -xl border-l-4 border-amber-400 shadow-sm h-96">
+            <div className="col-span-12 md:col-span-6 bg-white p-5 rounded border-l-4 border-amber-400 shadow-sm h-96">
               <div className="flex justify-between items-center mb-6">
                 <h3 className="text-lg font-bold text-slate-800">
                   Collector DNA
@@ -231,7 +231,7 @@ export default function EnterpriseDashboard() {
             </div>
 
             {/* ROW C: Artist Intelligence */}
-            <div className="col-span-12 md:col-span-6 bg-white p-5 rounded -xl border-l-4 border-blue-400 shadow-sm h-96">
+            <div className="col-span-12 md:col-span-6 bg-white p-5 rounded border-l-4 border-blue-400 shadow-sm h-96">
               <div className="flex justify-between items-center mb-6">
                 <h3 className="text-lg font-bold text-slate-800">
                   Artist Pedigree
@@ -263,7 +263,7 @@ export default function EnterpriseDashboard() {
             </div>
 
             {/* ROW D: ROI & Live Feed */}
-            <div className="col-span-12 md:col-span-8 bg-white p-5 rounded -xl border border-slate-200 shadow-sm h-[26rem]">
+            <div className="col-span-12 md:col-span-8 bg-white p-5 rounded border border-slate-200 shadow-sm h-[26rem]">
               <h3 className="text-sm font-semibold uppercase tracking-wider text-slate-500 mb-4">
                 Traffic Acquisition (ROI)
               </h3>
@@ -272,7 +272,7 @@ export default function EnterpriseDashboard() {
               </div>
             </div>
 
-            <div className="col-span-12 md:col-span-4 bg-white p-5 rounded -xl border border-slate-200 shadow-sm h-[26rem] overflow-hidden">
+            <div className="col-span-12 md:col-span-4 bg-white p-5 rounded border border-slate-200 shadow-sm h-[26rem] overflow-hidden">
               <h3 className="text-sm font-semibold uppercase tracking-wider text-slate-500 mb-4">
                 Recent Signups
               </h3>
@@ -356,7 +356,7 @@ export default function EnterpriseDashboard() {
 
             {/* User Data Table */}
             <div className="flex-1 overflow-y-auto p-6 md:p-8">
-              <div className="bg-white rounded -xl shadow-sm border border-slate-200 min-h-[400px]">
+              <div className="bg-white rounded shadow-sm border border-slate-200 min-h-[400px]">
                 {crm.isLoading ? (
                   <div className="flex h-full items-center justify-center text-slate-400 py-20">
                     Loading User Data...

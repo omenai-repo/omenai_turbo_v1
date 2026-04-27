@@ -52,7 +52,7 @@ export default function InviteForm({
   const auth_url = auth_uri();
   const { value: waitlistActivated } = useLowRiskFeatureFlag(
     "waitlistActivated",
-    true
+    true,
   );
   const router = useRouter();
 
@@ -72,7 +72,7 @@ export default function InviteForm({
 
   async function processInvite(
     data: InviteFormData,
-    entity: string
+    entity: string,
   ): Promise<void> {
     const result = await createInviteToken({
       email: data.email,

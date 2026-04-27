@@ -85,7 +85,7 @@ export function ActionModals({
               gallery_id,
               name,
               email,
-              csrf || ""
+              csrf || "",
             );
 
       if (!response.isOk) {

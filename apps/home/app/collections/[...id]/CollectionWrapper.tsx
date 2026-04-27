@@ -35,7 +35,7 @@ export default function CollectionWrapper({ id }: { id: string }) {
       <DesktopNavbar />
 
       {/* Added pt-28 to clear fixed navbar */}
-      <main className="container mx-auto py-6">
+      <main className="p-4 md:p-8 py-6">
         {/* 1. COLLECTION HEADER */}
         <header className="mb-12 border-b border-neutral-100 pb-6">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-end">
@@ -50,7 +50,7 @@ export default function CollectionWrapper({ id }: { id: string }) {
                   Collections
                 </Link>
                 <span>/</span>
-                <span className="text-dark ">{page_title}</span>
+                <span className="text-neutral-500">{page_title}</span>
               </div>
 
               <h1 className="font-serif text-2xl md:text-3xl lg:text-4xl text-dark  leading-none tracking-tight">

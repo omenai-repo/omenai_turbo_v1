@@ -145,7 +145,7 @@ export default function OperationalView() {
                   <p className="text-[9px] text-[#B0B8C1] uppercase tracking-[0.2em]">
                     Total Lost
                   </p>
-                  <p className="font-serif text-3xl text-[#0E1B2E] mt-1">
+                  <p className="font -serif text-3xl text-[#0E1B2E] mt-1">
                     {totalLost}
                   </p>
                 </div>
@@ -167,7 +167,7 @@ export default function OperationalView() {
                       <span className="text-[10px] tracking-[0.1em] uppercase text-[#8A96A3]">
                         {p.name}
                       </span>
-                      <span className="font-serif text-sm text-[#3A4A5C] ml-1">
+                      <span className="font -serif text-sm text-[#3A4A5C] ml-1">
                         {p.amount}
                       </span>
                     </div>

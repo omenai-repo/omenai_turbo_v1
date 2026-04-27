@@ -28,7 +28,7 @@ export default function ArtistInfo({
     <div className="w-full">
       {/* 1. HEADER (Name & Meta) */}
       <div className="mb-12">
-        <h1 className="font-serif text-2xl md:text-3xl lg:text-5xl text-dark  leading-[0.9] tracking-tight mb-6">
+        <h1 className="font -serif text-2xl md:text-3xl lg:text-5xl text-dark  leading-[0.9] tracking-tight mb-6">
           {info.name}
         </h1>
 
@@ -42,14 +42,14 @@ export default function ArtistInfo({
 
           <div className="h-4 w-[1px] bg-neutral-200" />
 
-          <div className="flex items-center gap-2 font-light">
+          <div className="flex items-center gap-2 font-normal">
             <span className="text-neutral-500">Based in</span>
             <span className="text-dark ">{info.address.country}</span>
           </div>
 
           <div className="h-4 w-[1px] bg-neutral-200" />
 
-          <div className="flex items-center gap-1.5 text-dark font-light">
+          <div className="flex items-center gap-1.5 text-dark font-normal">
             <HiCheckBadge className="text-lg text-blue-600" />
             <span>Verified Artist</span>
           </div>
@@ -60,7 +60,7 @@ export default function ArtistInfo({
       <div className="grid grid-cols-1 gap-12 lg:grid-cols-12">
         {/* LEFT: Portrait (Sticky) */}
         <div className="lg:col-span-4 xl:col-span-3">
-          <div className="relative aspect-[3/4] w-full overflow-hidden rounded -sm bg-neutral-100 shadow-sm lg:sticky lg:top-32">
+          <div className="relative aspect-[3/4] w-full overflow-hidden rounded bg-neutral-100 shadow-sm lg:sticky lg:top-32">
             <Image
               fill
               src={image_href}
@@ -82,7 +82,7 @@ export default function ArtistInfo({
             <span className="font-sans text-xs font-bold uppercase tracking-widest text-neutral-400 block mb-6">
               Biography
             </span>
-            <div className="prose prose-neutral max-w-none prose-p:font-serif prose-p:text-sm md:prose-p:text-md prose-p:leading-relaxed prose-p:text-neutral-700">
+            <div className="prose prose-neutral max-w-none prose-p:font -serif prose-p:text-sm md:prose-p:text-md prose-p:leading-relaxed prose-p:text-neutral-700">
               <p className="whitespace-pre-wrap">{displayText}</p>
             </div>
 

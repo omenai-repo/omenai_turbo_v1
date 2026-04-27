@@ -49,7 +49,7 @@ export default function ArtistDashboardLayout({
             Origin: base_url(),
           },
           credentials: "include",
-        }
+        },
       );
       if (!res.ok) {
         console.error("Failed to Artist onboarding status:");
@@ -81,6 +81,7 @@ export default function ArtistDashboardLayout({
       ) : (
         <div className="flex h-screen overflow-hidden">
           <NextTopLoader color="#0f172a" height={6} />
+
           <VerificationBlockerModal
             open={user && user.role === "artist" && !data?.isArtistVerified}
           />

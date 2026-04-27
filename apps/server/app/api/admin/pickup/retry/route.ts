@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { FailedPickup } from "@omenai/shared-models/models/crons/FailedPickup";
-import { scheduleUPSPickup } from "../../../ups_service";
+import { scheduleUPSPickup } from "../../../services/ups_service";
 import { createErrorRollbarReport, validateRequestBody } from "../../../util";
 import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
 import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";

@@ -3,6 +3,11 @@
 @tailwind utilities;
 
 /* width */
+
+body {
+  background-color: #ffffff;
+  box-sizing: border-box;
+}
 ::-webkit-scrollbar {
   width: 3px;
   height: 5px;
@@ -43,7 +48,7 @@
   width: 100%; /* Full width */
   height: 2px; /* Track height */
   background: #e0e0e0; /* Light gray background */
-  border-radius: 3px; /* Rounded track edges */
+  border-radius: 3px; /* rounded track edges */
   outline: none; /* Remove the outline */
   transition: background 0.3s; /* Smooth background transition */
 }
@@ -209,4 +214,33 @@ input[type="date"]::-moz-focus-inner {
 /* Optional: Only show the scrollbar on hover for an ultra-clean look */
 .custom-scrollbar:hover::-webkit-scrollbar-thumb {
   background-color: rgba(163, 163, 163, 0.8);
+}
+
+/* Ultra thin horizontal scrollbar */
+.thin-scrollbar::-webkit-scrollbar {
+  height: 1px;
+}
+
+.thin-scrollbar::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.thin-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 999px;
+}
+
+/* Firefox */
+.thin-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.2);
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
 }

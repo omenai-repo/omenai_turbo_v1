@@ -18,7 +18,7 @@ export const DeleteAccountConfirmationModal = () => {
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="bg-white text-dark p-6 rounded w-full max-w-3xl shadow-xl cursor-default relative h-auto"
+            className="bg-white text-dark p-6 rounded-sm  w-full max-w-3xl shadow-xl cursor-default relative h-auto"
           >
             {/* Add modal form here */}
             <div className="h-auto w-full">

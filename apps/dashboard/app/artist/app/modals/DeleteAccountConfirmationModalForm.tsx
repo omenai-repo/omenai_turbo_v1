@@ -45,7 +45,7 @@ export default function DeleteAccountConfirmationModalForm() {
         "artist",
         payload.id,
         payload.reason,
-        csrf || ""
+        csrf || "",
       );
 
       if (response.status === 409) {
@@ -70,7 +70,7 @@ export default function DeleteAccountConfirmationModalForm() {
     } catch (err: any) {
       setError(
         err?.message ||
-          "Network error encountered, please try again or contact support"
+          "Network error encountered, please try again or contact support",
       );
     } finally {
       setLoading(false);

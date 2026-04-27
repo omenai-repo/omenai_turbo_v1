@@ -197,7 +197,7 @@ export default function AddressForm({
           type="button"
           onClick={onCancel}
           disabled={isSaving}
-          className="px-5 py-2.5 text-fluid-xs font-normal text-neutral-700 hover:bg-neutral-100 rounded -sm transition-colors disabled:opacity-50"
+          className="px-5 py-2.5 text-fluid-xs font-normal text-neutral-700 hover:bg-neutral-100 rounded transition-colors disabled:opacity-50"
         >
           Cancel
         </button>
@@ -213,7 +213,7 @@ export default function AddressForm({
             !formData.city ||
             !formData.zip
           }
-          className="flex items-center gap-2 px-5 py-2.5 text-fluid-xs font-normal text-white bg-green-600 hover:bg-green-700 rounded -sm transition-colors shadow-sm disabled:opacity-50"
+          className="flex items-center gap-2 px-5 py-2.5 text-fluid-xs font-normal text-white bg-green-600 hover:bg-green-700 rounded transition-colors shadow-sm disabled:opacity-50"
         >
           {isSaving && <Loader2 className="w-4 h-4 animate-spin" />}
           {isSaving ? "Saving..." : "Save Pickup Address"}

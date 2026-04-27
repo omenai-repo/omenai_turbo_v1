@@ -17,8 +17,10 @@ export function createUploadedArtworkData(
   const updatedArwordData: Omit<
     ArtworkSchemaTypes,
     "art_id" | "availability" | "exclusivity_status"
-  > = {
+  > & { artist_id?: string; newGhostArtistName?: string } = {
     artist: data.artist,
+    artist_id: data.artist_id || "",
+    newGhostArtistName: data.newGhostArtistName || "",
     dimensions: {
       height: data.height,
       width: data.width,

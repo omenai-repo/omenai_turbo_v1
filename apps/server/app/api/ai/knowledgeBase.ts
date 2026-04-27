@@ -19,17 +19,17 @@ const FINANCIALS = `
 - **Listing Fees**: None.
 - **Artist Commission**: Omenai takes a **39% commission** on every successful sale.
 - **Gallery Model (Subscription Based)**:
-  1. **Basic**: $150/mo ($1500/yr). 
+  1. **Foundation**: $150/mo ($1530/yr). 
      - 25% Platform Commission. (Gallery keeps 75%).
-     - Limit: 5 uploads/mo (75/yr).
+     - Limit: 15 uploads/mo (180/yr).
      - Benefits: Global payment processing, personalized analytics.
-  2. **Pro**: $250/mo ($2500/yr). 
+  2. **Gallery**: $250/mo ($2550/yr). 
      - 20% Platform Commission.
-     - Limit: 15 uploads/mo (225/yr).
-  3. **Premium**: $400/mo ($4000/yr). 
+     - Limit: 60 uploads/mo (720/yr).
+  3. **Principal**: $500/mo ($5100/yr). 
      - 15% Platform Commission.
      - Unlimited uploads.
-     - **Exclusive Feature**: "Price on Demand" masking for high-value pieces.
+     - **Exclusive Feature**: "Price on request" masking for high-value pieces.
 `;
 
 // --- SECTOR 3: PRICING LOGIC (CRITICAL) ---
@@ -38,7 +38,7 @@ const PRICING_LOGIC = `
   - **Galleries**: They set their own prices for artworks.
   - **Individual Artists**: Prices are set by **Omenai's Internal Algorithm**.
     - *Factors*: Size, Medium, Artist Career Progression, and Market Equivalents.
-- **Negotiation**: Prices are FIXED (unless "Price on Demand" applies).
+- **Negotiation**: Prices are FIXED (unless "Price on request" applies).
 `;
 
 // --- SECTOR 4: THE ORDER PROTOCOL & QUEUE SYSTEM ---
@@ -135,7 +135,7 @@ export const getOmenaiContext = async (
   } else if (userPageContext.includes("gallery_signup")) {
     dynamicFocus = `
       USER CONTEXT: Potential Gallery Partner.
-      PRIORITIZE: The 3 Subscription Tiers (Basic/Pro/Premium) and the Price-on-Demand feature for Premium.
+      PRIORITIZE: The 3 Subscription Tiers (Foundation/Gallery/Principal) and the Price-on-Request feature for Gallery and Principal plans.
     `;
   } else {
     dynamicFocus = `

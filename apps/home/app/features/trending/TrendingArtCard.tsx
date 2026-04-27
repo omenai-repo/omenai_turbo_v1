@@ -30,9 +30,10 @@ export default function TrendingArtworkCard({
   const image_href = getOptimizedImage(image, "small");
 
   return (
-    <div className="group flex flex-col gap-3 w-full">
-      {/* 1. IMAGE AREA - FIXED RATIO */}
-      <div className="relative w-full aspect-[4/5] overflow-hidden rounded -md bg-neutral-100">
+    <div className="group/card flex flex-col gap-3 w-full max-w-[320px] mx-auto">
+      {/* 1. IMAGE AREA - BOUNDING BOX */}
+      {/* Removed the flex justify-center classes since absolute positioning overrides them anyway */}
+      <div className="relative w-full h-[350px] overflow-hidden rounded">
         <Link
           href={`/artwork/${encodeURIComponent(art_id)}`}
           className="block h-full w-full"
@@ -40,7 +41,7 @@ export default function TrendingArtworkCard({
           {/* BADGE LOGIC: Show 'Acquired' if sold */}
           {!availability && (
             <div className="absolute top-2 left-2 z-20">
-              <span className="inline-flex items-center justify-center bg-[#091830] px-2 py-1 rounded -sm text-[10px] font-sans font-bold uppercase tracking-widest text-white shadow-sm ring-1 ring-white/10">
+              <span className="inline-flex items-center justify-center bg-[#091830] px-2 py-1 rounded text-[10px] font-sans font-bold uppercase tracking-widest text-white shadow-sm ring-1 ring-white/10">
                 Sold
               </span>
             </div>
@@ -50,27 +51,26 @@ export default function TrendingArtworkCard({
             src={image_href}
             alt={name}
             fill
-            className="object-cover transition-transform duration-500 group-hover:scale-105"
+            // Added `object-bottom` to anchor the art to the bottom edge!
+            className="object-contain object-bottom transition-transform duration-500 group-hover/card:scale-1055"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
           />
         </Link>
 
         {/* Like Button */}
-        <div className="absolute top-2 right-2 z-10 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-          <div className="bg-white rounded -full p-1.5 shadow-sm hover:shadow-md transition-shadow">
-            <LikeComponent
-              impressions={impressions}
-              likeIds={likeIds}
-              sessionId={sessionId}
-              art_id={art_id}
-            />
-          </div>
+        <div className="absolute bottom-2 right-2 z-10 opacity-0 transition-opacity duration-300 group-hover/card:opacity-100">
+          <LikeComponent
+            impressions={impressions}
+            likeIds={likeIds}
+            sessionId={sessionId}
+            art_id={art_id}
+          />
         </div>
       </div>
 
       {/* 2. DATA AREA */}
       <div className="flex flex-col gap-1 px-1">
-        <h3 className="font-serif text-md text-dark  leading-snug truncate">
+        <h3 className="font-serif text-md text-dark leading-snug truncate">
           <Link href={`/artwork/${encodeURIComponent(art_id)}`}>{name}</Link>
         </h3>
 
@@ -80,7 +80,7 @@ export default function TrendingArtworkCard({
           </p>
 
           <div className="flex items-center gap-1 text-xs text-neutral-400">
-            <span className="font-sans font-medium text-[10px] text-dark ">
+            <span className="font-sans font-medium text-[10px] text-dark">
               {impressions}
             </span>
             <span className="text-[9px] uppercase tracking-wide">like(s)</span>

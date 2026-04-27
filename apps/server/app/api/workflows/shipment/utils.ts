@@ -1,4 +1,4 @@
-import { serverStorage } from "@omenai/appwrite-config/appwrite";
+import { serverStorage } from "@omenai/appwrite-config/serverAppwrite";
 import { saveFailedJob } from "@omenai/shared-lib/workflow_runs/createFailedWorkflowJobs";
 import { ID, Payload } from "appwrite";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";

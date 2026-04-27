@@ -17,7 +17,7 @@ export default function TeamManagement() {
   const [inviteModalOpen, setInviteModalOpen] = useState(false);
 
   // Permissions
-  if (!canAccessRoute(user.access_role, "team")) {
+  if (!canAccessRoute(user.access_role, "admin_access")) {
     return <ForbiddenPage userRole={user.access_role} />;
   }
 

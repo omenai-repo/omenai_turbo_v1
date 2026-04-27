@@ -8,15 +8,32 @@ export function getSubscriptionExpiryDate(
 ) {
   const baseDate = start_date ? new Date(start_date) : new Date();
 
-  // If a specific number of months is provided, calculate based on that
-  if (months) {
-    const futureDate = addMonths(baseDate, months);
+  if (months !== undefined) {
+    const wholeMonths = Math.floor(months);
+    const fractionalMonths = months - wholeMonths;
+
+    let futureDate = addMonths(baseDate, wholeMonths);
+
+    // Handle fractional months explicitly
+    if (fractionalMonths > 0) {
+      let daysToAdd = 0;
+
+      // Force exact business rule
+      if (Math.abs(fractionalMonths - 0.5) < 1e-6) {
+        daysToAdd = 14;
+      } else {
+        throw new Error(
+          `Unsupported fractional month value: ${months}. Only 0.5 is allowed.`,
+        );
+      }
+
+      futureDate = addDays(futureDate, daysToAdd);
+    }
+
     return toUTCDate(futureDate);
   }
 
-  // Otherwise, fall back to the standard fixed-day logic
+  // fallback logic
   const daysToAdd = interval === "monthly" ? 30 : 365;
-  const futureDate = addDays(baseDate, daysToAdd);
-
-  return toUTCDate(futureDate);
+  return toUTCDate(addDays(baseDate, daysToAdd));
 }

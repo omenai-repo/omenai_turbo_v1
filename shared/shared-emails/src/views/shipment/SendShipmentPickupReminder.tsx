@@ -223,7 +223,7 @@ export const ShipmentPickupNotificationEmail = ({
                   must be prepared prior to the courier's arrival:
                 </Text>
 
-                <div className="bg-box bg-white border border-gray-200 border-divider rounded -md p-4 mb-3">
+                <div className="bg-box bg-white border border-gray-200 border-divider rounded p-4 mb-3">
                   <Text
                     className="heading-main text-gray-900 font-semibold m-0 mb-1"
                     style={{ fontSize: "15px" }}
@@ -239,7 +239,7 @@ export const ShipmentPickupNotificationEmail = ({
                   </Text>
                 </div>
 
-                <div className="bg-box bg-white border border-gray-200 border-divider rounded -md p-4 mb-3">
+                <div className="bg-box bg-white border border-gray-200 border-divider rounded p-4 mb-3">
                   <Text
                     className="heading-main text-gray-900 font-semibold m-0 mb-1"
                     style={{ fontSize: "15px" }}
@@ -255,7 +255,7 @@ export const ShipmentPickupNotificationEmail = ({
                   </Text>
                 </div>
 
-                <div className="bg-box bg-white border border-gray-200 border-divider rounded -md p-4 mb-3">
+                <div className="bg-box bg-white border border-gray-200 border-divider rounded p-4 mb-3">
                   <Text
                     className="heading-main text-gray-900 font-semibold m-0 mb-1"
                     style={{ fontSize: "15px" }}

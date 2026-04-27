@@ -1,6 +1,6 @@
 export function TicketMessage({ ticket }: { ticket: any }) {
   return (
-    <div className="bg-white rounded -xl border border-slate-200 shadow-sm overflow-hidden">
+    <div className="bg-white rounded border border-slate-200 shadow-sm overflow-hidden">
       <div className="px-6 py-4 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center">
         <h3 className="font-semibold text-slate-900">Issue Description</h3>
         <span className="text-xs text-slate-500">

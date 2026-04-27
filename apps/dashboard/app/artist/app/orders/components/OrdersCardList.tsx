@@ -273,7 +273,7 @@ function SingleOrderCard({ order }: { order: CreateOrderModelTypes }) {
             <MetaBlock icon={<MapPin size={14} />} label="Destination">
               {order.shipping_details.addresses.destination.state},{" "}
               {order.shipping_details.addresses.destination.country}
-              <span className="block text-xs text-slate-400 font-light mt-0.5"></span>
+              <span className="block text-xs text-slate-400 font-normal mt-0.5"></span>
             </MetaBlock>
 
             <MetaBlock icon={<Info size={14} />} label="Status Note">

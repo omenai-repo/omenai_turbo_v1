@@ -53,7 +53,7 @@ export default function AnalyticsTabs() {
               Platform Intelligence · Live
             </p>
           </div>
-          <h1 className="font-serif text-xl font-normal text-[#0E1B2E] tracking-tight">
+          <h1 className="font -serif text-xl font-normal text-[#0E1B2E] tracking-tight">
             Analytics Overview
           </h1>
         </div>
@@ -62,7 +62,7 @@ export default function AnalyticsTabs() {
           <p className="text-[9px] tracking-[0.2em] uppercase text-[#B0B8C1]">
             Data refreshed
           </p>
-          <p className="text-xs text-[#8A96A3] font-light mt-0.5">
+          <p className="text-xs text-[#8A96A3] font-normal mt-0.5">
             {new Intl.DateTimeFormat("en-US", {
               month: "short",
               day: "numeric",

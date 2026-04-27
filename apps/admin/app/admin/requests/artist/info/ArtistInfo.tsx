@@ -23,6 +23,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { useRollbar } from "@rollbar/react";
+import { getOptimizedLogoImage } from "@omenai/shared-lib/storage/getImageFileView";
 
 export default function ArtistInfo({ data }: { data: VerificationInfoType }) {
   const { artist, request } = data;
@@ -69,7 +70,12 @@ export default function ArtistInfo({ data }: { data: VerificationInfoType }) {
               recommendation,
               csrf || "",
             )
-          : await rejectArtistVerification(artist_id, name, email, csrf || "");
+          : await rejectArtistVerification(
+              artist_id,
+              name,
+              email as string,
+              csrf || "",
+            );
 
       if (!response.isOk) {
         toast_notif(response.message, "error");
@@ -96,7 +102,7 @@ export default function ArtistInfo({ data }: { data: VerificationInfoType }) {
     }
   };
 
-  const image_href = getGalleryLogoFileView(data!.artist!.logo, 300);
+  const image_href = getOptimizedLogoImage(data.artist.logo as string, "small");
 
   const categoryOptions = [
     "Emerging",

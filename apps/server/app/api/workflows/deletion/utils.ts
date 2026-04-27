@@ -1,6 +1,6 @@
 import crypto from "node:crypto";
 import cloudinary from "@omenai/cloudinary-config";
-import { serverStorage, storage } from "@omenai/appwrite-config";
+import { serverStorage } from "@omenai/appwrite-config/serverAppwrite";
 import { saveFailedJob } from "@omenai/shared-lib/workflow_runs/createFailedWorkflowJobs";
 
 export async function uploadToCloudinary(url: string, id: string) {

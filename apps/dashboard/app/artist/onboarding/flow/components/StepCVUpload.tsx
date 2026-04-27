@@ -30,7 +30,7 @@ export default function CVUploadStep({
   return (
     <div className="flex flex-col items-center">
       <Upload className="w-12 h-12 text-blue-500 mb-6" />
-      <h2 className="text-fluid-xs font-light text-dark mb-4 text-center">
+      <h2 className="text-fluid-xs font-normal text-dark mb-4 text-center">
         {question}
       </h2>
       <button

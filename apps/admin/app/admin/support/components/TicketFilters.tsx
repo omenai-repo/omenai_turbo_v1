@@ -23,7 +23,7 @@ export function TicketFilters({
   onSearchSubmit,
 }: TicketFiltersProps) {
   return (
-    <div className="bg-white p-4 rounded -xl border border-slate-200 shadow-sm flex flex-wrap gap-4 items-center justify-between">
+    <div className="bg-white p-4 rounded border border-slate-200 shadow-sm flex flex-wrap gap-4 items-center justify-between">
       {/* Search */}
       <div className="relative flex-1 min-w-[200px] max-w-md">
         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">

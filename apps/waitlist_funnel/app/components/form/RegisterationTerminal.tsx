@@ -188,7 +188,7 @@ export const RegistrationTerminal = () => {
             </button>
           )}
         </div>
-        <h2 className="font-serif text-2xl md:text-3xl text-black">
+        <h2 className="font -serif text-2xl md:text-3xl text-black">
           {step === 1
             ? "Join the waitlist."
             : "Complete your waitlist profile."}

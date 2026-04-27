@@ -2,7 +2,10 @@ import { validatePasswordFields } from "@omenai/shared-lib/validations/validateP
 import { validate } from "@omenai/shared-lib/validations/validatorGroup";
 import { useGalleryAuthStore } from "@omenai/shared-state-store/src/auth/register/GalleryAuthStore";
 import { AddressTypes, GallerySignupData } from "@omenai/shared-types";
-import {INPUT_CLASS, TEXTAREA_CLASS} from "@omenai/shared-ui-components/components/styles/inputClasses";
+import {
+  INPUT_CLASS,
+  TEXTAREA_CLASS,
+} from "@omenai/shared-ui-components/components/styles/inputClasses";
 import { handleKeyPress } from "@omenai/shared-utils/src/disableSubmitOnEnter";
 import { AnimatePresence, motion } from "framer-motion";
 import { EyeOff, Eye, AlertCircle } from "lucide-react";
@@ -46,7 +49,7 @@ export default function Input({
   const [show, setShow] = useState(false);
 
   const handleChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     updateGallerySignupData(e.target.name, e.target.value);
     setErrorList([]);
@@ -57,19 +60,19 @@ export default function Input({
         e.target.name,
         e.target.name === "confirmPassword"
           ? gallerySignupData.password
-          : undefined
+          : undefined,
       );
     if (!success) {
       setIsFieldDirty(
         e.target.name as keyof GallerySignupData & AddressTypes,
-        true
+        true,
       );
       setErrorList(errors);
     } else {
       setErrorList([]);
       setIsFieldDirty(
         e.target.name as keyof GallerySignupData & AddressTypes,
-        false
+        false,
       );
     }
   };
@@ -87,7 +90,7 @@ export default function Input({
       const passwordErrors = errors.filter(
         (err) =>
           err.toLowerCase().includes("password") &&
-          !err.toLowerCase().includes("confirm")
+          !err.toLowerCase().includes("confirm"),
       );
       if (passwordErrors.length > 0) {
         setErrorList(passwordErrors);
@@ -100,7 +103,7 @@ export default function Input({
       const confirmErrors = errors.filter(
         (err) =>
           err.toLowerCase().includes("match") ||
-          err.toLowerCase().includes("confirm")
+          err.toLowerCase().includes("confirm"),
       );
       if (confirmErrors.length > 0) {
         setErrorList(confirmErrors);
@@ -127,7 +130,7 @@ export default function Input({
           {/* Label */}
           <label
             htmlFor={labelText}
-            className="block text-fluid-xxs font-light text-gray-700"
+            className="block text-fluid-xxs font-normal text-gray-700"
           >
             {label}
           </label>

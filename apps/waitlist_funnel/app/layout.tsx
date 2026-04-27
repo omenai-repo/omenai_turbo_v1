@@ -65,7 +65,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${work_sans.variable} ${pt_serif.variable} bg-white font-serif flex flex-col justify-center`}
+        className={`${work_sans.variable} ${pt_serif.variable} bg-white font -serif flex flex-col justify-center`}
       >
         {children}
         <GoogleAnalytics gaId={process.env.GAID as string} />

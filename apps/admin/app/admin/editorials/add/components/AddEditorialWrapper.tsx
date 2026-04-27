@@ -8,7 +8,7 @@ import ForbiddenPage from "../../../components/ForbiddenPage";
 export default function AddEditorialWrapper() {
   const { user } = useAuth({ requiredRole: "admin" });
 
-  if (!canAccessRoute(user.access_role, "editorials")) {
+  if (!canAccessRoute(user.access_role, "mid_level_access")) {
     return <ForbiddenPage userRole={user.access_role} />;
   }
 
@@ -20,7 +20,7 @@ export default function AddEditorialWrapper() {
           <h1 className="text-xl font-medium tracking-normal text-neutral-900">
             Editorial Workspace
           </h1>
-          <p className="text-sm text-neutral-500 font-light mt-0.5">
+          <p className="text-sm text-neutral-500 font-normal mt-0.5">
             Draft a new editorial
           </p>
         </div>

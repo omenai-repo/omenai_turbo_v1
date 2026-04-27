@@ -151,7 +151,7 @@ export default function Footer() {
                 href="https://apps.apple.com/ng/app/omenai/id6748387089"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-3 w-full rounded -md bg-white border border-neutral-200 px-4 py-3 hover:border-[#091830] hover:shadow-md transition-all duration-300"
+                className="flex items-center gap-3 w-full rounded bg-white border border-neutral-200 px-4 py-3 hover:border-[#091830] hover:shadow-md transition-all duration-300"
               >
                 <FaApple className="text-xl text-dark " />
                 <div className="flex flex-col">
@@ -168,7 +168,7 @@ export default function Footer() {
                 href="https://play.google.com/store/apps/details?id=com.omenai.omenaiapp"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-3 w-full rounded -md bg-white border border-neutral-200 px-4 py-3 hover:border-[#091830] hover:shadow-md transition-all duration-300"
+                className="flex items-center gap-3 w-full rounded bg-white border border-neutral-200 px-4 py-3 hover:border-[#091830] hover:shadow-md transition-all duration-300"
               >
                 <FaGooglePlay className="text-lg text-dark " />
                 <div className="flex flex-col">

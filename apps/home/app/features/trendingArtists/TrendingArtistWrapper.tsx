@@ -36,7 +36,7 @@ export default function TrendingArtistWrapper() {
                 Creator Roster
               </span>
             </div> */}
-            <h2 className="text-2xl md:text-3xl font-serif text-dark ">
+            <h2 className="text-2xl md:text-3xl font -serif text-dark ">
               Artist to watch
             </h2>
             <p className="mt-2 font-sans text-sm text-neutral-500 max-w-lg">

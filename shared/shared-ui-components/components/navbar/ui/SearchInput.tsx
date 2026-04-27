@@ -1,10 +1,12 @@
 "use client";
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { CiSearch } from "react-icons/ci";
+import { Search, Loader2 } from "lucide-react";
+import { INPUT_CLASS } from "../../styles/inputClasses";
 
 export default function SearchInput({ setIsMobileMenuOpen }: any) {
   const [searchTerm, setSearchTerm] = useState("");
+  const [isFocused, setIsFocused] = useState(false);
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
@@ -17,34 +19,44 @@ export default function SearchInput({ setIsMobileMenuOpen }: any) {
   };
 
   return (
-    <div className="relative w-full group">
-      {/* Search Icon - Moved to left for standard utility feel */}
-      <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-dark  transition-colors pointer-events-none">
-        <CiSearch className="w-5 h-5" />
+    <div className="relative w-full">
+      <div
+        className={`
+          flex items-center gap-2 px-3 py-2
+          bg-neutral-50 rounded-sm
+          border transition-all duration-200 ease-out
+          ${
+            isFocused
+              ? "bg-white border-neutral-300 shadow-sm"
+              : "border-transparent hover:border-neutral-200 hover:bg-white/70"
+          }
+        `}
+      >
+        {isPending ? (
+          <Loader2
+            className="w-4 h-4 text-neutral-400 shrink-0 animate-spin"
+            strokeWidth={1.5}
+          />
+        ) : (
+          <Search
+            className={`w-4 h-4 shrink-0 transition-colors duration-200 ${
+              isFocused ? "text-neutral-600" : "text-neutral-400"
+            }`}
+            strokeWidth={1.5}
+          />
+        )}
+
+        <input
+          type="text"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
+          placeholder="Artists, artworks, styles..."
+          className={INPUT_CLASS}
+        />
       </div>
-
-      <input
-        type="text"
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-        // More descriptive placeholder, no uppercase yelling
-        placeholder="Search artists, artworks, styles..."
-        className="
-            w-full pl-10 pr-4 py-2.5 
-            bg-slate-100 border border-transparent rounded -md 
-            text-sm font-sans text-slate-900 placeholder:text-slate-500 
-            focus:outline-none focus:bg-white focus:border-slate-200 focus:ring-0 focus:border-dark
-            transition-all duration-200
-        "
-      />
-
-      {/* Loading Indicator - Right aligned */}
-      {isPending && (
-        <div className="absolute right-3 top-1/2 -translate-y-1/2">
-          <div className="h-4 w-4 border-2 border-[#091830] border-t-transparent rounded -full animate-spin" />
-        </div>
-      )}
     </div>
   );
 }

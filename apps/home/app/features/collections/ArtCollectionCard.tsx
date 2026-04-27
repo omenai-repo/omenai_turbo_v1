@@ -44,7 +44,7 @@ export default function ArtCollectionCard({
           {/* Header Row: Title + Arrow Interaction */}
           <div className="flex items-start justify-between border-b border-neutral-200 pb-4 transition-colors duration-500 group-hover:border-black">
             <div>
-              <h3 className="font-sans text-md leading-none text-neutral-900">
+              <h3 className="font-serif text-md leading-none text-neutral-900">
                 {title}
               </h3>
             </div>

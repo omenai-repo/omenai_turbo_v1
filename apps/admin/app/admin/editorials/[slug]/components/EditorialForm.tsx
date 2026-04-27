@@ -125,7 +125,7 @@ export default function EditorialForm({
             onChange={handleInputChange}
             value={data.headline}
             required
-            className="w-full text-3xl lg:text-4xl font-light tracking-tight text-neutral-900 placeholder:text-neutral-400 bg-transparent border border-neutral-200 focus:border-dark outline-none focus:ring-0 rounded transition-all duration-300 py-2"
+            className="w-full text-3xl lg:text-4xl font-normal tracking-tight text-neutral-900 placeholder:text-neutral-400 bg-transparent border border-neutral-200 focus:border-dark outline-none focus:ring-0 rounded transition-all duration-300 py-2"
           />
 
           <textarea
@@ -134,7 +134,7 @@ export default function EditorialForm({
             onChange={handleInputChange}
             value={data.summary}
             rows={4}
-            className="w-full text-xl font-light text-neutral-600 placeholder:text-neutral-400 resize-none bg-transparent border border-neutral-200 focus:border-dark outline-none focus:ring-0 rounded transition-all duration-300 py-2"
+            className="w-full text-xl font-normal text-neutral-600 placeholder:text-neutral-400 resize-none bg-transparent border border-neutral-200 focus:border-dark outline-none focus:ring-0 rounded transition-all duration-300 py-2"
           />
         </div>
         <div className="lg:col-span-5 xl:col-span-4 h-full">

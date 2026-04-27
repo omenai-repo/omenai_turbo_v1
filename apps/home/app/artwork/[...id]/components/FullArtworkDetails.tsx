@@ -32,7 +32,7 @@ export default function FullArtworkDetails({
 
   return (
     <div className="w-full">
-      <h3 className="mb-8 font-serif text-2xl text-dark">
+      <h3 className="mb-8 font -serif text-2xl text-dark">
         Provenance & Details
       </h3>
 

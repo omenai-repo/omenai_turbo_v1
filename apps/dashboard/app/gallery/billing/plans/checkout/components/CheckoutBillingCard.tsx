@@ -198,10 +198,10 @@ export default function CheckoutBillingCard({
   return (
     <>
       <div className=" space-y-4 mb-4 w-full">
-        <div className="bg-gradient-to-br from-slate-50 to-white rounded p-6 border border-slate-200">
+        <div className="bg-gradient-to-br from-slate-50 to-white rounded-sm  p-6 border border-slate-200">
           <div className="flex items-center justify-between mb-6">
             <h2 className="font-semibold text-slate-900">Payment Details</h2>
-            <span className="inline-flex items-center gap-1 px-3 py-1 bg-green-100 text-green-700 text-xs font-medium rounded">
+            <span className="inline-flex items-center gap-1 px-3 py-1 bg-green-100 text-green-700 text-xs font-medium rounded-sm ">
               <IoIosLock className="w-3 h-3" />
               Encrypted
             </span>

@@ -24,7 +24,7 @@ export const UpdateLogoModal = () => {
             animate={{ scale: 1, rotate: "0deg" }}
             exit={{ scale: 0, rotate: "0deg" }}
             onClick={(e) => e.stopPropagation()}
-            className=" text-dark p-6 rounded w-full max-w-lg cursor-default relative h-auto"
+            className=" text-dark p-6 rounded-sm  w-full max-w-lg cursor-default relative h-auto"
           >
             {/* Add modal form here */}
             <div className="h-auto w-full">

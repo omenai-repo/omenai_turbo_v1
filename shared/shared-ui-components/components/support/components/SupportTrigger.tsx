@@ -20,7 +20,7 @@ export function SupportTrigger({ onClick }: { onClick: () => void }) {
       `}</style>
 
       {/* Tooltip */}
-      <div className="absolute bottom-full mb-4 px-4 py-2 bg-[#091830] text-white shadow-xl shadow-blue-900/20 rounded -xl opacity-0 translate-y-2 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none whitespace-nowrap hidden md:block border border-blue-900/30">
+      <div className="absolute bottom-full mb-4 px-4 py-2 bg-[#091830] text-white shadow-xl shadow-blue-900/20 rounded opacity-0 translate-y-2 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none whitespace-nowrap hidden md:block border border-blue-900/30">
         <div className="flex items-center gap-2.5 text-[11px] font-semibold tracking-widest uppercase">
           <span>Ask Advisor</span>
           <span className="flex h-2 w-2 relative">
