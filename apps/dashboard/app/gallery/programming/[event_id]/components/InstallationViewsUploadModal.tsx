@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-
+import DOMPurify from "dompurify";
 interface InstallationViewsUploadModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -179,7 +179,7 @@ export const InstallationViewsUploadModal = ({
                     className="relative aspect-[4/3] bg-neutral-100 rounded-sm border border-neutral-200 overflow-hidden group"
                   >
                     <img
-                      src={url}
+                      src={DOMPurify.sanitize(url)}
                       alt={`Preview ${idx}`}
                       className="w-full h-full object-cover"
                     />
