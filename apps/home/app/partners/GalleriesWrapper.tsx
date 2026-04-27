@@ -10,6 +10,7 @@ import {
 } from "@omenai/shared-lib/storage/getImageFileView";
 import { fetchGalleries } from "@omenai/shared-services/gallery/fetchGalleries";
 import FollowComponent from "@omenai/shared-ui-components/components/likes/FollowComponent";
+import { GallerySchemaTypes } from "@omenai/shared-types";
 
 const fetchAllGalleries = async () => {
   const response = await fetchGalleries(1, 15);
@@ -43,11 +44,14 @@ export default function AllGalleriesDirectory() {
     staleTime: 1000 * 60 * 5,
   });
 
-  const allGalleries = useMemo(() => {
-    return data?.pages.flatMap((page) => page?.data || []) || [];
-  }, [data]);
+  const cleanedGalleryList = useMemo(() => {
+    const allGalleries = data?.pages.flatMap((page) => page?.data || []) || [];
 
-  const totalGalleries = data?.pages[0]?.pagination?.total || 0;
+    return allGalleries.filter(
+      (gallery: GallerySchemaTypes) =>
+        gallery.name.toLowerCase() !== "omenai gallery",
+    );
+  }, [data]);
 
   return (
     <div className="w-full max-w-[1600px] mx-auto p-4 md:p-8">
@@ -70,14 +74,14 @@ export default function AllGalleriesDirectory() {
         <div className="py-32 text-center text-neutral-400 font-sans text-xs uppercase tracking-widest">
           Failed to load galleries.
         </div>
-      ) : allGalleries.length === 0 ? (
+      ) : cleanedGalleryList.length === 0 ? (
         <div className="py-32 text-center text-neutral-400 font-sans text-xs uppercase tracking-widest">
           No galleries available at this time.
         </div>
       ) : (
         <>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-12">
-            {allGalleries.map((gallery: any) => {
+            {cleanedGalleryList.map((gallery: any) => {
               const locationStr = [gallery.address?.country]
                 .filter(Boolean)
                 .join(", ");
