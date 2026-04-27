@@ -5,10 +5,10 @@
   "type": "module",
   "devDependencies": {
     "@omenai/appwrite-config": "*",
-    "@omenai/shared-utils": "*",
+    "@omenai/rollbar-config": "*",
     "@omenai/shared-lib": "*",
+    "@omenai/shared-utils": "*",
     "@omenai/typescript-config": "*",
-    "@omenai/url-config": "*",
-    "@omenai/rollbar-config": "*"
+    "@omenai/url-config": "*"
   }
 }
