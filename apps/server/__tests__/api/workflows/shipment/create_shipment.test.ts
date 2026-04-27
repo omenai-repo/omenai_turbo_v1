@@ -35,9 +35,12 @@ vi.mock("@omenai/shared-models/models/orders/CreateShipmentSchedule", () => ({
   },
 }));
 
-vi.mock("@omenai/shared-emails/src/models/shipment/sendShipmentScheduledEmail", () => ({
-  sendShipmentScheduledEmail: vi.fn().mockResolvedValue(undefined),
-}));
+vi.mock(
+  "@omenai/shared-emails/src/models/shipment/sendShipmentScheduledEmail",
+  () => ({
+    sendShipmentScheduledEmail: vi.fn().mockResolvedValue(undefined),
+  }),
+);
 
 vi.mock("@omenai/shared-utils/src/toUtcDate", () => ({
   toUTCDate: vi.fn((d: Date) => d),
@@ -57,7 +60,7 @@ vi.mock("../../../../app/api/workflows/shipment/utils", () => ({
   UPS_SHIPMENT_API_URL: "http://localhost/api/shipment/create_ups_shipment",
   getMongoClient: vi.fn(),
   buildShipmentData: vi.fn(),
-  handleWaybillUpload: vi.fn().mockResolvedValue("http://waybill-url"),
+  handleWaybillUpload: vi.fn().mockResolvedValue("https://waybill-url"),
   handleWorkflowError: vi
     .fn()
     .mockRejectedValue(new Error("RetryableError: workflow error")),
@@ -84,8 +87,18 @@ import {
 
 const baseOrder = {
   order_id: "order-abc",
-  buyer_details: { id: "buyer-1", name: "John", email: "buyer@test.com", phone: "+1234" },
-  seller_details: { id: "seller-1", name: "Jane", email: "seller@test.com", phone: "+5678" },
+  buyer_details: {
+    id: "buyer-1",
+    name: "John",
+    email: "buyer@test.com",
+    phone: "+1234",
+  },
+  seller_details: {
+    id: "seller-1",
+    name: "Jane",
+    email: "seller@test.com",
+    phone: "+5678",
+  },
   artwork_data: {
     title: "Test Art",
     art_id: "art-1",
@@ -96,8 +109,20 @@ const baseOrder = {
   shipping_details: {
     additional_information: null,
     addresses: {
-      origin: { address_line: "1 Origin St", city: "Paris", country: "FR", countryCode: "FR", zip: "75001" },
-      destination: { address_line: "1 Dest St", city: "Berlin", country: "DE", countryCode: "DE", zip: "10115" },
+      origin: {
+        address_line: "1 Origin St",
+        city: "Paris",
+        country: "FR",
+        countryCode: "FR",
+        zip: "75001",
+      },
+      destination: {
+        address_line: "1 Dest St",
+        city: "Berlin",
+        country: "DE",
+        countryCode: "DE",
+        zip: "10115",
+      },
     },
     shipment_information: {
       carrier: "DHL Express",
@@ -182,8 +207,12 @@ describe("POST /api/workflows/shipment/create_shipment", () => {
         ...baseOrder.shipping_details,
         shipment_information: {
           ...baseOrder.shipping_details.shipment_information,
-          tracking: { id: "TRK-DONE", link: "http://track", delivery_status: "delivered" },
-          waybill_document: "http://waybill-url",
+          tracking: {
+            id: "TRK-DONE",
+            link: "https://track",
+            delivery_status: "delivered",
+          },
+          waybill_document: "https://waybill-url",
         },
       },
     };
@@ -206,8 +235,12 @@ describe("POST /api/workflows/shipment/create_shipment", () => {
         ...baseOrder.shipping_details,
         shipment_information: {
           ...baseOrder.shipping_details.shipment_information,
-          tracking: { id: "TRK-DONE", link: "http://track", delivery_status: "delivered" },
-          waybill_document: "http://waybill-url",
+          tracking: {
+            id: "TRK-DONE",
+            link: "https://track",
+            delivery_status: "delivered",
+          },
+          waybill_document: "https://waybill-url",
         },
       },
     };
@@ -245,7 +278,10 @@ describe("POST /api/workflows/shipment/create_shipment", () => {
 
     await POST(makeRequest({ order_id: "order-abc" }));
 
-    expect(handleWaybillUpload).toHaveBeenCalledWith("base64content", "order-abc");
+    expect(handleWaybillUpload).toHaveBeenCalledWith(
+      "base64content",
+      "order-abc",
+    );
   });
 
   it("RECOVER_WAYBILL: returns 500 when waybill cache is missing", async () => {
@@ -288,7 +324,9 @@ describe("POST /api/workflows/shipment/create_shipment", () => {
 
     expect(ScheduledShipment.updateOne).toHaveBeenCalledWith(
       { order_id: "order-abc" },
-      expect.objectContaining({ $set: expect.objectContaining({ order_id: "order-abc" }) }),
+      expect.objectContaining({
+        $set: expect.objectContaining({ order_id: "order-abc" }),
+      }),
       { upsert: true },
     );
     expect(sendShipmentScheduledEmail).toHaveBeenCalled();
