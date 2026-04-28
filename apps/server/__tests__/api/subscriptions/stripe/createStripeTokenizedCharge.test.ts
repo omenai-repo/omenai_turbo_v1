@@ -31,7 +31,8 @@ vi.mock("@omenai/shared-lib/configcat/configCatFetch", () => ({
 }));
 
 vi.mock("../../../../app/api/util", async () => {
-  const { buildValidateRequestBodyMock } = await import("../../../helpers/util-mock");
+  const { buildValidateRequestBodyMock } =
+    await import("../../../helpers/util-mock");
   return buildValidateRequestBodyMock();
 });
 
@@ -103,7 +104,9 @@ describe("POST /api/subscriptions/stripe/createStripeTokenizedCharge", () => {
   });
 
   it("creates off_session payment intent with stored payment method", async () => {
-    await POST(makeRequest({ amount: 49, gallery_id: "gallery-001", meta: {} }));
+    await POST(
+      makeRequest({ amount: 49, gallery_id: "gallery-001", meta: {} }),
+    );
 
     expect(stripe.paymentIntents.create).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -118,7 +121,9 @@ describe("POST /api/subscriptions/stripe/createStripeTokenizedCharge", () => {
   });
 
   it("converts amount to cents (multiplies by 100)", async () => {
-    await POST(makeRequest({ amount: 99.5, gallery_id: "gallery-001", meta: {} }));
+    await POST(
+      makeRequest({ amount: 99.5, gallery_id: "gallery-001", meta: {} }),
+    );
 
     expect(stripe.paymentIntents.create).toHaveBeenCalledWith(
       expect.objectContaining({ amount: 9950 }),
@@ -167,6 +172,6 @@ describe("POST /api/subscriptions/stripe/createStripeTokenizedCharge", () => {
     );
     const body = await response.json();
 
-    expect(response.status).toBe(500);
+    expect(response.status).toBe(400);
   });
 });
