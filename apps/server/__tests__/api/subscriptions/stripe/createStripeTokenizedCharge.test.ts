@@ -39,6 +39,7 @@ import { POST } from "../../../../app/api/subscriptions/stripe/createStripeToken
 import { Subscriptions } from "@omenai/shared-models/models/subscriptions";
 import { stripe } from "@omenai/shared-lib/payments/stripe/stripe";
 import { fetchConfigCatValue } from "@omenai/shared-lib/configcat/configCatFetch";
+import { validateRequestBody } from "../../../../app/api/util";
 
 const mockSubscription = {
   stripe_customer_id: "cus_123",
@@ -70,6 +71,21 @@ describe("POST /api/subscriptions/stripe/createStripeTokenizedCharge", () => {
     vi.mocked(Subscriptions.findOne).mockResolvedValue(mockSubscription as any);
     vi.mocked(stripe.paymentIntents.create).mockResolvedValue(
       mockPaymentIntent as any,
+    );
+    vi.mocked(validateRequestBody).mockImplementation(
+      async (request: Request, schema: any) => {
+        const body = await request.json();
+        const result = schema.safeParse(body);
+        if (!result.success) {
+          const msg = result.error.issues
+            .map((e: any) => `${e.path.join(".")}: ${e.message}`)
+            .join(", ");
+          throw Object.assign(new Error(`Validation Failed: ${msg}`), {
+            name: "BadRequestError",
+          });
+        }
+        return result.data;
+      },
     );
   });
 
