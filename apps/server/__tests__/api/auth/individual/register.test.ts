@@ -209,15 +209,13 @@ describe("POST /api/auth/individual/register", () => {
     expect(response.status).toBe(500);
   });
 
-  it("returns 500 when collector onboarding is disabled", async () => {
+  it("returns 503 when collector onboarding is disabled", async () => {
     vi.mocked(fetchConfigCatValue).mockResolvedValue(false);
 
     const response = await POST(makeRequest(validBody));
     const body = await response.json();
 
-    // ServiceUnavailableError is not mapped in errorHandler (casing typo),
-    // so it falls through to the generic 500 handler
-    expect(response.status).toBe(500);
+    expect(response.status).toBe(503);
   });
 
   it("returns 400 when a required field is missing", async () => {

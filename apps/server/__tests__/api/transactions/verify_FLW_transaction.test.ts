@@ -181,6 +181,7 @@ function stubFetch(responseData: any, ok = true) {
 describe("POST /api/transactions/verify_FLW_transaction", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    process.env.FLW_SECRET_KEY = "test-flw-secret-key";
     stubFetch(validFlwResponse);
     vi.mocked(CreateOrder.findOne).mockResolvedValue(mockOrderInfo as any);
     vi.mocked(AccountArtist.findOne).mockResolvedValue(mockArtist as any);
@@ -199,6 +200,7 @@ describe("POST /api/transactions/verify_FLW_transaction", () => {
 
   afterEach(() => {
     vi.unstubAllGlobals();
+    delete process.env.FLW_SECRET_KEY;
   });
 
   /* ---- Input validation ---- */

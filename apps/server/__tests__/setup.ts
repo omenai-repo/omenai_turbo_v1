@@ -11,5 +11,5 @@ vi.mock("next/server", () => ({
 }));
 
 vi.mock("@omenai/rollbar-config", () => ({
-  rollbarServerInstance: { error: vi.fn() },
+  rollbarServerInstance: { error: vi.fn(), critical: vi.fn() },
 }));

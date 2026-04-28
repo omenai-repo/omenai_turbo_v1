@@ -101,14 +101,13 @@ describe("POST /api/wallet/add_primary_account", () => {
     );
   });
 
-  it("returns 500 when wallet feature is disabled", async () => {
+  it("returns 503 when wallet feature is disabled", async () => {
     vi.mocked(fetchConfigCatValue).mockResolvedValue(false as any);
 
     const response = await POST(makeRequest(ukAccountBody));
     const body = await response.json();
 
-    // ServiceUnavailableError maps to 500 due to lowercase key mismatch in errorStatusMap
-    expect(response.status).toBe(500);
+    expect(response.status).toBe(503);
   });
 
   it("returns 404 when wallet does not exist for user", async () => {

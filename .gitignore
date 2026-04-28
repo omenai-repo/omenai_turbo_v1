@@ -6,6 +6,7 @@ node_modules
 .pnp.js
 
 
+
 # Local env files
 .env
 .env.local
@@ -15,6 +16,7 @@ node_modules
 
 # Testing
 coverage
+.claude
 
 # Turbo
 .turbo

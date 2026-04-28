@@ -189,13 +189,13 @@ describe("POST /api/auth/gallery/register", () => {
     expect(response.status).toBe(500);
   });
 
-  it("returns 500 when gallery onboarding is disabled", async () => {
+  it("returns 503 when gallery onboarding is disabled", async () => {
     vi.mocked(fetchConfigCatValue).mockResolvedValue(false);
 
     const response = await POST(makeRequest(validBody));
     const body = await response.json();
 
-    expect(response.status).toBe(500);
+    expect(response.status).toBe(503);
   });
 
   it("returns 400 when a required field is missing", async () => {
