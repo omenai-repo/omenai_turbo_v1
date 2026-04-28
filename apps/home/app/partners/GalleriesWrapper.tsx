@@ -49,11 +49,10 @@ export default function AllGalleriesDirectory() {
 
     return allGalleries.filter(
       (gallery: GallerySchemaTypes) =>
-        gallery.name.toLowerCase() !== "omenai gallery" ||
+        gallery.name.toLowerCase() !== "omenai gallery" &&
         gallery.name.toLowerCase() !== "ankh gallery",
     );
   }, [data]);
-
   return (
     <div className="w-full max-w-[1600px] mx-auto p-4 md:p-8">
       {/* Page Header */}
