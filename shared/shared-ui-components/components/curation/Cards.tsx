@@ -195,8 +195,8 @@ function FeaturedCardShell({
   const base = `group/card flex flex-col h-full rounded-[3px] overflow-hidden transition-all duration-300
     ${
       dark
-        ? "bg-[#091830] text-dark border border-neutral-100 hover:border-[#C9A96E]/40 hover:shadow-[0_8px_32px_rgba(9,24,48,0.35)]"
-        : "bg-white text-dark border border-neutral-100 hover:border-[#091830]/20 hover:shadow-[0_6px_24px_rgba(9,24,48,0.09)]"
+        ? "bg-[#091830] text-dark border border-neutral-50 hover:border-[#C9A96E]/40 hover:shadow-[0_8px_32px_rgba(9,24,48,0.35)]"
+        : "bg-white text-dark border border-neutral-50 hover:border-[#091830]/20 hover:shadow-[0_6px_24px_rgba(9,24,48,0.09)]"
     }`;
 
   const inner = (

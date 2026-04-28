@@ -47,7 +47,12 @@ export async function getAcquisitionMetrics() {
     ] = await Promise.all([
       // 0. TOTAL COMMUNITY & DEMOGRAPHICS
       AccountIndividual.aggregate([
-        { $unionWith: { coll: "accountartists" } },
+        {
+          $unionWith: {
+            coll: "accountartists",
+            pipeline: [{ $match: { profile_status: { $ne: "ghost" } } }],
+          },
+        },
         { $unionWith: { coll: "accountgalleries" } },
         {
           $facet: {
