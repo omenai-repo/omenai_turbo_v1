@@ -60,58 +60,10 @@ export default function CheckoutBillingCard({
 
   const router = useRouter();
 
-  const handlePaymentResponse = async (
-    stripe: Stripe,
-    data: { status: string; client_secret: string; paymentIntentId: string },
-  ) => {
-    const { status, client_secret, paymentIntentId } = data;
-
-    switch (status) {
-      case "succeeded":
-        // ✅ Payment complete
-        router.push(
-          `${dashboard_url()}/gallery/billing/plans/checkout/verification?payment_intent=${paymentIntentId}`,
-        );
-        break;
-
-      case "requires_action":
-        // ⚠️ Needs customer authentication (3DS)
-        await stripe.confirmCardPayment(client_secret);
-        router.push(
-          `${dashboard_url()}/gallery/billing/plans/checkout/verification?payment_intent=${paymentIntentId}`,
-        );
-        break;
-
-      case "requires_payment_method":
-        router.push(
-          `${dashboard_url()}/gallery/billing/plans/checkout/verification?payment_intent=${paymentIntentId}`,
-        );
-        break;
-
-      case "processing":
-        // ⏳ Still pending
-
-        router.push(
-          `${dashboard_url()}/gallery/billing/plans/checkout/verification?payment_intent=${paymentIntentId}`,
-        );
-        break;
-
-      case "canceled":
-        alert("Payment was canceled.");
-        router.push(`${dashboard_url()}/gallery/billing/plans`);
-        break;
-
-      default:
-        alert(`Unhandled payment status: ${status}`);
-        router.push(`${dashboard_url()}/gallery/billing/plans`);
-        break;
-    }
-  };
-
   async function handlePayNow() {
     setError("");
-
     setLoading(true);
+
     const tokenize_card = await createStripeTokenizedCharge(
       amount,
       user.gallery_id,
@@ -125,24 +77,54 @@ export default function CheckoutBillingCard({
       csrf || "",
     );
 
-    if (!tokenize_card?.isOk)
-      toast_notif(
-        "Unable to initiate card charge. Please contact support",
-        "error",
-      );
-    else {
-      const { client_secret, status, paymentIntentId } = tokenize_card;
-
+    if (tokenize_card?.requiresAction) {
+      toast_notif("Additional authentication required by your bank.", "info");
       const stripePromise = await stripe;
 
-      await handlePaymentResponse(stripePromise as Stripe, {
-        status,
-        client_secret,
-        paymentIntentId,
-      });
+      if (!stripePromise) {
+        toast_notif("Stripe failed to load.", "error");
+        setLoading(false);
+        return;
+      }
 
-      toast_notif("Please wait... processing", "info");
+      // Prompt the user with the 3D Secure modal
+      const { error, paymentIntent } = await stripePromise.confirmCardPayment(
+        tokenize_card.client_secret,
+      );
+
+      if (error) {
+        // The user failed or canceled the 3D Secure challenge
+        toast_notif(error.message || "Payment authentication failed.", "error");
+        setLoading(false);
+        return;
+      }
+
+      if (paymentIntent && paymentIntent.status === "succeeded") {
+        // 3D Secure passed and payment succeeded
+        router.push(
+          `${dashboard_url()}/gallery/billing/plans/checkout/verification?payment_intent=${paymentIntent.id}`,
+        );
+      }
+      setLoading(false);
+      return;
     }
+
+    // 2. Handle Standard Errors (Card declines, insufficient funds, etc.)
+    if (!tokenize_card?.isOk) {
+      toast_notif(
+        tokenize_card?.message ||
+          "Unable to process payment. Please check your card.",
+        "error",
+      );
+      setLoading(false);
+      return;
+    }
+
+    // 3. Handle Standard Success (Payment went through without 3D Secure)
+    toast_notif("Payment successful! Redirecting...", "success");
+    router.push(
+      `${dashboard_url()}/gallery/billing/plans/checkout/verification?payment_intent=${tokenize_card.paymentIntentId}`,
+    );
 
     setLoading(false);
   }
