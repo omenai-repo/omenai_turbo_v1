@@ -11,7 +11,7 @@ export async function createStripeTokenizedCharge(
     plan_id: string;
     plan_interval: string;
   },
-  token: string
+  token: string,
 ) {
   try {
     const url = getApiUrl();
@@ -21,12 +21,15 @@ export async function createStripeTokenizedCharge(
         method: "POST",
         body: JSON.stringify({
           amount,
-          gallery_id,
+          gallery_id, // Ensure your backend isn't trusting this for DB lookups
           meta,
         }),
-        headers: { "x-csrf-token": token },
+        headers: {
+          "x-csrf-token": token,
+          "Content-Type": "application/json", // Best practice to include this
+        },
         credentials: "include",
-      }
+      },
     );
 
     const result = await res.json();
@@ -34,9 +37,10 @@ export async function createStripeTokenizedCharge(
     return {
       isOk: res.ok,
       message: result.message,
-      client_secret: result.paymentIntent,
+      client_secret: result.client_secret,
       status: result.status,
       paymentIntentId: result.paymentIntentId,
+      requiresAction: result.requiresAction,
     };
   } catch (error: any) {
     logRollbarServerError(error);
