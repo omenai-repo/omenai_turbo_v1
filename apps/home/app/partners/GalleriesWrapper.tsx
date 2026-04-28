@@ -49,7 +49,8 @@ export default function AllGalleriesDirectory() {
 
     return allGalleries.filter(
       (gallery: GallerySchemaTypes) =>
-        gallery.name.toLowerCase() !== "omenai gallery",
+        gallery.name.toLowerCase() !== "omenai gallery" ||
+        gallery.name.toLowerCase() !== "ankh gallery",
     );
   }, [data]);
 

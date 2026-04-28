@@ -65,7 +65,8 @@ export const FeaturedGalleriesSection = () => {
 
     return galleryData.filter(
       (gallery: GallerySchemaTypes) =>
-        gallery.name.toLowerCase() !== "omenai gallery",
+        gallery.name.toLowerCase() !== "omenai gallery" ||
+        gallery.name.toLowerCase() !== "ankh gallery",
     );
   }, [galleries]);
 
