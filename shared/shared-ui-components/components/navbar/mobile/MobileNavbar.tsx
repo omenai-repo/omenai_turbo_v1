@@ -17,9 +17,9 @@ import { ArrowUpRight } from "lucide-react";
 const navItems = [
   { label: "Collect", href: "/catalog" },
   { label: "Editorials", href: "/articles" },
-  { label: "Shows", href: "/shows" },
-  { label: "Fairs & Events", href: "/events" },
-  { label: "Galleries", href: "/partners" },
+  // { label: "Shows", href: "/shows" },
+  // { label: "Fairs & Events", href: "/events" },
+  // { label: "Galleries", href: "/partners" },
 ];
 
 const loggedInRouteMap = {

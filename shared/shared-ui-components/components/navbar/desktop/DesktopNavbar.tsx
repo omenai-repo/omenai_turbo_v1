@@ -19,9 +19,9 @@ import { Menu } from "lucide-react";
 export const navigation = [
   { name: "Collect", href: "/catalog" },
   { name: "Editorials", href: "/articles" },
-  { name: "Shows", href: "/shows" },
-  { name: "Fairs & Events", href: "/events" },
-  { name: "Galleries", href: "/partners" },
+  // { name: "Shows", href: "/shows" },
+  // { name: "Fairs & Events", href: "/events" },
+  // { name: "Galleries", href: "/partners" },
 ];
 
 const loggedInRouteMap = {
