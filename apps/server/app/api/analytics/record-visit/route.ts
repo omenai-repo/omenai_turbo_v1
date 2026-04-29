@@ -4,9 +4,7 @@ import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_mid
 import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import CampaignVisit from "@omenai/shared-models/models/WaitlistFunnel/CampaignVisitsModel";
 import { UAParser } from "ua-parser-js";
-export const POST = withRateLimit(standardRateLimit)(async function POST(
-  req: Request,
-) {
+async function handler(req: Request) {
   try {
     // 1. Connect to the Database
     await connectMongoDB();
@@ -78,4 +76,6 @@ export const POST = withRateLimit(standardRateLimit)(async function POST(
     // so we return 200 or 500 silently.
     return NextResponse.json({ success: false }, { status: 500 });
   }
-});
+}
+
+export const POST = (req: Request) => withRateLimit(standardRateLimit)(handler)(req);

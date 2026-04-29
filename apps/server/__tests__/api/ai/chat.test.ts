@@ -2,7 +2,14 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { buildValidateRequestBodyMock } from "../../helpers/util-mock";
 
 const mockRatelimitLimit = vi.hoisted(() =>
-  vi.fn().mockResolvedValue({ success: true, limit: 5, reset: 9999999999, remaining: 4 }),
+  vi
+    .fn()
+    .mockResolvedValue({
+      success: true,
+      limit: 5,
+      reset: 9999999999,
+      remaining: 4,
+    }),
 );
 
 vi.mock("@upstash/ratelimit", () => ({
@@ -27,11 +34,15 @@ const mockToTextStreamResponse = vi.hoisted(() =>
 );
 
 vi.mock("ai", () => ({
-  streamText: vi.fn().mockReturnValue({ toTextStreamResponse: mockToTextStreamResponse }),
+  streamText: vi
+    .fn()
+    .mockReturnValue({ toTextStreamResponse: mockToTextStreamResponse }),
 }));
 
 vi.mock("../../../app/api/ai/knowledgeBase", () => ({
-  getOmenaiContext: vi.fn().mockResolvedValue("You are an AI assistant for Omenai."),
+  getOmenaiContext: vi
+    .fn()
+    .mockResolvedValue("You are an AI assistant for Omenai."),
 }));
 
 vi.mock("../../../app/api/util", () => buildValidateRequestBodyMock());
@@ -44,7 +55,10 @@ import { getOmenaiContext } from "../../../app/api/ai/knowledgeBase";
 function makeRequest(body: Record<string, any> = {}): Request {
   return new Request("http://localhost/api/ai/chat", {
     method: "POST",
-    headers: { "Content-Type": "application/json", "x-forwarded-for": "1.2.3.4" },
+    headers: {
+      "Content-Type": "application/json",
+      "x-forwarded-for": "0.0.0.0",
+    },
     body: JSON.stringify(body),
   });
 }
@@ -57,10 +71,21 @@ const validBody = {
 describe("POST /api/ai/chat", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mockRatelimitLimit.mockResolvedValue({ success: true, limit: 5, reset: 9999999999, remaining: 4 });
-    mockToTextStreamResponse.mockReturnValue(new Response("stream", { status: 200 }));
-    vi.mocked(getOmenaiContext).mockResolvedValue("You are an AI assistant for Omenai.");
-    vi.mocked(streamText).mockReturnValue({ toTextStreamResponse: mockToTextStreamResponse } as any);
+    mockRatelimitLimit.mockResolvedValue({
+      success: true,
+      limit: 5,
+      reset: 9999999999,
+      remaining: 4,
+    });
+    mockToTextStreamResponse.mockReturnValue(
+      new Response("stream", { status: 200 }),
+    );
+    vi.mocked(getOmenaiContext).mockResolvedValue(
+      "You are an AI assistant for Omenai.",
+    );
+    vi.mocked(streamText).mockReturnValue({
+      toTextStreamResponse: mockToTextStreamResponse,
+    } as any);
   });
 
   it("returns 200 streaming response on success", async () => {
