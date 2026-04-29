@@ -1,3 +1,8 @@
 {
-  "extends": "@omenai/typescript-config/base.json"
+  "extends": "@omenai/typescript-config/base.json",
+  "compilerOptions": {
+    "types": ["vitest/globals"]
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "dist"]
 }
