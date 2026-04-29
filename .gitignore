@@ -17,8 +17,6 @@ node_modules
 # Testing
 coverage
 .claude
-.yarn
-
 # Turbo
 .turbo
 
