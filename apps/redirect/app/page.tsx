@@ -8,7 +8,7 @@ export default async function FallbackPage({
 }: {
   searchParams: { token?: string };
 }) {
-  const token = searchParams.token;
+  const token = searchParams.token ?? "";
 
   // 1. Handle missing tokens immediately
   if (!token) {
