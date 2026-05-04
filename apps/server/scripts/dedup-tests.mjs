@@ -11,9 +11,9 @@
  *   - vi.mock("...app/api/util", () => { class BadRequestError... validateGetRouteParams })
  */
 
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const testsRoot = path.join(__dirname, "..", "__tests__");
@@ -64,7 +64,9 @@ function stripBlock(content, block) {
 }
 
 function relativeHelperPath(testFilePath) {
-  return path.relative(path.dirname(testFilePath), helpersDir).replace(/\\/g, "/");
+  return path
+    .relative(path.dirname(testFilePath), helpersDir)
+    .replaceAll(/\\/g, "/");
 }
 
 // Regex that matches a util mock block that starts with `() => {`
@@ -87,7 +89,7 @@ for (const filePath of findTestFiles(testsRoot)) {
   content = stripBlock(content, ROLLBAR_BLOCK);
 
   // 2. Replace complex util mocks with async factory
-  content = content.replace(UTIL_MOCK_RE, (match, quotedPath, body) => {
+  content = content.replaceAll(UTIL_MOCK_RE, (match, quotedPath, body) => {
     if (!body.includes("BadRequestError")) return match; // simple stub – keep as-is
 
     const helperPath = relativeHelperPath(filePath);
@@ -105,7 +107,7 @@ for (const filePath of findTestFiles(testsRoot)) {
   });
 
   // 3. Collapse any accidental triple blank lines to double
-  content = content.replace(/\n{3,}/g, "\n\n");
+  content = content.replaceAll(/\n{3,}/g, "\n\n");
 
   if (content !== original) {
     fs.writeFileSync(filePath, content, "utf-8");

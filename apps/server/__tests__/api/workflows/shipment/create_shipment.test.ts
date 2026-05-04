@@ -177,7 +177,7 @@ describe("POST /api/workflows/shipment/create_shipment", () => {
       receiver_data: { fullname: "John", email: "buyer@test.com" },
     } as any);
 
-    global.fetch = vi.fn().mockResolvedValue({
+    globalThis.fetch = vi.fn().mockResolvedValue({
       ok: true,
       json: async () => ({
         data: {
@@ -351,7 +351,7 @@ describe("POST /api/workflows/shipment/create_shipment", () => {
   });
 
   it("CREATE_SHIPMENT: returns 500 when shipment API fails", async () => {
-    global.fetch = vi.fn().mockResolvedValue({
+    globalThis.fetch = vi.fn().mockResolvedValue({
       ok: false,
       json: async () => ({ message: "Shipment creation failed" }),
     } as any);

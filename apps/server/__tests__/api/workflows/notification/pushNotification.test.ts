@@ -43,7 +43,7 @@ describe("POST /api/workflows/notification/pushNotification", () => {
     vi.clearAllMocks();
     vi.mocked(pushNotification).mockResolvedValue({ success: true } as any);
 
-    global.fetch = vi.fn().mockResolvedValue({
+    globalThis.fetch = vi.fn().mockResolvedValue({
       ok: true,
       json: async () => ({ success: true }),
     } as any);
@@ -64,14 +64,14 @@ describe("POST /api/workflows/notification/pushNotification", () => {
   it("calls the createNotification internal API", async () => {
     await POST(makeRequest(notificationPayload));
 
-    expect(global.fetch).toHaveBeenCalledWith(
+    expect(globalThis.fetch).toHaveBeenCalledWith(
       expect.stringContaining("/api/notifications/createNotification"),
       expect.objectContaining({ method: "POST" }),
     );
   });
 
   it("returns 500 when createNotification API fails", async () => {
-    global.fetch = vi.fn().mockResolvedValue({
+    globalThis.fetch = vi.fn().mockResolvedValue({
       ok: false,
       json: async () => ({ message: "Unauthorized" }),
     } as any);

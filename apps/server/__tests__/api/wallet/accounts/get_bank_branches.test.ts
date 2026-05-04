@@ -9,7 +9,8 @@ vi.mock("@omenai/shared-lib/auth/configs/rate_limit_configs", () => ({
 }));
 
 vi.mock("../../../../app/api/util", async () => {
-  const { buildValidateGetRouteParamsMock } = await import("../../../helpers/util-mock");
+  const { buildValidateGetRouteParamsMock } =
+    await import("../../../helpers/util-mock");
   return buildValidateGetRouteParamsMock();
 });
 
@@ -33,7 +34,7 @@ describe("GET /api/wallet/accounts/get_bank_branches", () => {
   });
 
   it("returns 200 with branch list on success", async () => {
-    global.fetch = vi.fn().mockResolvedValue({
+    globalThis.fetch = vi.fn().mockResolvedValue({
       ok: true,
       status: 200,
       json: vi.fn().mockResolvedValue({ data: mockBranches }),
@@ -49,12 +50,12 @@ describe("GET /api/wallet/accounts/get_bank_branches", () => {
   });
 
   it("returns 200 with empty branches when FLW returns no branches error", async () => {
-    global.fetch = vi.fn().mockResolvedValue({
+    globalThis.fetch = vi.fn().mockResolvedValue({
       ok: false,
       status: 404,
-      json: vi
-        .fn()
-        .mockResolvedValue({ message: "No branches found for specified bank id" }),
+      json: vi.fn().mockResolvedValue({
+        message: "No branches found for specified bank id",
+      }),
     } as any);
 
     const response = await GET(makeRequest("999"));

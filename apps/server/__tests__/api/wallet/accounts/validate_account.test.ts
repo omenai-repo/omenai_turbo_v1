@@ -9,21 +9,19 @@ vi.mock("@omenai/shared-lib/auth/configs/rate_limit_configs", () => ({
 }));
 
 vi.mock("../../../../app/api/util", async () => {
-  const { buildValidateRequestBodyMock } = await import("../../../helpers/util-mock");
+  const { buildValidateRequestBodyMock } =
+    await import("../../../helpers/util-mock");
   return buildValidateRequestBodyMock();
 });
 
 import { POST } from "../../../../app/api/wallet/accounts/validate_account/route";
 
 function makeRequest(body: object): Request {
-  return new Request(
-    "http://localhost/api/wallet/accounts/validate_account",
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-    },
-  );
+  return new Request("http://localhost/api/wallet/accounts/validate_account", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
 }
 
 const mockAccountData = {
@@ -51,19 +49,21 @@ describe("POST /api/wallet/accounts/validate_account", () => {
     expect(response.status).toBe(200);
     expect(body.message).toBe("Bank account validated successfully");
     expect(body.account_data).toEqual(mockAccountData);
-    expect(global.fetch).toHaveBeenCalledWith(
+    expect(globalThis.fetch).toHaveBeenCalledWith(
       "https://api.flutterwave.com/v3/accounts/resolve",
       expect.objectContaining({ method: "POST" }),
     );
   });
 
   it("returns FLW error status when account validation fails", async () => {
-    global.fetch = vi.fn().mockResolvedValue({
+    globalThis.fetch = vi.fn().mockResolvedValue({
       ok: false,
       status: 400,
       json: vi
         .fn()
-        .mockResolvedValue({ message: "Sorry, we could not verify that account number" }),
+        .mockResolvedValue({
+          message: "Sorry, we could not verify that account number",
+        }),
     } as any);
 
     const response = await POST(makeRequest(validBody));
@@ -74,9 +74,7 @@ describe("POST /api/wallet/accounts/validate_account", () => {
   });
 
   it("returns 400 when bankCode is missing", async () => {
-    const response = await POST(
-      makeRequest({ accountNumber: "0123456789" }),
-    );
+    const response = await POST(makeRequest({ accountNumber: "0123456789" }));
     const body = await response.json();
 
     expect(response.status).toBe(400);

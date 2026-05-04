@@ -14,7 +14,6 @@ vi.mock("../../../app/api/services/events/getGalleryWorks.service", () => ({
 
 import { GET } from "../../../app/api/events/getGalleryWorks/route";
 import { getGalleryWorksService } from "../../../app/api/services/events/getGalleryWorks.service";
-import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 
 const mockArtworks = [{ art_id: "art-1", title: "Sunset" }];
 const mockPagination = { page: 1, limit: 20, total: 1, totalPages: 1 };
@@ -48,14 +47,25 @@ describe("GET /api/events/getGalleryWorks", () => {
 
   it("passes gallery_id, page, limit, and filters to service", async () => {
     await GET(
-      makeRequest({ id: "gallery-1", page: "2", limit: "10", artist: "Amara", medium: "Oil", price: "Under 1000" }),
+      makeRequest({
+        id: "gallery-1",
+        page: "2",
+        limit: "10",
+        artist: "Amara",
+        medium: "Oil",
+        price: "Under 1000",
+      }),
     );
 
     expect(getGalleryWorksService).toHaveBeenCalledWith(
       "gallery-1",
       2,
       10,
-      expect.objectContaining({ artist: "Amara", medium: "Oil", price: "Under 1000" }),
+      expect.objectContaining({
+        artist: "Amara",
+        medium: "Oil",
+        price: "Under 1000",
+      }),
     );
   });
 
@@ -88,7 +98,9 @@ describe("GET /api/events/getGalleryWorks", () => {
   });
 
   it("returns 500 when service throws", async () => {
-    vi.mocked(getGalleryWorksService).mockRejectedValue(new Error("Unexpected"));
+    vi.mocked(getGalleryWorksService).mockRejectedValue(
+      new Error("Unexpected"),
+    );
 
     const response = await GET(makeRequest({ id: "gallery-1" }));
 

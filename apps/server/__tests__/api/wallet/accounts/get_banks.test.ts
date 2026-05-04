@@ -9,7 +9,8 @@ vi.mock("@omenai/shared-lib/auth/configs/rate_limit_configs", () => ({
 }));
 
 vi.mock("../../../../app/api/util", async () => {
-  const { buildValidateGetRouteParamsMock } = await import("../../../helpers/util-mock");
+  const { buildValidateGetRouteParamsMock } =
+    await import("../../../helpers/util-mock");
   return buildValidateGetRouteParamsMock();
 });
 
@@ -33,7 +34,7 @@ describe("GET /api/wallet/accounts/get_banks", () => {
   });
 
   it("returns 200 with bank list on success", async () => {
-    global.fetch = vi.fn().mockResolvedValue({
+    globalThis.fetch = vi.fn().mockResolvedValue({
       ok: true,
       status: 200,
       json: vi.fn().mockResolvedValue({ data: mockBanks }),
@@ -49,7 +50,7 @@ describe("GET /api/wallet/accounts/get_banks", () => {
   });
 
   it("returns FLW error status when FLW API fails", async () => {
-    global.fetch = vi.fn().mockResolvedValue({
+    globalThis.fetch = vi.fn().mockResolvedValue({
       ok: false,
       status: 400,
       json: vi.fn().mockResolvedValue({ message: "Invalid country code" }),

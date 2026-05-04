@@ -33,15 +33,12 @@ vi.mock(
   }),
 );
 
-vi.mock(
-  "@omenai/shared-models/models/transactions/PaymentLedgerShema",
-  () => ({
-    PaymentLedger: {
-      exists: vi.fn(),
-      updateOne: vi.fn(),
-    },
-  }),
-);
+vi.mock("@omenai/shared-models/models/transactions/PaymentLedgerShema", () => ({
+  PaymentLedger: {
+    exists: vi.fn(),
+    updateOne: vi.fn(),
+  },
+}));
 
 vi.mock(
   "@omenai/shared-models/models/device_management/DeviceManagementSchema",
@@ -91,7 +88,7 @@ import { PaymentLedger } from "@omenai/shared-models/models/transactions/Payment
 import { DeviceManagement } from "@omenai/shared-models/models/device_management/DeviceManagementSchema";
 import { createWorkflow } from "@omenai/shared-lib/workflow_runs/createWorkflow";
 import { sendPaymentFailedMail } from "@omenai/shared-emails/src/models/payment/sendPaymentFailedMail";
-import { ZMetaSchema, createErrorRollbarReport } from "../../../app/api/util";
+import { ZMetaSchema } from "../../../app/api/util";
 
 const VALID_SECRET = "test-flw-secret-hash";
 
@@ -194,7 +191,7 @@ describe("POST /api/webhook/flw-pay", () => {
 
     vi.mocked(DeviceManagement.findOne).mockResolvedValue(null);
 
-    global.fetch = vi.fn().mockResolvedValue({
+    globalThis.fetch = vi.fn().mockResolvedValue({
       json: async () => baseVerifiedTransaction,
     } as any);
   });
@@ -215,7 +212,7 @@ describe("POST /api/webhook/flw-pay", () => {
     );
 
     expect(response.status).toBe(200);
-    expect(global.fetch).not.toHaveBeenCalled();
+    expect(globalThis.fetch).not.toHaveBeenCalled();
   });
 
   it("returns status 400 in body when meta parsing fails", async () => {
@@ -240,7 +237,7 @@ describe("POST /api/webhook/flw-pay", () => {
   });
 
   it("returns 200 early when FLW status is pending", async () => {
-    global.fetch = vi.fn().mockResolvedValue({
+    globalThis.fetch = vi.fn().mockResolvedValue({
       json: async () => ({
         data: { ...baseVerifiedTransaction.data, status: "pending" },
       }),
@@ -253,7 +250,7 @@ describe("POST /api/webhook/flw-pay", () => {
   });
 
   it("calls sendPaymentFailedMail and returns 200 when FLW status is failed", async () => {
-    global.fetch = vi.fn().mockResolvedValue({
+    globalThis.fetch = vi.fn().mockResolvedValue({
       json: async () => ({
         data: { ...baseVerifiedTransaction.data, status: "failed" },
       }),
@@ -268,7 +265,7 @@ describe("POST /api/webhook/flw-pay", () => {
   });
 
   it("returns 200 early when amounts do not match (shouldExitEarly)", async () => {
-    global.fetch = vi.fn().mockResolvedValue({
+    globalThis.fetch = vi.fn().mockResolvedValue({
       json: async () => ({
         data: {
           ...baseVerifiedTransaction.data,
@@ -353,7 +350,9 @@ describe("POST /api/webhook/flw-pay", () => {
       }),
     );
     expect(createWorkflow).toHaveBeenCalledWith(
-      expect.stringContaining("/api/workflows/payment/handleArtworkPaymentUpdatesByFlw"),
+      expect.stringContaining(
+        "/api/workflows/payment/handleArtworkPaymentUpdatesByFlw",
+      ),
       expect.any(String),
       expect.any(String),
     );

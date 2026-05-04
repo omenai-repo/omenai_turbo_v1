@@ -12,25 +12,19 @@ vi.mock("@omenai/shared-lib/mongo_connect/mongoConnect", () => ({
   connectMongoDB: vi.fn(),
 }));
 
-vi.mock(
-  "@omenai/shared-models/models/deletion/DeletionRequestSchema",
-  () => ({
-    DeletionRequestModel: {
-      find: vi.fn(),
-      updateMany: vi.fn(),
-      bulkWrite: vi.fn(),
-    },
-  }),
-);
+vi.mock("@omenai/shared-models/models/deletion/DeletionRequestSchema", () => ({
+  DeletionRequestModel: {
+    find: vi.fn(),
+    updateMany: vi.fn(),
+    bulkWrite: vi.fn(),
+  },
+}));
 
-vi.mock(
-  "@omenai/shared-models/models/deletion/DeletionTaskSchema",
-  () => ({
-    DeletionTaskModel: {
-      create: vi.fn(),
-    },
-  }),
-);
+vi.mock("@omenai/shared-models/models/deletion/DeletionTaskSchema", () => ({
+  DeletionTaskModel: {
+    create: vi.fn(),
+  },
+}));
 
 vi.mock(
   "@omenai/shared-models/models/deletion/FailedDeletionTaskSchema",
@@ -49,9 +43,29 @@ vi.mock("../../../../app/api/cron/utils", () => ({
   verifyAuthVercel: vi.fn().mockResolvedValue(undefined),
   pollExpiredDeletionRequests: vi.fn(),
   serviceMap: {
-    user: ["order_service", "purchase_transaction_service", "account_service", "misc_service"],
-    artist: ["order_service", "wallet_service", "categorization_service", "upload_service", "account_service", "sales_service", "misc_service"],
-    gallery: ["order_service", "subscriptions_service", "upload_service", "account_service", "sales_service", "misc_service"],
+    user: [
+      "order_service",
+      "purchase_transaction_service",
+      "account_service",
+      "misc_service",
+    ],
+    artist: [
+      "order_service",
+      "wallet_service",
+      "categorization_service",
+      "upload_service",
+      "account_service",
+      "sales_service",
+      "misc_service",
+    ],
+    gallery: [
+      "order_service",
+      "subscriptions_service",
+      "upload_service",
+      "account_service",
+      "sales_service",
+      "misc_service",
+    ],
   },
   createDeletionTaskPerService: vi.fn(),
 }));
@@ -68,7 +82,6 @@ vi.mock("../../../../custom/errors/handler/errorHandler", () => ({
 
 import { GET } from "../../../../app/api/cron/deletion/createDeletionTasks/route";
 import { DeletionRequestModel } from "@omenai/shared-models/models/deletion/DeletionRequestSchema";
-import { DeletionTaskModel } from "@omenai/shared-models/models/deletion/DeletionTaskSchema";
 import { FailedDeletionTaskModel } from "@omenai/shared-models/models/deletion/FailedDeletionTaskSchema";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import {
@@ -80,13 +93,10 @@ import {
 const CRON_SECRET = "test-cron-secret";
 
 function makeRequest(secret = CRON_SECRET): Request {
-  return new Request(
-    "http://localhost/api/cron/deletion/createDeletionTasks",
-    {
-      method: "GET",
-      headers: { Authorization: `Bearer ${secret}` },
-    },
-  );
+  return new Request("http://localhost/api/cron/deletion/createDeletionTasks", {
+    method: "GET",
+    headers: { Authorization: `Bearer ${secret}` },
+  });
 }
 
 const mockDeletionRequest = {
@@ -148,7 +158,9 @@ describe("GET /api/cron/deletion/createDeletionTasks", () => {
       .mockResolvedValueOnce([]);
 
     const mockTaskId = { toString: () => "task-id-001" };
-    vi.mocked(createDeletionTaskPerService).mockResolvedValue(mockTaskId as any);
+    vi.mocked(createDeletionTaskPerService).mockResolvedValue(
+      mockTaskId as any,
+    );
 
     const response = await GET(makeRequest());
     const body = await response.json();
@@ -168,7 +180,9 @@ describe("GET /api/cron/deletion/createDeletionTasks", () => {
 
     expect(DeletionRequestModel.updateMany).toHaveBeenCalledWith(
       { requestId: { $in: ["req-001"] } },
-      expect.objectContaining({ $set: expect.objectContaining({ status: "processing" }) }),
+      expect.objectContaining({
+        $set: expect.objectContaining({ status: "processing" }),
+      }),
     );
   });
 
@@ -177,7 +191,9 @@ describe("GET /api/cron/deletion/createDeletionTasks", () => {
       .mockResolvedValueOnce([mockDeletionRequest] as any)
       .mockResolvedValueOnce([]);
 
-    vi.mocked(createDeletionTaskPerService).mockResolvedValue("task-id-001" as any);
+    vi.mocked(createDeletionTaskPerService).mockResolvedValue(
+      "task-id-001" as any,
+    );
 
     await GET(makeRequest());
 
@@ -185,8 +201,9 @@ describe("GET /api/cron/deletion/createDeletionTasks", () => {
   });
 
   it("does not call FailedDeletionTaskModel.insertMany when createDeletionTaskPerService throws (error propagates to catch block)", async () => {
-    vi.mocked(pollExpiredDeletionRequests)
-      .mockResolvedValueOnce([mockDeletionRequest] as any);
+    vi.mocked(pollExpiredDeletionRequests).mockResolvedValueOnce([
+      mockDeletionRequest,
+    ] as any);
 
     vi.mocked(createDeletionTaskPerService).mockRejectedValue(
       new Error("Unexpected DB error"),
@@ -198,8 +215,9 @@ describe("GET /api/cron/deletion/createDeletionTasks", () => {
   });
 
   it("returns 200 when createDeletionTaskPerService returns undefined (handles its own errors internally)", async () => {
-    vi.mocked(pollExpiredDeletionRequests)
-      .mockResolvedValueOnce([mockDeletionRequest] as any);
+    vi.mocked(pollExpiredDeletionRequests).mockResolvedValueOnce([
+      mockDeletionRequest,
+    ] as any);
 
     vi.mocked(createDeletionTaskPerService).mockResolvedValue(undefined as any);
 

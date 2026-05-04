@@ -52,7 +52,7 @@ describe("POST /api/shipment/create_ups_shipment", () => {
   });
 
   it("returns 401 when internal secret header is missing", async () => {
-    const request = makeRequest({ secret: null });
+    makeRequest({ secret: null });
     // Remove the header entirely
     const headerlessRequest = new Request(
       "http://localhost/api/shipment/create_ups_shipment",

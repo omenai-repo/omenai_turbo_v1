@@ -75,7 +75,7 @@ describe("POST /api/wallet/add_primary_account", () => {
       primary_withdrawal_account: null,
     });
     vi.mocked(Wallet.updateOne).mockResolvedValue({ modifiedCount: 1 } as any);
-    global.fetch = vi.fn().mockResolvedValue({
+    globalThis.fetch = vi.fn().mockResolvedValue({
       ok: true,
       json: vi.fn().mockResolvedValue({ data: { id: 12345 } }),
     } as any);
