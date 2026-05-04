@@ -241,10 +241,10 @@ export default function ArtworkCard({
             </p>
           )}
 
-          {/* Price / status row */}
           <div className="flex items-center justify-between gap-2 pt-0.5">
-            <span
-              className={`
+            {!isAvailable && (
+              <span
+                className={`
               text-[9px] uppercase tracking-[0.18em] font-medium font-sans
               px-2 py-1 border leading-none shrink-0
               ${
@@ -253,18 +253,19 @@ export default function ArtworkCard({
                   : "border-neutral-300 text-neutral-400"
               }
             `}
-            >
-              {isAvailable ? "Available" : "Sold"}
-            </span>
+              >
+                Sold
+              </span>
+            )}
 
             {isAvailable && (
               <div className="text-right min-w-0">
                 {pricing?.shouldShowPrice === "Yes" ? (
-                  <span className="font-sans text-[12px] font-medium text-black leading-none">
+                  <span className="font-sans text-[14px] font-semibold text-black leading-none">
                     {formatPrice(pricing.usd_price)}
                   </span>
                 ) : (
-                  <span className="font-sans text-[10px] font-light italic text-neutral-400 leading-none">
+                  <span className="font-sans text-[12px] font-normal italic text-neutral-400 leading-none">
                     Request Price
                   </span>
                 )}
