@@ -76,7 +76,6 @@ describe("POST /api/admin/block_artist", () => {
     const response = await POST(
       makeRequest({ artist_id: "artist-123", status: "blocked" }),
     );
-    const body = await response.json();
 
     expect(response.status).toBe(500);
   });

@@ -51,7 +51,6 @@ describe("PATCH /api/artworks/updatePriceReviewRequest", () => {
     const response = await PATCH(
       makeRequest({ artist_id: "artist-abc", review_id: "review-123", action: "ACCEPT" }),
     );
-    const body = await response.json();
 
     expect(response.status).toBe(200);
     expect(review.status).toBe("APPROVED_COUNTER_PRICE");
@@ -65,7 +64,6 @@ describe("PATCH /api/artworks/updatePriceReviewRequest", () => {
     const response = await PATCH(
       makeRequest({ artist_id: "artist-abc", review_id: "review-123", action: "DECLINE" }),
     );
-    const body = await response.json();
 
     expect(response.status).toBe(200);
     expect(review.status).toBe("DECLINED_BY_ARTIST");
@@ -108,7 +106,6 @@ describe("PATCH /api/artworks/updatePriceReviewRequest", () => {
     const response = await PATCH(
       makeRequest({ artist_id: "artist-abc", review_id: "review-123", action: "APPROVE" }),
     );
-    const body = await response.json();
 
     expect(response.status).toBe(400);
   });

@@ -125,7 +125,6 @@ describe("POST /api/subscriptions/retrieveSubData", () => {
     } as any);
 
     const response = await POST(makeRequest({ gallery_id: "gallery-001" }));
-    const body = await response.json();
 
     expect(response.status).toBe(500);
   });

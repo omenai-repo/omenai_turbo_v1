@@ -89,7 +89,6 @@ describe("PUT /api/artworks/extendArtworkExclusivity", () => {
     vi.mocked(Artworkuploads.findOneAndUpdate).mockResolvedValue(null as any);
 
     const response = await PUT(makeRequest({ art_id: "art-123" }));
-    const body = await response.json();
 
     expect(response.status).toBe(500);
   });

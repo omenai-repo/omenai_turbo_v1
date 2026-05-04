@@ -85,7 +85,6 @@ describe("POST /api/subscriptions/cancelSubscription", () => {
     vi.mocked(Subscriptions.updateOne).mockRejectedValueOnce(new Error("DB error"));
 
     const response = await POST(makeRequest({ gallery_id: "gallery-001" }));
-    const body = await response.json();
 
     expect(response.status).toBe(500);
   });

@@ -78,7 +78,6 @@ describe("POST /api/flw/createCheckoutSession", () => {
     vi.mocked(fetchConfigCatValue).mockResolvedValue(false);
 
     const response = await POST(makeRequest(checkoutPayload));
-    const body = await response.json();
 
     expect(response.status).toBe(503);
   });

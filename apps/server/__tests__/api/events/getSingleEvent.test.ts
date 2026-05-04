@@ -66,7 +66,6 @@ describe("GET /api/events/getSingleEvent", () => {
     } as any);
 
     const response = await GET(makeRequest({ event_id: "evt-999" }));
-    const body = await response.json();
 
     expect(response.status).toBe(404);
   });

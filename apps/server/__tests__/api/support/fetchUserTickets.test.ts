@@ -155,7 +155,6 @@ describe("GET /api/support/fetchUserTickets", () => {
     });
 
     const response = await GET(makeRequest());
-    const body = await response.json();
 
     expect(response.status).toBe(500);
   });
@@ -166,7 +165,6 @@ describe("GET /api/support/fetchUserTickets", () => {
     );
 
     const response = await GET(makeRequest());
-    const body = await response.json();
 
     expect(response.status).toBe(500);
   });

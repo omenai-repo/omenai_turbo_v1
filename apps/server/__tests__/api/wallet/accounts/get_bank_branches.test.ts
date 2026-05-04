@@ -67,7 +67,6 @@ describe("GET /api/wallet/accounts/get_bank_branches", () => {
 
   it("returns 400 when bankCode param is missing", async () => {
     const response = await GET(makeRequest());
-    const body = await response.json();
 
     expect(response.status).toBe(400);
   });

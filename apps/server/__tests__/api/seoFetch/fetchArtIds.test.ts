@@ -83,7 +83,6 @@ describe("GET /api/seoFetch/fetchArtIds", () => {
     vi.mocked(connectMongoDB).mockRejectedValueOnce(new Error("DB connection failed"));
 
     const response = await GET();
-    const body = await response.json();
 
     expect(response.status).toBe(500);
   });
@@ -98,7 +97,6 @@ describe("GET /api/seoFetch/fetchArtIds", () => {
     } as any);
 
     const response = await GET();
-    const body = await response.json();
 
     expect(response.status).toBe(500);
   });

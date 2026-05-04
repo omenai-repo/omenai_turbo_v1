@@ -106,7 +106,6 @@ describe("POST /api/artworks/deleteArtwork", () => {
     mockDeleteOne(0);
 
     const response = await POST(makeRequest({ art_id: "art-123" }));
-    const body = await response.json();
 
     expect(response.status).toBe(500);
   });

@@ -74,7 +74,6 @@ describe("POST /api/workflows/emails/sendPaymentSuccessMail", () => {
 
   it("returns 201 when buyer and gallery seller emails succeed", async () => {
     const response = await POST(makeRequest({ ...basePayload, seller_entity: "gallery" }));
-    const body = await response.json();
 
     expect(response.status).toBe(201);
     expect(sendPaymentSuccessGalleryMail).toHaveBeenCalledOnce();

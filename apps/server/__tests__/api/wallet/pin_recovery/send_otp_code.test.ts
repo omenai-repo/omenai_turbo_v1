@@ -118,7 +118,6 @@ describe("POST /api/wallet/pin_recovery/send_otp_code", () => {
     vi.mocked(VerificationCodes.create).mockResolvedValue(null as any);
 
     const response = await POST(makeRequest({ artist_id: "artist-123" }));
-    const body = await response.json();
 
     expect(response.status).toBe(500);
   });

@@ -24,7 +24,8 @@ vi.mock("@omenai/shared-lib/configcat/configCatFetch", () => ({
 }));
 
 vi.mock("../../../app/api/util", async () => {
-  const { buildValidateRequestBodyMock } = await import("../../helpers/util-mock");
+  const { buildValidateRequestBodyMock } =
+    await import("../../helpers/util-mock");
   return buildValidateRequestBodyMock();
 });
 
@@ -105,7 +106,6 @@ describe("POST /api/wallet/add_primary_account", () => {
     vi.mocked(fetchConfigCatValue).mockResolvedValue(false as any);
 
     const response = await POST(makeRequest(ukAccountBody));
-    const body = await response.json();
 
     expect(response.status).toBe(503);
   });
@@ -138,7 +138,7 @@ describe("POST /api/wallet/add_primary_account", () => {
   });
 
   it("returns 400 when FLW API returns error for Africa account", async () => {
-    global.fetch = vi.fn().mockResolvedValue({
+    globalThis.fetch = vi.fn().mockResolvedValue({
       ok: false,
       json: vi.fn().mockResolvedValue({ message: "Invalid account details" }),
     } as any);
@@ -154,7 +154,6 @@ describe("POST /api/wallet/add_primary_account", () => {
     vi.mocked(Wallet.updateOne).mockResolvedValue({ modifiedCount: 0 } as any);
 
     const response = await POST(makeRequest(ukAccountBody));
-    const body = await response.json();
 
     expect(response.status).toBe(500);
   });

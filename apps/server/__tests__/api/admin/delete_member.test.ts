@@ -80,7 +80,6 @@ describe("PUT /api/admin/delete_member", () => {
     } as any);
 
     const response = await PUT(makeRequest(validBody));
-    const body = await response.json();
 
     expect(response.status).toBe(500);
   });

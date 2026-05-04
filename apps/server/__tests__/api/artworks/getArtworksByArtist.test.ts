@@ -73,7 +73,6 @@ describe("POST /api/artworks/getArtworksByArtist", () => {
 
   it("uses page 1 by default when page is not provided", async () => {
     const response = await POST(makeRequest({ artist: "artist-name" }));
-    const body = await response.json();
 
     // page defaults to 1 via schema, so the request succeeds
     expect(response.status).toBe(200);

@@ -263,7 +263,6 @@ describe("POST /api/subscriptions/stripe/verifyDiscountedSubscriptionCharge", ()
 
   it("returns 400 when required fields are missing", async () => {
     const response = await POST(makeRequest({ setupIntentId: "seti_123" }));
-    const body = await response.json();
 
     expect(response.status).toBe(400);
   });

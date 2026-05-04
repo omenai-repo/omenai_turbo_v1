@@ -177,7 +177,6 @@ describe("POST /api/stripe/createPaymentIntent", () => {
     vi.mocked(fetchConfigCatValue).mockResolvedValueOnce(false);
 
     const response = await POST(makeRequest(validBody));
-    const body = await response.json();
 
     expect(response.status).toBe(503);
   });
@@ -186,7 +185,6 @@ describe("POST /api/stripe/createPaymentIntent", () => {
     mockGalleryAndSubscription(null, mockSubscriptionActive);
 
     const response = await POST(makeRequest(validBody));
-    const body = await response.json();
 
     expect(response.status).toBe(403);
   });
@@ -198,14 +196,12 @@ describe("POST /api/stripe/createPaymentIntent", () => {
     });
 
     const response = await POST(makeRequest(validBody));
-    const body = await response.json();
 
     expect(response.status).toBe(403);
   });
 
   it("returns 400 when required fields are missing", async () => {
     const response = await POST(makeRequest({ seller_id: "gallery-001", meta: {} }));
-    const body = await response.json();
 
     expect(response.status).toBe(400);
   });
@@ -216,7 +212,6 @@ describe("POST /api/stripe/createPaymentIntent", () => {
     );
 
     const response = await POST(makeRequest(validBody));
-    const body = await response.json();
 
     expect(response.status).toBe(500);
   });

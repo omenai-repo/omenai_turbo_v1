@@ -136,7 +136,6 @@ describe("POST /api/subscriptions/stripe/createStripeTokenizedCharge", () => {
     const response = await POST(
       makeRequest({ amount: 49, gallery_id: "gallery-001", meta: {} }),
     );
-    const body = await response.json();
 
     expect(response.status).toBe(503);
   });
@@ -157,7 +156,6 @@ describe("POST /api/subscriptions/stripe/createStripeTokenizedCharge", () => {
     const response = await POST(
       makeRequest({ gallery_id: "gallery-001", meta: {} }),
     );
-    const body = await response.json();
 
     expect(response.status).toBe(400);
   });
@@ -170,7 +168,6 @@ describe("POST /api/subscriptions/stripe/createStripeTokenizedCharge", () => {
     const response = await POST(
       makeRequest({ amount: 49, gallery_id: "gallery-001", meta: {} }),
     );
-    const body = await response.json();
 
     expect(response.status).toBe(400);
   });

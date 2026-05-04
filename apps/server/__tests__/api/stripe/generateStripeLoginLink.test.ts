@@ -58,7 +58,6 @@ describe("POST /api/stripe/generateStripeLoginLink", () => {
     );
 
     const response = await POST(makeRequest({ account: "acct_bad" }));
-    const body = await response.json();
 
     expect(response.status).toBe(500);
   });

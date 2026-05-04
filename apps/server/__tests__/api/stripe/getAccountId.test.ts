@@ -96,7 +96,6 @@ describe("POST /api/stripe/getAccountId", () => {
     );
 
     const response = await POST(makeRequest({ gallery_id: "gallery-001" }));
-    const body = await response.json();
 
     expect(response.status).toBe(200);
     expect(AccountGallery.findOne).toHaveBeenCalled();
@@ -106,7 +105,6 @@ describe("POST /api/stripe/getAccountId", () => {
     vi.mocked(redis.get).mockRejectedValueOnce(new Error("Redis down"));
 
     const response = await POST(makeRequest({ gallery_id: "gallery-001" }));
-    const body = await response.json();
 
     expect(response.status).toBe(200);
     expect(AccountGallery.findOne).toHaveBeenCalled();
@@ -119,14 +117,12 @@ describe("POST /api/stripe/getAccountId", () => {
     } as any);
 
     const response = await POST(makeRequest({ gallery_id: "unknown" }));
-    const body = await response.json();
 
     expect(response.status).toBe(404);
   });
 
   it("returns 400 when gallery_id is missing", async () => {
     const response = await POST(makeRequest({}));
-    const body = await response.json();
 
     expect(response.status).toBe(400);
   });

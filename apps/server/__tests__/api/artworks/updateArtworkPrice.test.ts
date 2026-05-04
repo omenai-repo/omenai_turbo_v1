@@ -45,7 +45,6 @@ describe("POST /api/artworks/updateArtworkPrice", () => {
     vi.mocked(Artworkuploads.updateOne).mockResolvedValue({ modifiedCount: 0 } as any);
 
     const response = await POST(makeRequest({ art_id: "art-123", filter: { price: 1000 } }));
-    const body = await response.json();
 
     expect(response.status).toBe(500);
   });

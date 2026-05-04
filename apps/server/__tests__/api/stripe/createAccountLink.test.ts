@@ -67,7 +67,6 @@ describe("POST /api/stripe/createAccountLink", () => {
 
   it("returns 400 when account field is missing", async () => {
     const response = await POST(makeRequest({}));
-    const body = await response.json();
 
     expect(response.status).toBe(400);
   });
@@ -78,7 +77,6 @@ describe("POST /api/stripe/createAccountLink", () => {
     );
 
     const response = await POST(makeRequest({ account: "acct_123" }));
-    const body = await response.json();
 
     expect(response.status).toBe(500);
   });

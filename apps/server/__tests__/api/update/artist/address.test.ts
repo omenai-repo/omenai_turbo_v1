@@ -116,7 +116,6 @@ describe("POST /api/update/artist/address", () => {
     const response = await POST(
       makeRequest({ artist_id: "artist-1", address: ngAddress, base_currency: "NGN" }),
     );
-    const body = await response.json();
 
     expect(response.status).toBe(500);
   });

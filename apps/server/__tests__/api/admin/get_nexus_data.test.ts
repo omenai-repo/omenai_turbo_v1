@@ -61,14 +61,12 @@ describe("GET /api/admin/get_nexus_data", () => {
     vi.mocked(NexusTransactions.findOne).mockResolvedValue(null);
 
     const response = await GET(makeRequest("XX-XX"));
-    const body = await response.json();
 
     expect(response.status).toBe(500);
   });
 
   it("returns 400 when code param is missing", async () => {
     const response = await GET(makeRequest());
-    const body = await response.json();
 
     expect(response.status).toBe(400);
   });

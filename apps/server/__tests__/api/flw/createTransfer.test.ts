@@ -116,14 +116,12 @@ describe("POST /api/flw/createTransfer", () => {
     const response = await POST(
       makeRequest({ amount: 100, wallet_id: "wallet-001", wallet_pin: "1234" }),
     );
-    const body = await response.json();
 
     expect(response.status).toBe(503);
   });
 
   it("returns 400 when required body params are missing", async () => {
     const response = await POST(makeRequest({ amount: 100 }));
-    const body = await response.json();
 
     expect(response.status).toBe(400);
   });
@@ -134,7 +132,6 @@ describe("POST /api/flw/createTransfer", () => {
     const response = await POST(
       makeRequest({ amount: 100, wallet_id: "wallet-001", wallet_pin: "1234" }),
     );
-    const body = await response.json();
 
     expect(response.status).toBe(404);
   });
@@ -145,7 +142,6 @@ describe("POST /api/flw/createTransfer", () => {
     const response = await POST(
       makeRequest({ amount: 100, wallet_id: "wallet-001", wallet_pin: "wrong" }),
     );
-    const body = await response.json();
 
     expect(response.status).toBe(403);
   });
@@ -160,7 +156,6 @@ describe("POST /api/flw/createTransfer", () => {
     const response = await POST(
       makeRequest({ amount: 100, wallet_id: "wallet-001", wallet_pin: "1234" }),
     );
-    const body = await response.json();
 
     expect(response.status).toBe(403);
   });
@@ -174,7 +169,6 @@ describe("POST /api/flw/createTransfer", () => {
     const response = await POST(
       makeRequest({ amount: 100, wallet_id: "wallet-001", wallet_pin: "1234" }),
     );
-    const body = await response.json();
 
     expect(response.status).toBe(400);
   });

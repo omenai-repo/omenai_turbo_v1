@@ -115,7 +115,6 @@ describe("GET /api/admin/analytics/getFinancialMetrics", () => {
     vi.mocked(getFinancialChartData).mockResolvedValue({ success: false } as any);
 
     const response = await GET(makeRequest());
-    const body = await response.json();
 
     expect(response.status).toBe(500);
   });

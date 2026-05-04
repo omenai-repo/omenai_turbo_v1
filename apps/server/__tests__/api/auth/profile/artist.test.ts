@@ -77,7 +77,6 @@ describe("GET /api/auth/profile/artist", () => {
 
   it("returns 500 when the id query param is missing", async () => {
     const response = await GET(makeRequest());
-    const body = await response.json();
 
     expect(response.status).toBe(500);
     expect(AccountArtist.findOne).not.toHaveBeenCalled();
@@ -85,7 +84,6 @@ describe("GET /api/auth/profile/artist", () => {
 
   it("does not call the database when id is an empty string", async () => {
     const response = await GET(makeRequest(""));
-    const body = await response.json();
 
     expect(response.status).toBe(500);
     expect(AccountArtist.findOne).not.toHaveBeenCalled();

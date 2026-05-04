@@ -73,14 +73,12 @@ describe("GET /api/partners/getGalleryShows", () => {
     } as any);
 
     const response = await GET(makeRequest({ id: "gallery-1" }));
-    const body = await response.json();
 
     expect(response.status).toBe(400);
   });
 
   it("returns 400 when id param is missing", async () => {
     const response = await GET(makeRequest());
-    const body = await response.json();
 
     expect(response.status).toBe(400);
   });

@@ -112,7 +112,6 @@ describe("POST /api/subscriptions/retrieveDiscountStatus", () => {
 
   it("returns 400 when email is invalid format", async () => {
     const response = await POST(makeRequest({ email: "not-an-email" }));
-    const body = await response.json();
 
     expect(response.status).toBe(400);
   });
@@ -125,7 +124,6 @@ describe("POST /api/subscriptions/retrieveDiscountStatus", () => {
     } as any);
 
     const response = await POST(makeRequest({ email: "gallery@test.com" }));
-    const body = await response.json();
 
     expect(response.status).toBe(500);
   });

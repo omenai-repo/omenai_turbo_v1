@@ -51,7 +51,6 @@ describe("POST /api/update/artist/profile", () => {
 
   it("returns 200 when updating partial fields", async () => {
     const response = await POST(makeRequest({ id: "artist-2", phone: "+1234567890" }));
-    const body = await response.json();
 
     expect(response.status).toBe(200);
   });

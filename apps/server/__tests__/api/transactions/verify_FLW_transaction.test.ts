@@ -230,7 +230,6 @@ describe("POST /api/transactions/verify_FLW_transaction", () => {
     stubFetch({}, false);
 
     const response = await POST(makeRequest({ transaction_id: flwTxId }));
-    const body = await response.json();
 
     expect(response.status).toBe(500);
   });

@@ -209,7 +209,6 @@ describe("POST /api/auth/artist/register", () => {
     vi.mocked(AccountArtist.create).mockResolvedValue(null as any);
 
     const response = await POST(makeRequest(validBody));
-    const body = await response.json();
 
     expect(response.status).toBe(500);
   });
@@ -218,7 +217,6 @@ describe("POST /api/auth/artist/register", () => {
     vi.mocked(VerificationCodes.create).mockResolvedValue(null as any);
 
     const response = await POST(makeRequest(validBody));
-    const body = await response.json();
 
     expect(response.status).toBe(500);
   });
@@ -227,7 +225,6 @@ describe("POST /api/auth/artist/register", () => {
     vi.mocked(fetchConfigCatValue).mockResolvedValue(false);
 
     const response = await POST(makeRequest(validBody));
-    const body = await response.json();
 
     expect(response.status).toBe(503);
   });

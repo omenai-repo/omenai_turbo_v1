@@ -108,7 +108,6 @@ describe("GET /api/subscriptions/retrievePlans", () => {
     } as any);
 
     const response = await GET(makeRequest());
-    const body = await response.json();
 
     expect(response.status).toBe(500);
   });

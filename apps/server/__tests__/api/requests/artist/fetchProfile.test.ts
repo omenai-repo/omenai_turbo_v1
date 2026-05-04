@@ -11,7 +11,8 @@ vi.mock("@omenai/shared-models/models/auth/ArtistSchema", () => ({
 }));
 
 vi.mock("../../../../app/api/util", async () => {
-  const { buildValidateGetRouteParamsMock } = await import("../../../helpers/util-mock");
+  const { buildValidateGetRouteParamsMock } =
+    await import("../../../helpers/util-mock");
   return buildValidateGetRouteParamsMock();
 });
 

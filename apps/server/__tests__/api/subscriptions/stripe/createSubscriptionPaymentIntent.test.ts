@@ -131,7 +131,6 @@ describe("POST /api/subscriptions/stripe/createSubscriptionPaymentIntent", () =>
     vi.mocked(fetchConfigCatValue).mockResolvedValueOnce(false);
 
     const response = await POST(makeRequest(validBody));
-    const body = await response.json();
 
     expect(response.status).toBe(503);
   });
@@ -142,14 +141,12 @@ describe("POST /api/subscriptions/stripe/createSubscriptionPaymentIntent", () =>
     } as any);
 
     const response = await POST(makeRequest(validBody));
-    const body = await response.json();
 
     expect(response.status).toBe(500);
   });
 
   it("returns 400 when gallery_id is missing", async () => {
     const response = await POST(makeRequest({ amount: 49, meta: {} }));
-    const body = await response.json();
 
     expect(response.status).toBe(400);
   });
@@ -160,7 +157,6 @@ describe("POST /api/subscriptions/stripe/createSubscriptionPaymentIntent", () =>
     );
 
     const response = await POST(makeRequest(validBody));
-    const body = await response.json();
 
     expect(response.status).toBe(500);
   });

@@ -53,7 +53,6 @@ describe("POST /api/artworks/getSingleArtworkOnPurchase", () => {
     );
 
     const response = await POST(makeRequest({ art_id: "missing" }));
-    const body = await response.json();
 
     expect(response.status).toBe(404);
   });

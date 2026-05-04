@@ -200,7 +200,6 @@ describe("POST /api/auth/individual/sendPasswordResetLink", () => {
     const response = await POST(
       makeRequest({ recoveryEmail: "test@example.com" }),
     );
-    const body = await response.json();
 
     expect(response.status).toBe(500);
   });

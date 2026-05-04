@@ -91,14 +91,12 @@ describe("POST /api/sales/getActivityById", () => {
 
   it("returns 400 when id is missing", async () => {
     const response = await POST(makeRequest({ year: "2024" }));
-    const body = await response.json();
 
     expect(response.status).toBe(400);
   });
 
   it("returns 400 when year is missing", async () => {
     const response = await POST(makeRequest({ id: "gallery-001" }));
-    const body = await response.json();
 
     expect(response.status).toBe(400);
   });
@@ -107,7 +105,6 @@ describe("POST /api/sales/getActivityById", () => {
     vi.mocked(SalesActivity.find).mockRejectedValue(new Error("DB error"));
 
     const response = await POST(makeRequest({ id: "gallery-001", year: "2024" }));
-    const body = await response.json();
 
     expect(response.status).toBe(500);
   });
@@ -119,7 +116,6 @@ describe("POST /api/sales/getActivityById", () => {
     vi.mocked(connectMongoDB).mockRejectedValueOnce(new Error("Connection failed"));
 
     const response = await POST(makeRequest({ id: "gallery-001", year: "2024" }));
-    const body = await response.json();
 
     expect(response.status).toBe(500);
   });

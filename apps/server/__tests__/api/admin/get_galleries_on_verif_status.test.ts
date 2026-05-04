@@ -64,7 +64,6 @@ describe("GET /api/admin/get_galleries_on_verif_status", () => {
     const response = await GET(
       new Request("http://localhost/api/admin/get_galleries_on_verif_status"),
     );
-    const body = await response.json();
 
     expect(response.status).toBe(500);
   });

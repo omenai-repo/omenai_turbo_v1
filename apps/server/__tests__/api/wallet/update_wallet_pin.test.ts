@@ -119,7 +119,6 @@ describe("POST /api/wallet/update_wallet_pin", () => {
     const response = await POST(
       makeRequest({ wallet_id: "wallet-abc", pin: "5678" }),
     );
-    const body = await response.json();
 
     expect(response.status).toBe(500);
   });
@@ -140,7 +139,6 @@ describe("POST /api/wallet/update_wallet_pin", () => {
     const response = await POST(
       makeRequest({ wallet_id: "wallet-abc", pin: "5678" }),
     );
-    const body = await response.json();
 
     expect(response.status).toBe(201);
     expect(bcrypt.compareSync).not.toHaveBeenCalled();

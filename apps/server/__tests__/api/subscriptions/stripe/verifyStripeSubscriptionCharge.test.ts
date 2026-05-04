@@ -318,7 +318,6 @@ describe("POST /api/subscriptions/stripe/verifyStripeSubscriptionCharge", () => 
     );
 
     const response = await POST(makeRequest({ paymentIntentId: "pi_123" }));
-    const body = await response.json();
 
     expect(response.status).toBe(500);
   });

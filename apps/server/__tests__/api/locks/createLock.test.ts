@@ -93,7 +93,6 @@ describe("POST /api/locks/createLock", () => {
     vi.mocked(Artworkuploads.findOne).mockResolvedValue({ availability: false } as any);
 
     const response = await POST(makeRequest({ user_id: "user-001", art_id: "art-1" }));
-    const body = await response.json();
 
     expect(response.status).toBe(403);
   });

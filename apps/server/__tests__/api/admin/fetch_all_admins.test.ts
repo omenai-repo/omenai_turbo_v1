@@ -74,7 +74,6 @@ describe("GET /api/admin/fetch_all_admins", () => {
     vi.mocked(AccountAdmin.find).mockRejectedValue(new Error("DB error"));
 
     const response = await GET();
-    const body = await response.json();
 
     expect(response.status).toBe(500);
   });

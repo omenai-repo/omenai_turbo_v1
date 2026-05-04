@@ -64,7 +64,6 @@ describe("GET /api/subscriptions/retrieveSinglePlan", () => {
 
   it("returns 400 when plan_id param is missing", async () => {
     const response = await GET(makeRequest());
-    const body = await response.json();
 
     expect(response.status).toBe(400);
   });
@@ -75,7 +74,6 @@ describe("GET /api/subscriptions/retrieveSinglePlan", () => {
     } as any);
 
     const response = await GET(makeRequest("plan-999"));
-    const body = await response.json();
 
     expect(response.status).toBe(500);
   });
@@ -86,7 +84,6 @@ describe("GET /api/subscriptions/retrieveSinglePlan", () => {
     } as any);
 
     const response = await GET(makeRequest("plan-001"));
-    const body = await response.json();
 
     expect(response.status).toBe(500);
   });

@@ -15,8 +15,6 @@ vi.mock("@omenai/url-config/src/config", () => ({
 
 vi.mock("../../../../app/api/workflows/shipment/utils", () => ({
   getMongoClient: vi.fn().mockResolvedValue({}),
-  SHIPMENT_API_URL: "http://localhost/api/shipment/create_shipment",
-  UPS_SHIPMENT_API_URL: "http://localhost/api/shipment/create_ups_shipment",
 }));
 
 import { POST } from "../../../../app/api/workflows/notification/pushNotification/route";
@@ -79,23 +77,29 @@ describe("POST /api/workflows/notification/pushNotification", () => {
     } as any);
 
     const response = await POST(makeRequest(notificationPayload));
+    const body = await response.json();
 
     expect(response.status).toBe(500);
+    expect(body.message).toBeDefined();
   });
 
   it("returns 500 when pushNotification returns success false", async () => {
     vi.mocked(pushNotification).mockResolvedValue({ success: false } as any);
 
     const response = await POST(makeRequest(notificationPayload));
+    const body = await response.json();
 
     expect(response.status).toBe(500);
+    expect(body.message).toBeDefined();
   });
 
   it("returns 500 when fetch throws", async () => {
-    global.fetch = vi.fn().mockRejectedValue(new Error("Network error"));
+    globalThis.fetch = vi.fn().mockRejectedValue(new Error("Network error"));
 
     const response = await POST(makeRequest(notificationPayload));
+    const body = await response.json();
 
     expect(response.status).toBe(500);
+    expect(body.message).toBeDefined();
   });
 });

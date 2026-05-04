@@ -77,7 +77,6 @@ describe("POST /api/artworks/updateArtworkImpressions", () => {
     vi.mocked(Artworkuploads.updateOne).mockResolvedValue({ modifiedCount: 0 } as any);
 
     const response = await POST(makeRequest({ id: "art-123", value: true, like_id: "user-1" }));
-    const body = await response.json();
 
     expect(response.status).toBe(500);
   });

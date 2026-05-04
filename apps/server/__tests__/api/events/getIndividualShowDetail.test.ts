@@ -65,7 +65,6 @@ describe("GET /api/events/getIndividualShowDetail", () => {
 
   it("returns 400 when eventId param is missing", async () => {
     const response = await GET(makeRequest());
-    const body = await response.json();
 
     expect(response.status).toBe(400);
   });

@@ -54,7 +54,6 @@ describe("POST /api/artworks/getSingleArtworkImpression", () => {
     mockFindOne(null);
 
     const response = await POST(makeRequest({ id: "art-123" }));
-    const body = await response.json();
 
     expect(response.status).toBe(500);
   });

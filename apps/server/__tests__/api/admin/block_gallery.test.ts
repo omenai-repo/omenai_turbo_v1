@@ -76,7 +76,6 @@ describe("POST /api/admin/block_gallery", () => {
     const response = await POST(
       makeRequest({ gallery_id: "gallery-123", status: "blocked" }),
     );
-    const body = await response.json();
 
     expect(response.status).toBe(500);
   });

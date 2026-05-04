@@ -71,7 +71,6 @@ describe("POST /api/stripe/checkStripeDetailsSubmitted", () => {
 
   it("returns 400 when accountId is missing", async () => {
     const response = await POST(makeRequest({}));
-    const body = await response.json();
 
     expect(response.status).toBe(400);
   });
@@ -82,7 +81,6 @@ describe("POST /api/stripe/checkStripeDetailsSubmitted", () => {
     );
 
     const response = await POST(makeRequest({ accountId: "acct_bad" }));
-    const body = await response.json();
 
     expect(response.status).toBe(500);
   });

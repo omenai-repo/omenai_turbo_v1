@@ -69,9 +69,20 @@ describe("PATCH /api/admin/support/patch", () => {
     const response = await PATCH(
       makeRequest(undefined, { status: "resolved", priority: "low" }),
     );
-    const body = await response.json();
 
     expect(response.status).toBe(400);
+  });
+
+  it("returns 404 when ticket is not found", async () => {
+    vi.mocked(SupportTicket.findOneAndUpdate).mockResolvedValue(null);
+
+    const response = await PATCH(
+      makeRequest("TK-999", { status: "resolved", priority: "low" }),
+    );
+    const body = await response.json();
+
+    expect(response.status).toBe(404);
+    expect(body.message).toBeDefined();
   });
 
   it("returns 400 when status is missing in body", async () => {

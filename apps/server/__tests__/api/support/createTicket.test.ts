@@ -149,7 +149,6 @@ describe("POST /api/support", () => {
   it("returns 400 when category is missing", async () => {
     const { message, pageUrl, userEmail } = validBody;
     const response = await POST(makeRequest({ message, pageUrl, userEmail }));
-    const body = await response.json();
 
     expect(response.status).toBe(400);
   });
@@ -157,7 +156,6 @@ describe("POST /api/support", () => {
   it("returns 400 when message is missing", async () => {
     const { category, pageUrl, userEmail } = validBody;
     const response = await POST(makeRequest({ category, pageUrl, userEmail }));
-    const body = await response.json();
 
     expect(response.status).toBe(400);
   });
@@ -166,7 +164,6 @@ describe("POST /api/support", () => {
     vi.mocked(SupportTicket.create).mockRejectedValueOnce(new Error("DB error"));
 
     const response = await POST(makeRequest(validBody));
-    const body = await response.json();
 
     expect(response.status).toBe(500);
   });

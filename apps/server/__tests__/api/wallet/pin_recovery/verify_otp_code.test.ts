@@ -83,7 +83,6 @@ describe("POST /api/wallet/pin_recovery/verify_otp_code", () => {
     } as any);
 
     const response = await POST(makeRequest(validBody));
-    const body = await response.json();
 
     expect(response.status).toBe(500);
   });

@@ -74,7 +74,6 @@ describe("GET /api/admin/fetch_artist_verif_info", () => {
     vi.mocked(AccountArtist.findOne).mockResolvedValue(null);
 
     const response = await GET(makeRequest("ghost-artist"));
-    const body = await response.json();
 
     expect(response.status).toBe(500);
   });
@@ -83,14 +82,12 @@ describe("GET /api/admin/fetch_artist_verif_info", () => {
     vi.mocked(ArtistCategorization.findOne).mockResolvedValue(null);
 
     const response = await GET(makeRequest("artist-123"));
-    const body = await response.json();
 
     expect(response.status).toBe(500);
   });
 
   it("returns 400 when id param is missing", async () => {
     const response = await GET(makeRequest());
-    const body = await response.json();
 
     expect(response.status).toBe(400);
   });

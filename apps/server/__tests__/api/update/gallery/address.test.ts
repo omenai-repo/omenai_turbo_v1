@@ -73,7 +73,6 @@ describe("POST /api/update/gallery/address", () => {
     vi.mocked(validateDHLAddress).mockRejectedValue(new Error("Invalid address"));
 
     const response = await POST(makeRequest({ gallery_id: "gallery-1", address: ukAddress }));
-    const body = await response.json();
 
     expect(response.status).toBe(500);
   });

@@ -101,7 +101,6 @@ describe("POST /api/orders/confirmOrderDelivery", () => {
     const response = await POST(
       makeRequest({ order_id: "order-abc", confirm_delivery: "confirmed" }),
     );
-    const body = await response.json();
 
     expect(response.status).toBe(200);
     expect(sendGalleryShipmentSuccessEmail).toHaveBeenCalled();

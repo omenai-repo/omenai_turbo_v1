@@ -75,7 +75,6 @@ describe("POST /api/wallet/fund_wallet", () => {
     const response = await POST(
       makeRequest({ owner_id: "artist-123", amount: 100 }),
     );
-    const body = await response.json();
 
     expect(response.status).toBe(500);
   });

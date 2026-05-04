@@ -69,7 +69,6 @@ describe("PUT /api/admin/update_admin_profile", () => {
     } as any);
 
     const response = await PUT(makeRequest(validBody));
-    const body = await response.json();
 
     expect(response.status).toBe(409);
   });

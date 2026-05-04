@@ -63,7 +63,6 @@ describe("POST /api/stripe/retrieveBalance", () => {
     );
 
     const response = await POST(makeRequest({ account: "acct_bad" }));
-    const body = await response.json();
 
     expect(response.status).toBe(500);
   });

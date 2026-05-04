@@ -52,7 +52,6 @@ describe("GET /api/admin/analytics/getAcquisitionMetrics", () => {
     vi.mocked(getAcquisitionMetrics).mockResolvedValue({ success: false } as any);
 
     const response = await GET();
-    const body = await response.json();
 
     expect(response.status).toBe(500);
   });

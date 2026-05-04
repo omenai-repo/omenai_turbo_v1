@@ -70,14 +70,12 @@ describe("GET /api/admin/fetch_waitlist_users", () => {
 
   it("returns 400 when entity param is missing", async () => {
     const response = await GET(makeRequest());
-    const body = await response.json();
 
     expect(response.status).toBe(400);
   });
 
   it("returns 400 when entity is not a valid enum value", async () => {
     const response = await GET(makeRequest("collector"));
-    const body = await response.json();
 
     expect(response.status).toBe(400);
   });

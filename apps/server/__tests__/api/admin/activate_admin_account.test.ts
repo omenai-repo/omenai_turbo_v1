@@ -111,7 +111,6 @@ describe("POST /api/admin/activate_admin_account", () => {
     });
 
     const response = await POST(makeRequest(validBody));
-    const body = await response.json();
 
     expect(response.status).toBe(403);
   });
@@ -132,7 +131,6 @@ describe("POST /api/admin/activate_admin_account", () => {
     } as any);
 
     const response = await POST(makeRequest(validBody));
-    const body = await response.json();
 
     expect(response.status).toBe(500);
   });

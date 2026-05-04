@@ -134,7 +134,6 @@ describe("POST /api/orders/accept_order_request", () => {
     } as any);
 
     const response = await POST(makeRequest(validBody));
-    const body = await response.json();
 
     expect(response.status).toBe(200);
     expect(getUPSRates).toHaveBeenCalled();
@@ -174,7 +173,6 @@ describe("POST /api/orders/accept_order_request", () => {
     vi.mocked(Subscriptions.findOne).mockResolvedValue({ status: "active" } as any);
 
     const response = await POST(makeRequest(validBody));
-    const body = await response.json();
 
     expect(response.status).toBe(200);
   });

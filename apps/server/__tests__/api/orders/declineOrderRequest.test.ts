@@ -128,7 +128,6 @@ describe("POST /api/orders/declineOrderRequest", () => {
     } as any);
 
     const response = await POST(makeRequest(validArtistBody));
-    const body = await response.json();
 
     expect(response.status).toBe(200);
     expect(mockSession.commitTransaction).toHaveBeenCalled();

@@ -128,7 +128,6 @@ describe("PATCH /api/notifications/updateNotifications", () => {
     } as any);
 
     const response = await PATCH(makeRequest(validBody));
-    const body = await response.json();
 
     expect(response.status).toBe(404);
   });

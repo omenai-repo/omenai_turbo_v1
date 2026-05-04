@@ -80,7 +80,6 @@ describe("GET /api/tour", () => {
 
   it("returns 400 when id param is missing", async () => {
     const response = await GET(makeRequest());
-    const body = await response.json();
 
     expect(response.status).toBe(400);
   });

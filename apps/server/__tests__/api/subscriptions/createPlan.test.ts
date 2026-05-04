@@ -66,7 +66,6 @@ describe("POST /api/subscriptions/createPlan", () => {
     vi.mocked(SubscriptionPlan.create).mockResolvedValueOnce(null as any);
 
     const response = await POST(makeRequest(validPlanData));
-    const body = await response.json();
 
     expect(response.status).toBe(500);
   });
@@ -75,7 +74,6 @@ describe("POST /api/subscriptions/createPlan", () => {
     vi.mocked(SubscriptionPlan.create).mockRejectedValueOnce(new Error("Duplicate key"));
 
     const response = await POST(makeRequest(validPlanData));
-    const body = await response.json();
 
     expect(response.status).toBe(500);
   });

@@ -92,7 +92,6 @@ describe("POST /api/admin/accept_gallery_verification", () => {
     } as any);
 
     const response = await POST(makeRequest({ gallery_id: "gallery-123" }));
-    const body = await response.json();
 
     expect(response.status).toBe(500);
   });

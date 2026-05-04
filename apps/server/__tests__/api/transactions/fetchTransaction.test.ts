@@ -119,7 +119,6 @@ describe("POST /api/transactions/fetchTransaction", () => {
     } as any);
 
     const response = await POST(makeRequest({ trans_recipient_id: "gallery-001" }));
-    const body = await response.json();
 
     expect(response.status).toBe(500);
   });

@@ -76,7 +76,6 @@ describe("POST /api/wallet/unlock_funds", () => {
     const response = await POST(
       makeRequest({ owner_id: "artist-123", amount: 200 }),
     );
-    const body = await response.json();
 
     expect(response.status).toBe(500);
   });

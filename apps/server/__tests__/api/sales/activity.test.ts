@@ -68,7 +68,6 @@ describe("POST /api/sales/activity", () => {
     vi.mocked(SalesActivity.create).mockResolvedValue(null as any);
 
     const response = await POST(makeRequest(mockSalesData));
-    const body = await response.json();
 
     expect(response.status).toBe(500);
   });
@@ -77,7 +76,6 @@ describe("POST /api/sales/activity", () => {
     vi.mocked(SalesActivity.create).mockRejectedValue(new Error("DB error"));
 
     const response = await POST(makeRequest(mockSalesData));
-    const body = await response.json();
 
     expect(response.status).toBe(500);
   });
@@ -86,7 +84,6 @@ describe("POST /api/sales/activity", () => {
     vi.mocked(connectMongoDB).mockRejectedValueOnce(new Error("Connection failed"));
 
     const response = await POST(makeRequest(mockSalesData));
-    const body = await response.json();
 
     expect(response.status).toBe(500);
   });

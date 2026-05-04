@@ -73,7 +73,6 @@ describe("POST /api/update/individual/address", () => {
     vi.mocked(validateDHLAddress).mockRejectedValue(new Error("Cannot ship there"));
 
     const response = await POST(makeRequest({ user_id: "user-1", address: usAddress }));
-    const body = await response.json();
 
     expect(response.status).toBe(500);
   });

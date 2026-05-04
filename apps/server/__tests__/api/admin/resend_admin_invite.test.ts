@@ -99,7 +99,6 @@ describe("POST /api/admin/resend_admin_invite", () => {
     });
 
     const response = await POST(makeRequest({ admin_id: "admin-123" }));
-    const body = await response.json();
 
     expect(response.status).toBe(403);
   });

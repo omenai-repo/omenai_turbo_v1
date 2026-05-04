@@ -95,7 +95,6 @@ describe("GET /api/artworks/getArtworkPriceForArtist", () => {
     vi.mocked(fetchConfigCatValue).mockResolvedValue(false);
 
     const response = await GET(makeRequest(validParams));
-    const body = await response.json();
 
     expect(response.status).toBe(403);
   });
@@ -144,7 +143,6 @@ describe("GET /api/artworks/getArtworkPriceForArtist", () => {
 
   it("returns 400 when medium is not a valid enum value", async () => {
     const response = await GET(makeRequest({ ...validParams, medium: "Watercolor" }));
-    const body = await response.json();
 
     expect(response.status).toBe(400);
   });

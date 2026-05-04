@@ -80,7 +80,6 @@ describe("POST /api/artworks/getAllArtworks", () => {
     vi.mocked(fetchArtworksFromCache).mockResolvedValue(null as any);
 
     const response = await POST(makeRequest({ page: 1 }));
-    const body = await response.json();
 
     expect(response.status).toBe(500);
   });

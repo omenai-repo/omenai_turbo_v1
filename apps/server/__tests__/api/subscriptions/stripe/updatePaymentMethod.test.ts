@@ -98,7 +98,6 @@ describe("PUT /api/subscriptions/stripe/updatePaymentMethod", () => {
     const response = await PUT(
       makeRequest({ setupIntentId: "seti_123", gallery_id: "gallery-001" }),
     );
-    const body = await response.json();
 
     expect(response.status).toBe(503);
   });
@@ -135,7 +134,6 @@ describe("PUT /api/subscriptions/stripe/updatePaymentMethod", () => {
 
   it("returns 400 when setupIntentId is missing", async () => {
     const response = await PUT(makeRequest({ gallery_id: "gallery-001" }));
-    const body = await response.json();
 
     expect(response.status).toBe(400);
   });
@@ -146,7 +144,6 @@ describe("PUT /api/subscriptions/stripe/updatePaymentMethod", () => {
     const response = await PUT(
       makeRequest({ setupIntentId: "seti_123", gallery_id: "gallery-001" }),
     );
-    const body = await response.json();
 
     expect(response.status).toBe(500);
   });

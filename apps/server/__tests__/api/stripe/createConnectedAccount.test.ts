@@ -114,7 +114,6 @@ describe("POST /api/stripe/createConnectedAccount", () => {
     vi.mocked(AccountGallery.updateOne).mockResolvedValueOnce({ modifiedCount: 0 } as any);
 
     const response = await POST(makeRequest({ customer: validCustomer }));
-    const body = await response.json();
 
     expect(response.status).toBe(500);
   });
@@ -123,7 +122,6 @@ describe("POST /api/stripe/createConnectedAccount", () => {
     vi.mocked(stripe.accounts.create).mockRejectedValueOnce(new Error("Stripe error"));
 
     const response = await POST(makeRequest({ customer: validCustomer }));
-    const body = await response.json();
 
     expect(response.status).toBe(500);
   });
@@ -132,21 +130,18 @@ describe("POST /api/stripe/createConnectedAccount", () => {
     vi.mocked(redis.del).mockRejectedValueOnce(new Error("Redis error"));
 
     const response = await POST(makeRequest({ customer: validCustomer }));
-    const body = await response.json();
 
     expect(response.status).toBe(201);
   });
 
   it("returns 400 when customer fields are missing", async () => {
     const response = await POST(makeRequest({ customer: { name: "Only Name" } }));
-    const body = await response.json();
 
     expect(response.status).toBe(400);
   });
 
   it("returns 400 when customer is missing entirely", async () => {
     const response = await POST(makeRequest({}));
-    const body = await response.json();
 
     expect(response.status).toBe(400);
   });

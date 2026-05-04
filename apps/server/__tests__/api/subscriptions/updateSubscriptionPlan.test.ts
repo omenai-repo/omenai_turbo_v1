@@ -109,7 +109,6 @@ describe("POST /api/subscriptions/updateSubscriptionPlan", () => {
 
   it("returns 400 when action is missing", async () => {
     const response = await POST(makeRequest({ gallery_id: "gallery-001", data: {} }));
-    const body = await response.json();
 
     expect(response.status).toBe(400);
   });
@@ -120,7 +119,6 @@ describe("POST /api/subscriptions/updateSubscriptionPlan", () => {
     const response = await POST(
       makeRequest({ gallery_id: "gallery-001", action: "upgrade", data: {} }),
     );
-    const body = await response.json();
 
     expect(response.status).toBe(500);
   });

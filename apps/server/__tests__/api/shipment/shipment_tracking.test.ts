@@ -138,7 +138,6 @@ describe("GET /api/shipment/shipment_tracking", () => {
     vi.mocked(getUPSTracking).mockResolvedValue(mockDhlTrackingResult as any);
 
     const response = await GET(makeRequest("ORD-12345"));
-    const body = await response.json();
 
     expect(response.status).toBe(200);
     expect(getUPSTracking).toHaveBeenCalledWith("UPS-TRACK-001");

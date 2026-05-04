@@ -195,7 +195,6 @@ describe("POST /api/stripe/verifyPaymentTransaction", () => {
     } as any);
 
     const response = await POST(makeRequest({ checkout_session_id: "cs_expired" }));
-    const body = await response.json();
 
     expect(response.status).toBe(500);
   });
@@ -220,7 +219,6 @@ describe("POST /api/stripe/verifyPaymentTransaction", () => {
 
   it("returns 500 when neither payment_intent_id nor checkout_session_id is provided", async () => {
     const response = await POST(makeRequest({}));
-    const body = await response.json();
 
     expect(response.status).toBe(500);
   });
@@ -310,7 +308,6 @@ describe("POST /api/stripe/verifyPaymentTransaction", () => {
     vi.mocked(CreateOrder.updateOne).mockResolvedValue({ modifiedCount: 0 } as any);
 
     const response = await POST(makeRequest({ payment_intent_id: "pi_abc123" }));
-    const body = await response.json();
 
     expect(response.status).toBe(500);
   });
@@ -321,7 +318,6 @@ describe("POST /api/stripe/verifyPaymentTransaction", () => {
     );
 
     const response = await POST(makeRequest({ payment_intent_id: "pi_abc123" }));
-    const body = await response.json();
 
     expect(response.status).toBe(500);
   });

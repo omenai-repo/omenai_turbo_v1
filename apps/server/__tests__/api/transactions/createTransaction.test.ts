@@ -106,7 +106,6 @@ describe("POST /api/transactions/createTransaction", () => {
     );
 
     const response = await POST(makeRequest(validTransactionData));
-    const body = await response.json();
 
     expect(response.status).toBe(500);
   });
@@ -116,7 +115,6 @@ describe("POST /api/transactions/createTransaction", () => {
     vi.mocked(connectMongoDB).mockRejectedValueOnce(new Error("Connection refused"));
 
     const response = await POST(makeRequest(validTransactionData));
-    const body = await response.json();
 
     expect(response.status).toBe(500);
   });

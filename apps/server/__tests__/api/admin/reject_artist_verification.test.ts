@@ -78,7 +78,6 @@ describe("POST /api/admin/reject_artist_verification", () => {
     vi.mocked(RejectedGallery.create).mockResolvedValue(null as any);
 
     const response = await POST(makeRequest(validBody));
-    const body = await response.json();
 
     expect(response.status).toBe(500);
   });

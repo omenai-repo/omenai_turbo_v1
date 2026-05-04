@@ -77,7 +77,6 @@ describe("GET /api/flw/getTransferRate", () => {
 
   it("returns 400 when source param is missing", async () => {
     const response = await GET(makeRequest({ destination: "USD", amount: "100" }));
-    const body = await response.json();
 
     expect(response.status).toBe(400);
   });

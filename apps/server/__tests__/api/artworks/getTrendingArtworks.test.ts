@@ -77,7 +77,6 @@ describe("POST /api/artworks/getTrendingArtworks", () => {
 
   it("uses page 1 by default when page is not provided", async () => {
     const response = await POST(makeRequest({ filters: {} }));
-    const body = await response.json();
 
     // page defaults to 1 via schema, so the request succeeds
     expect(response.status).toBe(200);

@@ -125,7 +125,6 @@ describe("POST /api/subscriptions/stripe/createPaymentMethodSetupIntent", () => 
     const response = await POST(
       makeRequest({ gallery_id: "gallery-001", email: "gallery@test.com" }),
     );
-    const body = await response.json();
 
     expect(response.status).toBe(503);
   });
@@ -138,14 +137,12 @@ describe("POST /api/subscriptions/stripe/createPaymentMethodSetupIntent", () => 
     const response = await POST(
       makeRequest({ gallery_id: "unknown", email: "gallery@test.com" }),
     );
-    const body = await response.json();
 
     expect(response.status).toBe(500);
   });
 
   it("returns 400 when gallery_id is missing", async () => {
     const response = await POST(makeRequest({ email: "gallery@test.com" }));
-    const body = await response.json();
 
     expect(response.status).toBe(400);
   });
@@ -154,7 +151,6 @@ describe("POST /api/subscriptions/stripe/createPaymentMethodSetupIntent", () => 
     const response = await POST(
       makeRequest({ gallery_id: "gallery-001", email: "not-an-email" }),
     );
-    const body = await response.json();
 
     expect(response.status).toBe(400);
   });
@@ -167,7 +163,6 @@ describe("POST /api/subscriptions/stripe/createPaymentMethodSetupIntent", () => 
     const response = await POST(
       makeRequest({ gallery_id: "gallery-001", email: "gallery@test.com" }),
     );
-    const body = await response.json();
 
     expect(response.status).toBe(500);
   });

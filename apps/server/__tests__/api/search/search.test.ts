@@ -133,7 +133,6 @@ describe("POST /api/search", () => {
     } as any);
 
     const response = await POST(makeRequest({ searchTerm: "Lagos" }));
-    const body = await response.json();
 
     expect(response.status).toBe(500);
   });
@@ -142,7 +141,6 @@ describe("POST /api/search", () => {
     vi.mocked(fetchArtworksFromCache).mockRejectedValue(new Error("Redis error"));
 
     const response = await POST(makeRequest({ searchTerm: "Lagos" }));
-    const body = await response.json();
 
     expect(response.status).toBe(500);
   });
@@ -154,7 +152,6 @@ describe("POST /api/search", () => {
     vi.mocked(connectMongoDB).mockRejectedValueOnce(new Error("DB connection failed"));
 
     const response = await POST(makeRequest({ searchTerm: "Lagos" }));
-    const body = await response.json();
 
     expect(response.status).toBe(500);
   });

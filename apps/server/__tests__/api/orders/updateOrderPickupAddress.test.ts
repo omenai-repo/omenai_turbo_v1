@@ -97,7 +97,6 @@ describe("PATCH /api/orders/updateOrderPickupAddress", () => {
     const response = await PATCH(
       makeRequest({ type: "pickup", order_id: "order-abc", pickupAddress: upsPickupAddress }),
     );
-    const body = await response.json();
 
     expect(response.status).toBe(200);
     expect(validateDHLAddress).not.toHaveBeenCalled();
@@ -125,7 +124,6 @@ describe("PATCH /api/orders/updateOrderPickupAddress", () => {
     const response = await PATCH(
       makeRequest({ type: "pickup", order_id: "order-abc", pickupAddress: dhlPickupAddress }),
     );
-    const body = await response.json();
 
     // plain Error doesn't match any name in errorStatusMap → 500
     expect(response.status).toBe(500);

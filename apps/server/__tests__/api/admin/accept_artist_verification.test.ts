@@ -148,7 +148,6 @@ describe("POST /api/admin/accept_artist_verification", () => {
     const response = await POST(
       makeRequest({ artist_id: "artist-123", recommendation: "" }),
     );
-    const body = await response.json();
 
     expect(response.status).toBe(404);
   });
@@ -161,7 +160,6 @@ describe("POST /api/admin/accept_artist_verification", () => {
     const response = await POST(
       makeRequest({ artist_id: "artist-123", recommendation: "emerging" }),
     );
-    const body = await response.json();
 
     expect(response.status).toBe(500);
   });
@@ -174,7 +172,6 @@ describe("POST /api/admin/accept_artist_verification", () => {
     const response = await POST(
       makeRequest({ artist_id: "artist-123", recommendation: "emerging" }),
     );
-    const body = await response.json();
 
     expect(response.status).toBe(500);
   });

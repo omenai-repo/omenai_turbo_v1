@@ -84,7 +84,6 @@ describe("POST /api/auth/admin/register", () => {
   // which causes a ReferenceError. This test reflects the current behavior.
   it("returns 500 due to undefined `data` spread in AccountAdmin.create()", async () => {
     const response = await POST(makeRequest(validBody));
-    const body = await response.json();
 
     expect(response.status).toBe(500);
   });
@@ -103,7 +102,6 @@ describe("POST /api/auth/admin/register", () => {
     vi.mocked(AccountAdmin.create).mockResolvedValue(null as any);
 
     const response = await POST(makeRequest(validBody));
-    const body = await response.json();
 
     expect(response.status).toBe(500);
   });
@@ -112,7 +110,6 @@ describe("POST /api/auth/admin/register", () => {
     vi.mocked(VerificationCodes.create).mockResolvedValue(null as any);
 
     const response = await POST(makeRequest(validBody));
-    const body = await response.json();
 
     expect(response.status).toBe(500);
   });
