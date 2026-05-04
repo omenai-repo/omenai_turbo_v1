@@ -12,21 +12,32 @@ vi.mock("@omenai/shared-lib/mongo_connect/mongoConnect", () => ({
 vi.mock("@omenai/shared-models/models/auth/ArtistSchema", () => ({
   AccountArtist: { findOne: vi.fn() },
 }));
-vi.mock("@omenai/shared-models/models/artworks/ArtworkPriceReviewSchema", () => ({
-  PriceReview: class {
-    constructor(_data: any) {}
-    save() { return Promise.resolve(); }
-  },
-}));
+vi.mock(
+  "@omenai/shared-models/models/artworks/ArtworkPriceReviewSchema",
+  () => ({
+    PriceReview: class {
+      constructor(_data: any) {}
+      save() {
+        return Promise.resolve();
+      }
+    },
+  }),
+);
 vi.mock("../../../app/api/services/uploadArtwork.service", () => ({
   uploadArtworkLogic: vi.fn().mockResolvedValue({ message: "uploaded" }),
 }));
-vi.mock("@omenai/shared-emails/src/models/artist/sendPriceReviewRequest", () => ({
-  sendPriceReviewRequest: vi.fn().mockResolvedValue(undefined),
-}));
-vi.mock("@omenai/shared-emails/src/models/admin/sendArtworkPriceReviewEmail", () => ({
-  sendArtworkPriceReviewEmail: vi.fn().mockResolvedValue(undefined),
-}));
+vi.mock(
+  "@omenai/shared-emails/src/models/artist/sendPriceReviewRequest",
+  () => ({
+    sendPriceReviewRequest: vi.fn().mockResolvedValue(undefined),
+  }),
+);
+vi.mock(
+  "@omenai/shared-emails/src/models/admin/sendArtworkPriceReviewEmail",
+  () => ({
+    sendArtworkPriceReviewEmail: vi.fn().mockResolvedValue(undefined),
+  }),
+);
 
 import { POST } from "../../../app/api/artworks/createPriceReviewRequest/route";
 import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
@@ -36,7 +47,9 @@ import { sendPriceReviewRequest } from "@omenai/shared-emails/src/models/artist/
 const anchorPrice = 1000;
 const mockMeta = {
   artwork: { title: "Sunset", art_id: "art-123" },
-  algorithm_recommendation: { priceRange: [600, 700, 800, anchorPrice, 1100, 1200] },
+  algorithm_recommendation: {
+    priceRange: [600, 700, 800, anchorPrice, 1100, 1200],
+  },
 };
 
 function makeRequest(body: object): Request {
@@ -47,18 +60,22 @@ function makeRequest(body: object): Request {
   });
 }
 
-function mockArtist(overrides: Partial<{
-  pricing_allowances: { auto_approvals_used: number; last_reset_date: Date };
-  categorization: string;
-}> = {}) {
+function mockArtist(
+  overrides: Partial<{
+    pricing_allowances: { auto_approvals_used: number; last_reset_date: Date };
+    categorization: string;
+  }> = {},
+) {
   const artist = {
     artist_id: "artist-123",
     name: "Test Artist",
     email: "artist@example.com",
     categorization: overrides.categorization ?? "Emerging",
     pricing_allowances: {
-      auto_approvals_used: overrides.pricing_allowances?.auto_approvals_used ?? 0,
-      last_reset_date: overrides.pricing_allowances?.last_reset_date ?? new Date(),
+      auto_approvals_used:
+        overrides.pricing_allowances?.auto_approvals_used ?? 0,
+      last_reset_date:
+        overrides.pricing_allowances?.last_reset_date ?? new Date(),
     },
     save: vi.fn().mockResolvedValue(undefined),
   };
@@ -120,7 +137,12 @@ describe("POST /api/artworks/createPriceReviewRequest", () => {
 
   describe("pending admin review", () => {
     it("sends to admin review when usage cap (3) is reached", async () => {
-      mockArtist({ pricing_allowances: { auto_approvals_used: 3, last_reset_date: new Date() } });
+      mockArtist({
+        pricing_allowances: {
+          auto_approvals_used: 3,
+          last_reset_date: new Date(),
+        },
+      });
 
       const response = await POST(
         makeRequest({
@@ -170,10 +192,6 @@ describe("POST /api/artworks/createPriceReviewRequest", () => {
     it("resets usage count when more than 30 days have passed since last reset", async () => {
       const oldDate = new Date();
       oldDate.setDate(oldDate.getDate() - 31);
-      const artist = mockArtist({
-        pricing_allowances: { auto_approvals_used: 3, last_reset_date: oldDate },
-        categorization: "Emerging",
-      });
 
       const response = await POST(
         makeRequest({
