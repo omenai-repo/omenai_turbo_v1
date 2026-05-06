@@ -537,6 +537,9 @@ async function handleSubscriptionSucceeded(paymentIntent: any, meta: any) {
     "successful",
   );
 
+  console.log(isProcessed);
+  console.log(paymentIntent, meta);
+
   if (isProcessed) {
     return NextResponse.json({ status: 200 });
   }
