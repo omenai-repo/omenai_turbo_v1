@@ -24,7 +24,7 @@ function idempotencyKey(opts: {
   subscriptionId: string;
   renewalPeriod: string;
 }) {
-  return `sub_renewal:${opts.subscriptionId}:${opts.renewalPeriod}`;
+  return `sub_renewals:${opts.subscriptionId}:${opts.renewalPeriod}`;
 }
 
 type LeanExpiredSub = {
