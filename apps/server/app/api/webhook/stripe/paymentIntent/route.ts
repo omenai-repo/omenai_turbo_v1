@@ -494,15 +494,15 @@ export async function runPurchasePostWorkflows(
 async function handleSubscriptionEvent({ event, pi, meta }: any) {
   console.log(event.type);
   if (event.type === "payment_intent.processing") {
-    return handleSubscriptionProcessing(pi, meta);
+    return await handleSubscriptionProcessing(pi, meta);
   }
 
   if (event.type === "payment_intent.payment_failed") {
-    return handleSubscriptionFailed(pi, meta);
+    return await handleSubscriptionFailed(pi, meta);
   }
 
   if (event.type === "payment_intent.succeeded") {
-    return handleSubscriptionSucceeded(pi, meta);
+    return await handleSubscriptionSucceeded(pi, meta);
   }
 
   return NextResponse.json({ status: 400 });
@@ -538,12 +538,12 @@ async function handleSubscriptionSucceeded(paymentIntent: any, meta: any) {
   );
 
   console.log(isProcessed);
-  console.log(paymentIntent, meta);
 
   if (isProcessed) {
     return NextResponse.json({ status: 200 });
   }
 
+  console.log("This is about to get run");
   return processSubscriptionSuccess(paymentIntent, meta);
 }
 
@@ -552,16 +552,19 @@ async function handleSubscriptionSucceeded(paymentIntent: any, meta: any) {
 /* -------------------------------------------------------------------------- */
 
 async function processSubscriptionSuccess(paymentIntent: any, meta: any) {
+  console.log("This has started running");
   const client = await connectMongoDB();
   const session = await client.startSession();
 
   const nowUTC = toUTCDate(new Date());
   const customer = String(paymentIntent.customer ?? meta.customer ?? "");
+  console.log(customer);
 
   try {
     session.startTransaction();
 
     const planId = meta.plan_id ?? meta.planId;
+
     const planInterval = meta.planInterval ?? meta.planInterval;
 
     if (!planId || !planInterval) {
@@ -579,6 +582,7 @@ async function processSubscriptionSuccess(paymentIntent: any, meta: any) {
 
     const expiryDate = getSubscriptionExpiryDate(planInterval);
 
+    console.log(expiryDate);
     const txnData: Omit<SubscriptionTransactionModelSchemaTypes, "trans_id"> = {
       amount:
         Number(paymentIntent.amount_received ?? paymentIntent.amount) / 100,
@@ -591,9 +595,10 @@ async function processSubscriptionSuccess(paymentIntent: any, meta: any) {
 
     await SubscriptionTransactions.findOneAndUpdate(
       { payment_ref: paymentIntent.id },
-      { $set: txnData },
+      { $setOnInsert: txnData },
       { upsert: true, new: true, session },
     );
+    console.log("This ran now");
 
     const limit = getUploadLimitLookup(plan.name, planInterval, false);
     const subPayload = {
@@ -630,13 +635,15 @@ async function processSubscriptionSuccess(paymentIntent: any, meta: any) {
       isDiscountSub: false,
     };
 
-    await Subscriptions.updateOne(
+    const update_sub = await Subscriptions.updateOne(
       { stripe_customer_id: customer },
       { $setOnInsert: subPayload },
       { upsert: true },
     ).session(session);
 
-    await AccountGallery.updateOne(
+    console.log(update_sub.modifiedCount, update_sub.matchedCount);
+
+    const update_gallery = await AccountGallery.updateOne(
       { gallery_id: meta.gallery_id },
       {
         $set: {
@@ -654,17 +661,17 @@ async function processSubscriptionSuccess(paymentIntent: any, meta: any) {
       { session },
     );
 
-    await Waitlist.updateOne(
-      { entityId: meta.gallery_id, entity: "gallery" },
-      { $set: { discount: null } },
-    ).session(session);
+    console.log(update_gallery.modifiedCount);
+
     await session.commitTransaction();
 
+    console.log("Your turn to run");
     await sendSubscriptionPaymentSuccessfulMail({
       name: meta.name ?? "",
       email: meta.email ?? "",
     });
 
+    console.log("Done");
     return NextResponse.json({ status: 200 });
   } catch (error) {
     if (session.inTransaction()) {
