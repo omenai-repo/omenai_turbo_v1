@@ -1,4 +1,3 @@
-// app/FallbackActions.tsx (Client Component)
 "use client";
 
 import { DeepLinkPayload } from "@omenai/shared-types";

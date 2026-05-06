@@ -9,6 +9,7 @@ import Stripe from "stripe";
 import pLimit from "p-limit"; // For concurrency control
 import { createErrorRollbarReport } from "../../../util";
 import { verifyAuthVercel } from "../../utils";
+import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
 
 export const revalidate = 0;
 export const dynamic = "force-dynamic";
@@ -39,6 +40,7 @@ type LeanExpiredSub = {
     value: number;
     currency?: string;
   };
+  subscription_id: string;
 };
 
 const MAX_CONCURRENT_RENEWALS = 5;
@@ -57,11 +59,11 @@ async function renewSubscription(
 }> {
   const email = sub.customer?.email;
   const amountMajor = sub.next_charge_params?.value;
-  const currency = (sub.next_charge_params?.currency || "usd").toLowerCase();
+  const currency = (sub.next_charge_params?.currency || "USD").toLowerCase();
 
   if (!sub.stripe_customer_id || !amountMajor) {
     return {
-      subscriptionId: sub._id,
+      subscriptionId: sub.subscription_id,
       email,
       ok: false,
       error: "Missing stripe_customer_id or amount",
@@ -69,13 +71,14 @@ async function renewSubscription(
   }
 
   const pm =
-    typeof sub.paymentMethod === "string"
+    sub.paymentMethod &&
+    (typeof sub.paymentMethod === "string"
       ? sub.paymentMethod
-      : sub.paymentMethod?.id;
+      : sub.paymentMethod.id);
 
   if (!pm) {
     return {
-      subscriptionId: sub._id,
+      subscriptionId: sub.subscription_id,
       email,
       ok: false,
       error: "No stored payment method",
@@ -95,7 +98,7 @@ async function renewSubscription(
           confirm: true,
           metadata: {
             type: "subscription_renewal",
-            subscription_id: sub._id,
+            subscription_id: sub.subscription_id,
             planId: sub.next_charge_params?.id ?? "",
             planInterval: sub.next_charge_params?.interval ?? "",
             gallery_id: sub.customer?.gallery_id ?? "",
@@ -103,20 +106,21 @@ async function renewSubscription(
         },
         {
           idempotencyKey: idempotencyKey({
-            subscriptionId: sub._id,
+            subscriptionId: sub.subscription_id,
             renewalPeriod,
           }),
         },
       );
+
+      console.log(pi.id);
       return {
-        subscriptionId: sub._id,
+        subscriptionId: sub.subscription_id,
         email,
         ok: true,
         paymentIntentId: pi.id,
       };
     } catch (err: any) {
       lastError = err;
-      // Retry only on transient Stripe errors
       if (
         attempt < MAX_RETRIES &&
         (err?.type === "rate_limit_error" ||
@@ -132,7 +136,7 @@ async function renewSubscription(
   }
   const stripeErr = lastError as Stripe.errors.StripeError;
   return {
-    subscriptionId: sub._id,
+    subscriptionId: sub.subscription_id,
     email,
     ok: false,
     error: stripeErr?.message ?? "Payment renewal failed",
@@ -142,7 +146,7 @@ async function renewSubscription(
 export const GET = withRateLimit(lenientRateLimit)(async function GET(
   request: Request,
 ) {
-  const now = new Date();
+  const now = toUTCDate(new Date());
   const renewalPeriod = `${now.getUTCFullYear()}-${now.getUTCMonth() + 1}`;
 
   try {
@@ -151,7 +155,7 @@ export const GET = withRateLimit(lenientRateLimit)(async function GET(
     await connectMongoDB();
     // 1) Mark overdue subs as expired (ignore canceled ones)
     await Subscriptions.updateMany(
-      { expiry_date: { $lte: now }, status: { $ne: "canceled" } },
+      { expiry_date: { $lte: now }, status: "active" },
       { $set: { status: "expired" } },
     );
 
@@ -163,7 +167,7 @@ export const GET = withRateLimit(lenientRateLimit)(async function GET(
       // 2) Fetch expired subs to attempt renewal (paginated)
       const expiredSubs: LeanExpiredSub[] = await Subscriptions.find(
         { expiry_date: { $lte: now }, status: "expired" },
-        "_id expiry_date stripe_customer_id customer paymentMethod next_charge_params",
+        "_id subscription_id expiry_date stripe_customer_id customer paymentMethod next_charge_params",
       )
         .lean<LeanExpiredSub[]>()
         .skip(page * PAGE_SIZE)

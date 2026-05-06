@@ -20,11 +20,28 @@ interface SubscriptionExpireAlertProps {
   day: string;
   email?: string;
 }
+function getExpiryDate(daysFromNow: number) {
+  const today = new Date();
+  const expiryDate = new Date(today);
 
+  expiryDate.setDate(today.getDate() + daysFromNow);
+
+  return expiryDate;
+}
+
+function formatDate(date: Date) {
+  return date.toLocaleDateString("en-US", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+  });
+}
 export const SubscriptionExpireAlert = ({
   name,
   day,
 }: SubscriptionExpireAlertProps) => {
+  const expiryDate = getExpiryDate(+day);
+
   return (
     <Html>
       <Head>
@@ -44,7 +61,7 @@ export const SubscriptionExpireAlert = ({
       </Head>
       <Preview>
         Courtesy Reminder: Your Omenai subscription is scheduled to renew on{" "}
-        {day}.
+        {formatDate(expiryDate)}.
       </Preview>
       <Tailwind>
         <Body
@@ -84,7 +101,8 @@ export const SubscriptionExpireAlert = ({
 
             <Text className="text-main text-gray-800" style={textStyle}>
               This is a courtesy reminder that your Omenai subscription is
-              scheduled for its automated renewal on <strong>{day}</strong>.
+              scheduled for its automated renewal on{" "}
+              <strong>{formatDate(expiryDate)}</strong>.
             </Text>
 
             <Text className="text-main text-gray-800" style={textStyle}>
@@ -98,6 +116,7 @@ export const SubscriptionExpireAlert = ({
               you may easily do so through your gallery dashboard:
             </Text>
 
+            {/* Note, this would be changed to a url token for deeplinking */}
             <Section style={{ margin: "24px 0" }}>
               <Button
                 href={`${dashboard_url()}/gallery/billing/card`}
