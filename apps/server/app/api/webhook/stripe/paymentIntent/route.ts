@@ -743,6 +743,7 @@ async function subscriptionIdempotencyCheck(
     payment_ref: paymentId,
     stripe_customer_id: customerId,
   });
+  console.log(existingPayment);
 
   if (existingPayment?.status === status) {
     return { isProcessed: true, existingPayment };
