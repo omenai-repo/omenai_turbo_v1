@@ -37,6 +37,7 @@ export default function MigrationUpgradeCheckoutItem({
     differenceInCalendarDays(now, startDate),
     totalDays,
   );
+  const isSubscriptionDiscount = sub_data.isDiscountSub;
   const progressPercentage = totalDays > 0 ? (days_used / totalDays) * 100 : 0;
   const days_left = Math.max(totalDays - days_used, 0);
 
@@ -49,6 +50,7 @@ export default function MigrationUpgradeCheckoutItem({
         plan,
         days_used,
         totalDays,
+        isSubscriptionDiscount,
       ),
     [startDate, interval, sub_data.plan_details, plan, days_used, totalDays],
   );
@@ -130,7 +132,7 @@ export default function MigrationUpgradeCheckoutItem({
               </span>
               <span>{formatPrice(upgradeCost, currency)}</span>
             </div>
-            {plan_change_params.shouldCharge && (
+            {!isSubscriptionDiscount && plan_change_params.shouldCharge && (
               <div className="flex justify-between text-green-400 italic">
                 <span>Prorated credit (unused time)</span>
                 <span>-{formatPrice(proratedPrice, currency)}</span>

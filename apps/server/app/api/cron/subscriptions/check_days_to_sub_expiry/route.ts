@@ -31,7 +31,7 @@ export const GET = withRateLimit(standardRateLimit)(async function GET(
     const results = await Subscriptions.aggregate([
       {
         $match: {
-          status: "active", // Only send reminders for active subscriptions
+          status: "active",
           $expr: {
             $in: [
               {
@@ -41,7 +41,7 @@ export const GET = withRateLimit(standardRateLimit)(async function GET(
                   unit: "day",
                 },
               },
-              [3, 2, 1], // 3, 2, or 1 days until expiry
+              [3, 2, 1],
             ],
           },
         },
@@ -53,7 +53,6 @@ export const GET = withRateLimit(standardRateLimit)(async function GET(
           "customer.gallery_id": 1,
           expiry_date: 1,
           plan_details: 1,
-          // Calculate days until expiry for email customization
           days_until_expiry: {
             $dateDiff: {
               startDate: today,
@@ -76,7 +75,7 @@ export const GET = withRateLimit(standardRateLimit)(async function GET(
         return {
           from: "Subscription <omenai@omenai.app>",
           to: [subscription.customer.email],
-          subject: `Your Subscription Expires ${subscription.days_until_expiry > 1 ? `in ${subscription.days_until_expiry} days` : "tomorrow"}`,
+          subject: `YourOmenai Gallery Subscription Expires ${subscription.days_until_expiry > 1 ? `in ${subscription.days_until_expiry} days` : "tomorrow"}`,
           html,
         };
       }),

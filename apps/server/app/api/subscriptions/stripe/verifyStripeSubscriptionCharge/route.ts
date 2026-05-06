@@ -182,6 +182,7 @@ function buildSubscriptionPayload(
     stripe_customer_id: customer,
     customer: { name, email, gallery_id },
     status: "active" as const,
+    isDiscountSub: false,
     plan_details: {
       type: plan.name,
       value: plan.pricing,
@@ -284,7 +285,7 @@ async function processSuccessfulPayment(
         subscription_status: {
           type: plan.name,
           active: true,
-          discount: { active: false, plan: null },
+          discount: { active: false, plan: null, isDiscountSub: false },
         },
       },
     },

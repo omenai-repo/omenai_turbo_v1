@@ -491,6 +491,7 @@ export async function runPurchasePostWorkflows(
 /* -------------------------------------------------------------------------- */
 
 async function handleSubscriptionEvent({ event, pi, meta }: any) {
+  console.log(event.type);
   if (event.type === "payment_intent.processing") {
     return handleSubscriptionProcessing(pi, meta);
   }
@@ -622,6 +623,7 @@ async function processSubscriptionSuccess(paymentIntent: any, meta: any) {
         next_reset_date: expiryDate.toISOString(),
         upload_count: existingSubscription?.upload_tracker?.upload_count ?? 0,
       },
+      isDiscountSub: false,
     };
 
     await Subscriptions.updateOne(
@@ -637,7 +639,11 @@ async function processSubscriptionSuccess(paymentIntent: any, meta: any) {
           subscription_status: {
             type: plan.name,
             active: true,
-            discount: { active: false, plan: plan.name.toLowerCase() },
+            discount: {
+              active: false,
+              plan: plan.name.toLowerCase(),
+              isDiscountSub: false,
+            },
           },
         },
       },

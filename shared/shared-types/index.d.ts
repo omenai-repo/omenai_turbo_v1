@@ -175,6 +175,7 @@ type SubscriptionStatus = {
   discount: {
     active: boolean;
     plan: "gallery";
+    isDiscountSub: boolean;
   };
 };
 
@@ -802,6 +803,7 @@ export type SubscriptionModelSchemaTypes = {
     email: string;
     gallery_id: string;
   };
+  isDiscountSub: boolean;
   subscription_id: string;
   stripe_customer_id: string;
   start_date: Date;
@@ -1896,7 +1898,6 @@ export interface OperationalMetricsData {
   };
 }
 
-// 1. Helper type for the Leaderboard items
 export interface ArtworkLeaderboardItem {
   _id: string; // The art_id
   count: number; // Number of views or requests
@@ -1940,6 +1941,16 @@ export interface DeepLinkPayload {
   route: string;
   payload: Record<string, any>;
   params: Record<string, string>;
+}
+export interface DecryptedLinkResponse {
+  success: boolean;
+  data?: {
+    role: "collector" | "artist" | "gallery";
+    route: string;
+    payload: Record<string, any>;
+    params?: Record<string, string>;
+  };
+  error?: "INVALID_TOKEN" | "EXPIRED_TOKEN" | "SERVER_ERROR";
 }
 
 export type GalleryEventType = "exhibition" | "art_fair" | "viewing_room";

@@ -185,7 +185,6 @@ export async function verifyAuthVercel(request: Request) {
 import { CreateOrder } from "@omenai/shared-models/models/orders/CreateOrderSchema";
 import {
   DHL_API,
-  DHL_API_URL_TEST,
   getDhlHeaders,
   getUserFriendlyError,
 } from "../shipment/resources";

@@ -71,6 +71,7 @@ const gallerySignupSchema = new Schema<GallerySchemaTypes>(
           discount: {
             active: true,
             plan: "gallery",
+            isDiscountSub: false,
           },
         };
       },
