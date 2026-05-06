@@ -148,8 +148,9 @@ export const GET = withRateLimit(lenientRateLimit)(async function GET(
 ) {
   const now = toUTCDate(new Date());
   const renewalPeriod = `${now.getUTCFullYear()}-${now.getUTCMonth() + 1}`;
-  // const retryBucket = now.toISOString().split("T")[0];
-  const retryBucket = `${new Date().toISOString()}`;
+  const retryBucket = now.toISOString().split("T")[0];
+
+  // const retryBucket = `${new Date().toISOString()}`;
 
   const idempotencyKey = `renew_${renewalPeriod}_${retryBucket}`;
 

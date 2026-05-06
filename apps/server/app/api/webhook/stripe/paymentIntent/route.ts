@@ -516,8 +516,6 @@ async function handleSubscriptionSucceeded(paymentIntent: any, meta: any) {
     "successful",
   );
 
-  console.log(isProcessed);
-
   if (isProcessed) {
     return NextResponse.json({ status: 200 });
   }
@@ -543,7 +541,6 @@ async function processSubscriptionSuccess(
     const planId = meta.plan_id ?? meta.planId;
     const planInterval = meta.planInterval;
 
-    console.log("🎯 EXACT CUSTOMER ID:", `"${customer}"`);
     if (!planId || !planInterval) {
       await session.abortTransaction();
       return NextResponse.json({ status: 400, error: "Missing plan details" });
@@ -579,13 +576,6 @@ async function processSubscriptionSuccess(
     );
 
     const limit = getUploadLimitLookup(plan.name, planInterval, false);
-
-    console.log("2. Expiry Date to set:", expiryDate);
-    console.log(
-      "3. Schema Types Match?",
-      typeof plan.name,
-      typeof planInterval,
-    );
 
     const update_sub = await Subscriptions.updateOne(
       { stripe_customer_id: customer },
