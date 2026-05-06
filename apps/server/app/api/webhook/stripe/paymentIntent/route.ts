@@ -64,6 +64,7 @@ export const POST = withRateLimit(standardRateLimit)(async function POST(
     const payload = await verifyStripeWebhook(request);
 
     if (!payload) return NextResponse.json({ status: 200 });
+    console.log(payload.meta);
 
     if (payload.meta.type === "purchase") {
       return handlePurchaseEvent(payload);

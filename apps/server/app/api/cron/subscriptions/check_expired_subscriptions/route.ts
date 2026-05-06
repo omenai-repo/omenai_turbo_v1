@@ -97,7 +97,7 @@ async function renewSubscription(
           off_session: true,
           confirm: true,
           metadata: {
-            type: "subscription_renewal",
+            type: "subscription",
             subscription_id: sub.subscription_id,
             planId: sub.next_charge_params?.id ?? "",
             planInterval: sub.next_charge_params?.interval ?? "",
