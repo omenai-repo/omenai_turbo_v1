@@ -138,7 +138,7 @@ describe("GET /api/cron/subscriptions/check_expired_subscriptions", () => {
     await GET(makeRequest());
 
     expect(Subscriptions.updateMany).toHaveBeenCalledWith(
-      expect.objectContaining({ status: { $ne: "canceled" } }),
+      expect.objectContaining({ status: "active" }),
       { $set: { status: "expired" } },
     );
   });
