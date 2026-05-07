@@ -7,9 +7,7 @@ import { rollbarServerInstance } from "@omenai/rollbar-config";
 import { UAParser } from "ua-parser-js";
 import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 
-export const POST = withRateLimit(standardRateLimit)(async function POST(
-  req: Request,
-) {
+async function handler(req: Request) {
   try {
     await connectMongoDB();
 
@@ -73,4 +71,6 @@ export const POST = withRateLimit(standardRateLimit)(async function POST(
       { status: error_response.status },
     );
   }
-});
+}
+
+export const POST = (req: Request) => withRateLimit(standardRateLimit)(handler)(req);

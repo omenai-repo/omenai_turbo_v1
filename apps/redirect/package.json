@@ -9,11 +9,11 @@
     "lint": "next lint"
   },
   "devDependencies": {
+    "@omenai/next-security-headers": "*",
+    "@omenai/shared-utils": "*",
     "@omenai/tailwind-config": "*",
     "@omenai/typescript-config": "*",
-    "@omenai/next-security-headers": "*",
     "@omenai/url-config": "*",
-    "@omenai/shared-utils": "*",
     "eslint": "^9",
     "eslint-config-next": "15.0.4"
   },

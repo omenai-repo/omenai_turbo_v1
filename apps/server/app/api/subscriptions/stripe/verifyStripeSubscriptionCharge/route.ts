@@ -94,13 +94,9 @@ async function safeSendEmail(fn: () => Promise<unknown>) {
 }
 
 async function retrievePaymentIntent(paymentIntentId: string) {
-  try {
-    return await stripe.paymentIntents.retrieve(paymentIntentId, {
-      expand: ["payment_method", "charges.data.balance_transaction"],
-    });
-  } catch (err) {
-    return null;
-  }
+  return await stripe.paymentIntents.retrieve(paymentIntentId, {
+    expand: ["payment_method", "charges.data.balance_transaction"],
+  });
 }
 
 function resolveMetadata(

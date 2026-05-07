@@ -256,7 +256,8 @@ async function handlePurchaseSucceeded(paymentIntent: any, meta: any) {
     );
 
     if (updateOrder.modifiedCount === 0) {
-      throw new Error("Order update unsuccessful");
+      await session.abortTransaction();
+      return NextResponse.json({ error: "Order update had no effect" }, { status: 400 });
     }
 
     await session.commitTransaction();

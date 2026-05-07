@@ -13,6 +13,7 @@
   },
   "devDependencies": {
     "@omenai/appwrite-config": "*",
+    "@omenai/next-security-headers": "*",
     "@omenai/package-provider": "*",
     "@omenai/shared-auth": "*",
     "@omenai/shared-emails": "*",
@@ -24,7 +25,6 @@
     "@omenai/shared-state-store": "*",
     "@omenai/shared-types": "*",
     "@omenai/shared-ui-components": "*",
-    "@omenai/next-security-headers": "*",
     "@omenai/shared-utils": "*",
     "@omenai/tailwind-config": "*",
     "@omenai/typescript-config": "*",
