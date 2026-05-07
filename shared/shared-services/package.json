@@ -3,12 +3,18 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
   "devDependencies": {
     "@omenai/appwrite-config": "*",
     "@omenai/rollbar-config": "*",
     "@omenai/shared-lib": "*",
     "@omenai/shared-utils": "*",
     "@omenai/typescript-config": "*",
-    "@omenai/url-config": "*"
+    "@omenai/url-config": "*",
+    "@omenai/vitest-config": "*",
+    "vitest": "*"
   }
 }

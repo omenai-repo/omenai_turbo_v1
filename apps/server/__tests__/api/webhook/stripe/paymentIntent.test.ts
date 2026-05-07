@@ -1,5 +1,11 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 
+vi.mock("mongoose", () => ({
+  default: {
+    startSession: vi.fn(),
+  },
+}));
+
 vi.mock("@omenai/shared-lib/auth/middleware/rate_limit_middleware", () => ({
   withRateLimit: () => (fn: any) => fn,
 }));
@@ -154,6 +160,7 @@ vi.mock("../../../../app/api/util", () => ({
   record_tax_transaction: vi.fn().mockResolvedValue(undefined),
 }));
 
+import mongoose from "mongoose";
 import { POST } from "../../../../app/api/webhook/stripe/paymentIntent/route";
 import { stripe } from "@omenai/shared-lib/payments/stripe/stripe";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
@@ -293,9 +300,8 @@ describe("POST /api/webhook/stripe/paymentIntent", () => {
     vi.clearAllMocks();
     vi.stubEnv("STRIPE_PAYMENT_INTENT_WEBHOOK_SECRET", "test-pi-secret");
 
-    vi.mocked(connectMongoDB).mockResolvedValue({
-      startSession: vi.fn().mockReturnValue(mockSession),
-    } as any);
+    vi.mocked(connectMongoDB).mockResolvedValue({} as any);
+    vi.mocked(mongoose.startSession).mockResolvedValue(mockSession as any);
 
     setupPurchaseEvent("payment_intent.succeeded");
 
@@ -484,6 +490,7 @@ describe("POST /api/webhook/stripe/paymentIntent", () => {
   it("PURCHASE_SUCCEEDED: returns 200 when ledger upsert is a duplicate", async () => {
     vi.mocked(PaymentLedger.updateOne).mockResolvedValue({
       upsertedCount: 0,
+      modifiedCount: 0,
     } as any);
 
     const response = await POST(makeRequest("payment_intent.succeeded"));
@@ -513,6 +520,7 @@ describe("POST /api/webhook/stripe/paymentIntent", () => {
           payment_information: expect.objectContaining({ status: "completed" }),
         }),
       }),
+      expect.objectContaining({ session: mockSession }),
     );
     expect(createWorkflow).toHaveBeenCalledWith(
       expect.stringContaining("/api/workflows/shipment/create_shipment"),
