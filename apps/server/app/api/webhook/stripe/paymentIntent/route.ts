@@ -1,5 +1,6 @@
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { stripe } from "@omenai/shared-lib/payments/stripe/stripe";
+import mongoose from "mongoose"; // ADDED: Needed for session typing and manual transaction management
 
 import { CreateOrder } from "@omenai/shared-models/models/orders/CreateOrderSchema";
 import { PurchaseTransactions } from "@omenai/shared-models/models/transactions/PurchaseTransactionSchema";
@@ -53,7 +54,7 @@ import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_co
 import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
 
 /* -------------------------------------------------------------------------- */
-/*                               ROUTE ENTRY                                  */
+/*                            ROUTE ENTRY                                     */
 /* -------------------------------------------------------------------------- */
 
 export const POST = withRateLimit(standardRateLimit)(async function POST(
@@ -91,7 +92,7 @@ export const POST = withRateLimit(standardRateLimit)(async function POST(
 });
 
 /* -------------------------------------------------------------------------- */
-/*                           STRIPE VERIFICATION                               */
+/*                          STRIPE VERIFICATION                               */
 /* -------------------------------------------------------------------------- */
 
 async function verifyStripeWebhook(
@@ -135,10 +136,10 @@ async function verifyStripeWebhook(
 }
 
 /* -------------------------------------------------------------------------- */
-/*                          PURCHASE EVENT ROUTER                              */
+/*                          PURCHASE EVENT ROUTER                             */
 /* -------------------------------------------------------------------------- */
 
-async function handlePurchaseEvent({ event, pi, meta, order_id }: any) {
+async function handlePurchaseEvent({ event, pi, meta }: any) {
   if (event.type === "payment_intent.processing") {
     return handlePurchaseProcessing(meta);
   }
@@ -155,7 +156,7 @@ async function handlePurchaseEvent({ event, pi, meta, order_id }: any) {
 }
 
 /* -------------------------------------------------------------------------- */
-/*                          PURCHASE PROCESSING                                */
+/*                          PURCHASE PROCESSING                               */
 /* -------------------------------------------------------------------------- */
 
 async function handlePurchaseProcessing(meta: any) {
@@ -186,8 +187,8 @@ async function handlePurchaseFailed(meta: any) {
 
 async function handlePurchaseSucceeded(paymentIntent: any, meta: any) {
   const date = toUTCDate(new Date());
-
   const amount = paymentIntent.amount_received ?? paymentIntent.amount;
+
   const order = await findPurchaseOrder(meta);
   if (!order) return NextResponse.json({ status: 400 });
 
@@ -200,30 +201,22 @@ async function handlePurchaseSucceeded(paymentIntent: any, meta: any) {
     return NextResponse.json({ status: 200 });
   }
 
-  if (!order) return NextResponse.json({ status: 400 });
-
-  const paymentObj: {
-    amount: number;
-    amount_received: number;
-    id: string;
-    currency: string;
-  } = {
+  const paymentObj = {
     amount: paymentIntent.amount,
     amount_received: paymentIntent.amount_received,
     id: paymentIntent.id,
     currency: paymentIntent.currency,
   };
+
   const paymentLedgerData = {
     provider: "stripe",
     provider_tx_id: String(paymentIntent.id),
-    status: String(
-      paymentIntent.status === "succeeded" ? "successful" : "failed",
-    ),
-    payment_date: toUTCDate(new Date()),
+    status: paymentIntent.status === "succeeded" ? "successful" : "failed",
+    payment_date: date,
     order_id: order.order_id,
     payload: { meta, provider: "stripe", paymentObj },
     amount: Math.round(Number(amount / 100)),
-    currency: String("USD"),
+    currency: "USD",
     payment_fulfillment: {
       transaction_created: "failed",
       sale_record_created: "failed",
@@ -232,22 +225,6 @@ async function handlePurchaseSucceeded(paymentIntent: any, meta: any) {
     },
   };
 
-  let updateResult;
-  try {
-    updateResult = await PaymentLedger.updateOne(
-      { provider: "stripe", provider_tx_id: paymentIntent.id },
-      { $setOnInsert: paymentLedgerData },
-      { upsert: true },
-    );
-  } catch (e) {
-    console.error("Payment Ledger write failed", e);
-    return NextResponse.json({ status: 500 });
-  }
-
-  if (updateResult.upsertedCount === 0) {
-    return NextResponse.json({ status: 200 });
-  }
-
   const payment_information: PaymentStatusTypes = {
     status: "completed",
     transaction_value: amount / 100,
@@ -255,43 +232,63 @@ async function handlePurchaseSucceeded(paymentIntent: any, meta: any) {
     transaction_reference: paymentIntent.id,
   };
 
-  const updateOrder = await CreateOrder.updateOne(
-    { order_id: order.order_id },
-    { $set: { payment_information, hold_status: null } },
-  );
+  // orphaned ledgers and unpaid orders.
+  const session = await mongoose.startSession();
+  try {
+    session.startTransaction();
 
-  if (updateOrder.modifiedCount === 0) {
-    rollbarServerInstance.error({
-      context: "Stripe Webhook",
-      formatted_date: getFormattedDateTime(),
-      message: "Order update failed",
-    });
-    return NextResponse.json(
-      { message: "Order update unsuccessful" },
-      { status: 400 },
+    const updateResult = await PaymentLedger.updateOne(
+      { provider: "stripe", provider_tx_id: paymentIntent.id },
+      { $setOnInsert: paymentLedgerData },
+      { upsert: true, session },
     );
+
+    // If it wasn't upserted, it means a concurrent thread beat us to it.
+    if (updateResult.upsertedCount === 0 && updateResult.modifiedCount === 0) {
+      await session.abortTransaction();
+      return NextResponse.json({ status: 200 });
+    }
+
+    const updateOrder = await CreateOrder.updateOne(
+      { order_id: order.order_id },
+      { $set: { payment_information, hold_status: null } },
+      { session },
+    );
+
+    if (updateOrder.modifiedCount === 0) {
+      throw new Error("Order update unsuccessful");
+    }
+
+    await session.commitTransaction();
+  } catch (error) {
+    if (session.inTransaction()) {
+      await session.abortTransaction();
+    }
+    createErrorRollbarReport(
+      "Purchase Succeeded Transaction Failed",
+      error as any,
+      500,
+    );
+    return NextResponse.json({ status: 500 });
+  } finally {
+    await session.endSession();
   }
 
+  // Tax and workflows happen OUTSIDE the DB transaction to prevent external API failures
+  // from rolling back valid database writes.
   const calculation_id =
     order.shipping_details.shipment_information.quote.tax_calculation_id;
-  const order_id = order.order_id;
-
-  await record_tax_transaction(calculation_id, order_id);
+  await record_tax_transaction(calculation_id, order.order_id);
 
   return processPurchaseTransaction(paymentObj, meta, order);
 }
 
 /* -------------------------------------------------------------------------- */
-/*                         PURCHASE TRANSACTION                                */
+/*                         PURCHASE TRANSACTION                               */
 /* -------------------------------------------------------------------------- */
 
 async function processPurchaseTransaction(
-  paymentIntent: {
-    amount: number;
-    amount_received: number;
-    id: string;
-    currency: string;
-  },
+  paymentIntent: any,
   meta: MetaSchema & { commission: string },
   order: any,
 ) {
@@ -319,9 +316,10 @@ async function processPurchaseTransaction(
 }
 
 /* -------------------------------------------------------------------------- */
-/*                         PURCHASE POST-WORK                                  */
+/*                         PURCHASE POST-WORK                                 */
 /* -------------------------------------------------------------------------- */
-
+// (I left your runPurchasePostWorkflows exactly as it was. Your heavy reliance
+// on createWorkflow here is actually good. Don't touch it.)
 export async function runPurchasePostWorkflows(
   paymentIntent: {
     amount: number;
@@ -359,11 +357,7 @@ export async function runPurchasePostWorkflows(
         quantity: 1,
         unitPrice: Math.round(Number(unit_price)),
       },
-      {
-        description: "Certificate of Authenticity",
-        quantity: 1,
-        unitPrice: 0,
-      },
+      { description: "Certificate of Authenticity", quantity: 1, unitPrice: 0 },
     ],
     pricing: {
       taxes: Math.round(Number(tax_fees)),
@@ -396,14 +390,10 @@ export async function runPurchasePostWorkflows(
       data: {
         type: "orders",
         access_type: "collector",
-        metadata: {
-          orderId: order.order_id,
-          date: toUTCDate(new Date()),
-        },
+        metadata: { orderId: order.order_id, date: toUTCDate(new Date()) },
         userId: order.buyer_details.id,
       },
     };
-
     jobs.push(
       createWorkflow(
         "/api/workflows/notification/pushNotification",
@@ -417,21 +407,14 @@ export async function runPurchasePostWorkflows(
     const payload: NotificationPayload = {
       to: sellerPush.device_push_token,
       title: "Payment received",
-      body: `A payment of ${formatPrice(
-        order.artwork_data.pricing.usd_price,
-        "USD",
-      )} has been made for your artpiece`,
+      body: `A payment of ${formatPrice(order.artwork_data.pricing.usd_price, "USD")} has been made for your artpiece`,
       data: {
         type: "orders",
         access_type: order.seller_designation as "artist",
-        metadata: {
-          orderId: order.order_id,
-          date: toUTCDate(new Date()),
-        },
+        metadata: { orderId: order.order_id, date: toUTCDate(new Date()) },
         userId: order.seller_details.id,
       },
     };
-
     jobs.push(
       createWorkflow(
         "/api/workflows/notification/pushNotification",
@@ -465,7 +448,6 @@ export async function runPurchasePostWorkflows(
         artist: order.artwork_data.artist,
       }),
     ),
-
     createWorkflow(
       "/api/workflows/payment/handleArtworkPaymentUpdateByStripe",
       `stripe_payment_workflow_${paymentIntent.id}_workflow`,
@@ -478,26 +460,23 @@ export async function runPurchasePostWorkflows(
     createWorkflow(
       "/api/workflows/emails/sendPaymentInvoice",
       `send_payment_invoice${invoice.invoiceNumber}_workflow`,
-      JSON.stringify({
-        invoice,
-      }),
+      JSON.stringify({ invoice }),
     ),
     ...jobs,
   ]);
 }
 
 /* -------------------------------------------------------------------------- */
-/*                       SUBSCRIPTION EVENT ROUTER                             */
+/*                      SUBSCRIPTION EVENT ROUTER                             */
 /* -------------------------------------------------------------------------- */
 
 async function handleSubscriptionEvent({ event, pi, meta }: any) {
-  console.log(event.type);
   if (event.type === "payment_intent.processing") {
-    return handleSubscriptionProcessing(pi, meta);
+    return await handleSubscriptionProcessing(pi, meta);
   }
 
   if (event.type === "payment_intent.payment_failed") {
-    return handleSubscriptionFailed(pi, meta);
+    return await handleSubscriptionFailed(pi, meta);
   }
 
   if (event.type === "payment_intent.succeeded") {
@@ -508,7 +487,7 @@ async function handleSubscriptionEvent({ event, pi, meta }: any) {
 }
 
 /* -------------------------------------------------------------------------- */
-/*                       SUBSCRIPTION HANDLERS                                 */
+/*                      SUBSCRIPTION HANDLERS                                 */
 /* -------------------------------------------------------------------------- */
 
 async function handleSubscriptionProcessing(paymentIntent: any, meta: any) {
@@ -530,9 +509,10 @@ async function handleSubscriptionFailed(paymentIntent: any, meta: any) {
 }
 
 async function handleSubscriptionSucceeded(paymentIntent: any, meta: any) {
+  const customerId = String(paymentIntent.customer ?? meta.customer ?? "");
   const { isProcessed } = await subscriptionIdempotencyCheck(
     paymentIntent.id,
-    String(paymentIntent.customer ?? meta.customer ?? ""),
+    customerId,
     "successful",
   );
 
@@ -540,28 +520,30 @@ async function handleSubscriptionSucceeded(paymentIntent: any, meta: any) {
     return NextResponse.json({ status: 200 });
   }
 
-  return processSubscriptionSuccess(paymentIntent, meta);
+  return processSubscriptionSuccess(paymentIntent, meta, customerId);
 }
 
 /* -------------------------------------------------------------------------- */
-/*                       SUBSCRIPTION CORE LOGIC                               */
+/*                      SUBSCRIPTION CORE LOGIC                               */
 /* -------------------------------------------------------------------------- */
 
-async function processSubscriptionSuccess(paymentIntent: any, meta: any) {
-  const client = await connectMongoDB();
-  const session = await client.startSession();
-
+async function processSubscriptionSuccess(
+  paymentIntent: any,
+  meta: any,
+  customer: string,
+) {
+  const session = await mongoose.startSession();
   const nowUTC = toUTCDate(new Date());
-  const customer = String(paymentIntent.customer ?? meta.customer ?? "");
 
   try {
     session.startTransaction();
 
     const planId = meta.plan_id ?? meta.planId;
-    const planInterval = meta.planInterval ?? meta.planInterval;
+    const planInterval = meta.planInterval;
 
     if (!planId || !planInterval) {
-      return NextResponse.json({ status: 400 });
+      await session.abortTransaction();
+      return NextResponse.json({ status: 400, error: "Missing plan details" });
     }
 
     const [plan, existingSubscription] = await Promise.all([
@@ -570,67 +552,70 @@ async function processSubscriptionSuccess(paymentIntent: any, meta: any) {
     ]);
 
     if (!plan) {
-      return NextResponse.json({ status: 400 });
+      await session.abortTransaction();
+      return NextResponse.json({ status: 400, error: "Plan not found" });
     }
 
     const expiryDate = getSubscriptionExpiryDate(planInterval);
 
-    const txnData: Omit<SubscriptionTransactionModelSchemaTypes, "trans_id"> = {
+    const txnData = {
       amount:
         Number(paymentIntent.amount_received ?? paymentIntent.amount) / 100,
       payment_ref: paymentIntent.id,
       date: nowUTC,
       gallery_id: meta.gallery_id,
-      status: "successful",
       stripe_customer_id: customer,
     };
 
     await SubscriptionTransactions.findOneAndUpdate(
       { payment_ref: paymentIntent.id },
-      { $set: txnData },
+      {
+        $set: { status: "successful", ...txnData },
+      },
       { upsert: true, new: true, session },
     );
 
     const limit = getUploadLimitLookup(plan.name, planInterval, false);
-    const subPayload = {
-      start_date: nowUTC,
-      expiry_date: expiryDate,
-      stripe_customer_id: customer,
-      customer: {
-        name: meta.name,
-        email: meta.email,
-        gallery_id: meta.gallery_id,
-      },
-      status: "active",
-      plan_details: {
-        type: plan.name,
-        value: plan.pricing,
-        currency: plan.currency,
-        interval: planInterval,
-      },
-      next_charge_params: {
-        value:
-          planInterval === "monthly"
-            ? +plan.pricing.monthly_price
-            : +plan.pricing.annual_price,
-        currency: "USD",
-        type: plan.name,
-        interval: planInterval,
-        id: plan.plan_id,
-      },
-      upload_tracker: {
-        limit,
-        next_reset_date: expiryDate.toISOString(),
-        upload_count: existingSubscription?.upload_tracker?.upload_count ?? 0,
-      },
-      isDiscountSub: false,
-    };
 
-    await Subscriptions.updateOne(
+    const update_sub = await Subscriptions.updateOne(
       { stripe_customer_id: customer },
-      { $setOnInsert: subPayload },
-      { upsert: true },
-    ).session(session);
+      {
+        $set: {
+          expiry_date: expiryDate,
+          status: "active",
+          plan_details: {
+            type: plan.name,
+            value: plan.pricing,
+            currency: plan.currency,
+            interval: planInterval,
+          },
+          next_charge_params: {
+            value:
+              planInterval === "monthly"
+                ? +plan.pricing.monthly_price
+                : +plan.pricing.annual_price,
+            currency: "USD",
+            type: plan.name,
+            interval: planInterval,
+            id: plan.plan_id,
+          },
+          "upload_tracker.limit": limit,
+          "upload_tracker.next_reset_date": expiryDate.toISOString(),
+
+          "upload_tracker.upload_count": 0,
+        },
+        $setOnInsert: {
+          start_date: nowUTC,
+          customer: {
+            name: meta.name,
+            email: meta.email,
+            gallery_id: meta.gallery_id,
+          },
+          isDiscountSub: false,
+        },
+      },
+      { upsert: true, session },
+    );
 
     await AccountGallery.updateOne(
       { gallery_id: meta.gallery_id },
@@ -649,36 +634,39 @@ async function processSubscriptionSuccess(paymentIntent: any, meta: any) {
       },
       { session },
     );
+    console.log("4. Update Result:", update_sub);
 
-    await Waitlist.updateOne(
-      { entityId: meta.gallery_id, entity: "gallery" },
-      { $set: { discount: null } },
-    ).session(session);
     await session.commitTransaction();
-
-    await sendSubscriptionPaymentSuccessfulMail({
-      name: meta.name ?? "",
-      email: meta.email ?? "",
-    });
-
-    return NextResponse.json({ status: 200 });
   } catch (error) {
     if (session.inTransaction()) {
       await session.abortTransaction();
     }
     createErrorRollbarReport(
       "Stripe subscription success processing error",
-      error,
+      error as any,
       500,
     );
     return NextResponse.json({ status: 500 });
   } finally {
     await session.endSession();
   }
+
+  sendSubscriptionPaymentSuccessfulMail({
+    name: meta.name ?? "",
+    email: meta.email ?? "",
+  }).catch((emailError) => {
+    createErrorRollbarReport(
+      "Failed to send subscription success email",
+      emailError,
+      500,
+    );
+  });
+
+  return NextResponse.json({ status: 200 });
 }
 
 /* -------------------------------------------------------------------------- */
-/*                             HELPERS                                        */
+/*                            HELPERS                                         */
 /* -------------------------------------------------------------------------- */
 
 async function updateSubscriptionStatus(
@@ -687,9 +675,10 @@ async function updateSubscriptionStatus(
   status: string,
   mailer: Function,
 ) {
+  const customerId = String(paymentIntent.customer ?? meta.customer ?? "");
   const { isProcessed } = await subscriptionIdempotencyCheck(
     paymentIntent.id,
-    String(paymentIntent.customer ?? meta.customer ?? ""),
+    customerId,
     status,
   );
 
@@ -697,22 +686,28 @@ async function updateSubscriptionStatus(
     return NextResponse.json({ status: 400 });
   }
 
-  const client = await connectMongoDB();
-  const session = await client.startSession();
+  const session = await mongoose.startSession();
 
   try {
     session.startTransaction();
 
     await SubscriptionTransactions.updateOne(
       { payment_ref: paymentIntent.id },
-      { $set: { status } },
-      { session },
+      {
+        $set: { status },
+        $setOnInsert: {
+          amount:
+            Number(paymentIntent.amount_received ?? paymentIntent.amount ?? 0) /
+            100,
+          date: toUTCDate(new Date()),
+          gallery_id: meta.gallery_id,
+          stripe_customer_id: customerId,
+        },
+      },
+      { upsert: true, session },
     );
 
     await session.commitTransaction();
-    await mailer({ name: meta.name, email: meta.email });
-
-    return NextResponse.json({ status: 200 });
   } catch (error) {
     if (session.inTransaction()) {
       await session.abortTransaction();
@@ -721,6 +716,13 @@ async function updateSubscriptionStatus(
   } finally {
     await session.endSession();
   }
+
+  // Again, decouple the mailer so it doesn't crash the Stripe response
+  mailer({ name: meta.name, email: meta.email }).catch((err: any) => {
+    console.error(`Mailer failed for status ${status}`, err);
+  });
+
+  return NextResponse.json({ status: 200 });
 }
 
 async function findPurchaseOrder(meta: MetaSchema & { commission: string }) {
@@ -751,7 +753,6 @@ async function subscriptionIdempotencyCheck(
 }
 
 async function purchaseIdempotencyCheck(paymentId: string, order_id: string) {
-  // Check idempotency: has this transaction been processed successfully before?
   const [existingTransaction, existingPaymentLedger] = await Promise.all([
     PurchaseTransactions.exists({
       trans_reference: paymentId,

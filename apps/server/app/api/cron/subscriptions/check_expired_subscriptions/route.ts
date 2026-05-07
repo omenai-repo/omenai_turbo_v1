@@ -22,9 +22,9 @@ function cents(amount: number) {
 // Use subscriptionId and renewal period for idempotency
 function idempotencyKey(opts: {
   subscriptionId: string;
-  renewalPeriod: string;
+  idempotencyKeyPart: string;
 }) {
-  return `sub_renewal:${opts.subscriptionId}:${opts.renewalPeriod}`;
+  return `sub_renewals:${opts.subscriptionId}:${opts.idempotencyKeyPart}`;
 }
 
 type LeanExpiredSub = {
@@ -49,7 +49,7 @@ const PAGE_SIZE = 100;
 
 async function renewSubscription(
   sub: LeanExpiredSub,
-  renewalPeriod: string,
+  idempotencyKeyPart: string,
 ): Promise<{
   subscriptionId: string;
   email?: string;
@@ -97,7 +97,7 @@ async function renewSubscription(
           off_session: true,
           confirm: true,
           metadata: {
-            type: "subscription_renewal",
+            type: "subscription",
             subscription_id: sub.subscription_id,
             planId: sub.next_charge_params?.id ?? "",
             planInterval: sub.next_charge_params?.interval ?? "",
@@ -107,7 +107,7 @@ async function renewSubscription(
         {
           idempotencyKey: idempotencyKey({
             subscriptionId: sub.subscription_id,
-            renewalPeriod,
+            idempotencyKeyPart,
           }),
         },
       );
@@ -148,6 +148,11 @@ export const GET = withRateLimit(lenientRateLimit)(async function GET(
 ) {
   const now = toUTCDate(new Date());
   const renewalPeriod = `${now.getUTCFullYear()}-${now.getUTCMonth() + 1}`;
+  const retryBucket = now.toISOString().split("T")[0];
+
+  // const retryBucket = `${new Date().toISOString()}`;
+
+  const idempotencyKey = `renew_${renewalPeriod}_${retryBucket}`;
 
   try {
     await verifyAuthVercel(request);
@@ -191,7 +196,7 @@ export const GET = withRateLimit(lenientRateLimit)(async function GET(
       // 4) Attempt to renew subs via Stripe (parallel, limited concurrency)
       const limit = pLimit(MAX_CONCURRENT_RENEWALS);
       const renewalPromises = expiredSubs.map((sub) =>
-        limit(() => renewSubscription(sub, renewalPeriod)),
+        limit(() => renewSubscription(sub, idempotencyKey)),
       );
       const results = await Promise.allSettled(renewalPromises);
 
