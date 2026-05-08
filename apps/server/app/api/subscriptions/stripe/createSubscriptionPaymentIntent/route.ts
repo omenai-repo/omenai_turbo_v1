@@ -70,8 +70,8 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     const paymentIntent = await stripe.paymentIntents.create({
       amount: Math.round(amount * 100),
       currency: "usd",
-      customer: customer.id, // retrieved/stored earlier
-      setup_future_usage: "off_session", // tells Stripe: also save payment method
+      customer: customer.id,
+      setup_future_usage: "off_session",
       automatic_payment_methods: { enabled: true },
       metadata: { ...meta, type: "subscription" },
     });

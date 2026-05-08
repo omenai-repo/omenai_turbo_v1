@@ -14,6 +14,7 @@ const subscriptions = new Schema<SubscriptionModelSchemaTypes>(
       type: Schema.Types.Mixed,
       required: true,
     },
+    isDiscountSub: { type: Boolean, default: false },
     next_charge_params: { type: Schema.Types.Mixed, required: true },
     upload_tracker: { type: Schema.Types.Mixed, required: true },
     subscription_id: {
@@ -24,7 +25,7 @@ const subscriptions = new Schema<SubscriptionModelSchemaTypes>(
     },
   },
 
-  { timestamps: true }
+  { timestamps: true },
 );
 
 export const Subscriptions =

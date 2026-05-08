@@ -133,7 +133,8 @@
     "APPWRITE_ENDPOINT",
     "UPS_CLIENT_SECRET",
     "UPS_ACCOUNT_NUMBER",
-    "UPS_CLIENT_ID"
+    "UPS_CLIENT_ID",
+    "DEEPLINK_SECRET"
   ],
 
   "tasks": {
@@ -271,7 +272,8 @@
         "API_HEADER_ORIGIN",
         "UPS_CLIENT_ID",
         "UPS_CLIENT_SECRET",
-        "UPS_ACCOUNT_NUMBER"
+        "UPS_ACCOUNT_NUMBER",
+        "DEEPLINK_SECRET"
       ]
     },
     "lint": {

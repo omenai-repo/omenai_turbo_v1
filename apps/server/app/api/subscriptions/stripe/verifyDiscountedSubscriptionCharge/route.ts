@@ -200,6 +200,7 @@ async function processSubscriptionSuccess(
           gallery_id,
         },
         status: "active",
+        isDiscountSub: true,
         plan_details: {
           type: plan.name,
           value: plan.pricing,
@@ -235,7 +236,11 @@ async function processSubscriptionSuccess(
             subscription_status: {
               type: plan.name,
               active: true,
-              discount: { active: false, plan: plan.name.toLowerCase() },
+              discount: {
+                active: false,
+                plan: plan.name.toLowerCase(),
+                isDiscountSub: true,
+              },
             },
           },
         },

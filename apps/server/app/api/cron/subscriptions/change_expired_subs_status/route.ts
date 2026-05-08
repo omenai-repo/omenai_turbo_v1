@@ -1,3 +1,4 @@
+import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
 import SubscriptionPaymentFailedMail from "@omenai/shared-emails/src/views/subscription/SubscriptionPaymentFailedMail";
 import { lenientRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
@@ -15,6 +16,14 @@ export const dynamic = "force-dynamic";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
+const now = toUTCDate(new Date());
+
+const threeDaysAgo = new Date(now);
+threeDaysAgo.setDate(now.getDate() - 3);
+
+const sixDaysAgo = new Date(now);
+sixDaysAgo.setDate(now.getDate() - 6);
+
 // NOTE: Run every hour - cancels subscriptions that have been expired for 3+ days
 export const GET = withRateLimit(lenientRateLimit)(async function GET(
   request: Request,
@@ -24,19 +33,16 @@ export const GET = withRateLimit(lenientRateLimit)(async function GET(
 
     await connectMongoDB();
 
-    // Calculate the date that is three days ago
-    const threeDaysAgo = new Date();
-    threeDaysAgo.setDate(threeDaysAgo.getDate() - 3);
-
     const result = await Subscriptions.updateMany(
       {
         expiry_date: { $lt: threeDaysAgo },
-        status: "expired", // Only cancel expired subscriptions, not active ones
+        status: "expired",
       },
       { $set: { status: "canceled" } },
     );
     const subscriptions = await Subscriptions.find({
-      expiry_date: { $lt: threeDaysAgo },
+      expiry_date: { $gte: sixDaysAgo, $lt: threeDaysAgo },
+      status: "canceled",
     }).lean();
 
     const expiredEmailPayload = await Promise.all(
@@ -47,7 +53,7 @@ export const GET = withRateLimit(lenientRateLimit)(async function GET(
         return {
           from: "Subscription <omenai@omenai.app>",
           to: [subscription.customer.email],
-          subject: "Action Required: We were Unable to Process Your Payment",
+          subject: "Action Required: We were unable to process your payment",
           html,
         };
       }),

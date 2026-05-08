@@ -64,7 +64,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
         );
       }
 
-      // Otherwise, it's a hard decline, throw your standard bad request
+      // Otherwise, it's a hard decline, throw standard bad request
       throw new BadRequestError(result.message as string);
     }
     const paymentIntent = result.data;

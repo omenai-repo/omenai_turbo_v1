@@ -15,7 +15,8 @@ export const calculateSubscriptionPricing = (
   planDetails: SubscriptionModelSchemaTypes["plan_details"],
   newPlan: SubscriptionPlanDataTypes,
   daysUsed: number,
-  totalDays: number
+  totalDays: number,
+  isSubscriptionDiscount: boolean,
 ) => {
   const isYearly = planDetails.interval === "yearly";
   const planPrice = isYearly
@@ -24,7 +25,9 @@ export const calculateSubscriptionPricing = (
 
   const dailyRate = planPrice / totalDays;
 
-  const proratedPrice = Math.max(planPrice - daysUsed * dailyRate, 0);
+  const proratedPrice = isSubscriptionDiscount
+    ? 0
+    : Math.max(planPrice - daysUsed * dailyRate, 0);
 
   const upgradeCost =
     interval === "monthly"
