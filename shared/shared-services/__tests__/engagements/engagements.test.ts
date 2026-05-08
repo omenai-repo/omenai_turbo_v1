@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
 vi.mock("@omenai/url-config/src/config", () => ({
-  getApiUrl: vi.fn().mockReturnValue("http://test-api.com"),
+  getApiUrl: vi.fn().mockReturnValue("https://test-api.com"),
 }));
 
 vi.mock("@omenai/rollbar-config", () => ({
@@ -50,7 +50,7 @@ describe("addFollow", () => {
     await addFollow(payload, TOKEN);
 
     expect(fetch).toHaveBeenCalledWith(
-      "http://test-api.com/api/engagements/follow",
+      "https://test-api.com/api/engagements/follow",
       expect.objectContaining({
         method: "POST",
         body: JSON.stringify(payload),
@@ -120,7 +120,7 @@ describe("deleteFollow", () => {
     await deleteFollow(payload, TOKEN);
 
     expect(fetch).toHaveBeenCalledWith(
-      "http://test-api.com/api/engagements/deleteFollow",
+      "https://test-api.com/api/engagements/deleteFollow",
       expect.objectContaining({
         method: "DELETE",
         body: JSON.stringify(payload),
@@ -167,7 +167,7 @@ describe("fetchFollows", () => {
     await fetchFollows("session-abc");
 
     expect(fetch).toHaveBeenCalledWith(
-      "http://test-api.com/api/engagements/fetchFollows?id=session-abc",
+      "https://test-api.com/api/engagements/fetchFollows?id=session-abc",
     );
   });
 

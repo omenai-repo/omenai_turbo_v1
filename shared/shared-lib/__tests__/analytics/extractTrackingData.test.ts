@@ -1,6 +1,10 @@
 import { describe, it, expect } from "vitest";
 import { extractUserTrackingData } from "../../analytics/extractTrackingData";
 
+const TEST_IP_PRIMARY = "1.2.3.4";
+const TEST_IP_SECONDARY = "5.6.7.8";
+const TEST_IP_INTERNAL_A = "10.0.0.1";
+
 function makeRequest(headers: Record<string, string> = {}): Request {
   return new Request("https://example.com", { headers });
 }
@@ -13,14 +17,14 @@ describe("extractUserTrackingData", () => {
 
     it("extracts IP from x-forwarded-for (takes the first in the list)", () => {
       const data = extractUserTrackingData(
-        makeRequest({ "x-forwarded-for": "1.2.3.4, 10.0.0.1" })
+        makeRequest({ "x-forwarded-for": `${TEST_IP_PRIMARY}, ${TEST_IP_INTERNAL_A}` })
       );
-      expect(data.ip_address).toBe("1.2.3.4");
+      expect(data.ip_address).toBe(TEST_IP_PRIMARY);
     });
 
     it("falls back to x-real-ip when x-forwarded-for is absent", () => {
-      const data = extractUserTrackingData(makeRequest({ "x-real-ip": "5.6.7.8" }));
-      expect(data.ip_address).toBe("5.6.7.8");
+      const data = extractUserTrackingData(makeRequest({ "x-real-ip": TEST_IP_SECONDARY }));
+      expect(data.ip_address).toBe(TEST_IP_SECONDARY);
     });
   });
 

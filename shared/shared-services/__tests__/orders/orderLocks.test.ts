@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
 vi.mock("@omenai/url-config/src/config", () => ({
-  getApiUrl: vi.fn().mockReturnValue("http://test-api.com"),
+  getApiUrl: vi.fn().mockReturnValue("https://test-api.com"),
 }));
 
 vi.mock("@omenai/rollbar-config", () => ({
@@ -42,7 +42,7 @@ describe("releaseOrderLock", () => {
     await releaseOrderLock("art-1", "user-1");
 
     expect(fetch).toHaveBeenCalledWith(
-      "http://test-api.com/api/locks/releaseLock",
+      "https://test-api.com/api/locks/releaseLock",
       expect.objectContaining({
         method: "POST",
         body: JSON.stringify({ art_id: "art-1", user_id: "user-1" }),
@@ -88,7 +88,7 @@ describe("checkLockStatus", () => {
     await checkLockStatus("art-2", "user-2");
 
     expect(fetch).toHaveBeenCalledWith(
-      "http://test-api.com/api/locks/checkLock",
+      "https://test-api.com/api/locks/checkLock",
       expect.objectContaining({
         method: "POST",
         body: JSON.stringify({ art_id: "art-2", user_id: "user-2" }),
@@ -139,7 +139,7 @@ describe("createOrderLock", () => {
     await createOrderLock("art-3", "user-3", TOKEN);
 
     expect(fetch).toHaveBeenCalledWith(
-      "http://test-api.com/api/locks/createLock",
+      "https://test-api.com/api/locks/createLock",
       expect.objectContaining({
         method: "POST",
         body: JSON.stringify({ art_id: "art-3", user_id: "user-3" }),

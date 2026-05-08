@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
 vi.mock("@omenai/url-config/src/config", () => ({
-  getApiUrl: vi.fn().mockReturnValue("http://test-api.com"),
+  getApiUrl: vi.fn().mockReturnValue("https://test-api.com"),
 }));
 
 vi.mock("@omenai/rollbar-config", () => ({
@@ -58,7 +58,7 @@ describe("acceptOrderRequest", () => {
     await acceptOrderRequest("order-1", dimensions, null, TOKEN);
 
     expect(fetch).toHaveBeenCalledWith(
-      "http://test-api.com/api/orders/accept_order_request",
+      "https://test-api.com/api/orders/accept_order_request",
       expect.objectContaining({
         method: "POST",
         body: JSON.stringify({
@@ -76,7 +76,13 @@ describe("acceptOrderRequest", () => {
   it("includes specialInstructions when provided", async () => {
     mockFetchOk({ message: "Accepted" });
 
-    await acceptOrderRequest("order-1", dimensions, null, TOKEN, "Handle with care");
+    await acceptOrderRequest(
+      "order-1",
+      dimensions,
+      null,
+      TOKEN,
+      "Handle with care",
+    );
 
     const body = JSON.parse(
       (vi.mocked(fetch).mock.calls[0][1] as RequestInit).body as string,
@@ -125,10 +131,16 @@ describe("declineOrderRequest", () => {
   it("POSTs to the correct endpoint with all required fields and CSRF token", async () => {
     mockFetchOk({ message: "Order declined" });
 
-    await declineOrderRequest(declineData, "order-2", "gallery", "art-2", TOKEN);
+    await declineOrderRequest(
+      declineData,
+      "order-2",
+      "gallery",
+      "art-2",
+      TOKEN,
+    );
 
     expect(fetch).toHaveBeenCalledWith(
-      "http://test-api.com/api/orders/declineOrderRequest",
+      "https://test-api.com/api/orders/declineOrderRequest",
       expect.objectContaining({
         method: "POST",
         body: JSON.stringify({
@@ -146,7 +158,13 @@ describe("declineOrderRequest", () => {
   it("returns { isOk: true, message } on success", async () => {
     mockFetchOk({ message: "Declined" });
 
-    const result = await declineOrderRequest(declineData, "order-2", "artist", "art-2", TOKEN);
+    const result = await declineOrderRequest(
+      declineData,
+      "order-2",
+      "artist",
+      "art-2",
+      TOKEN,
+    );
 
     expect(result).toEqual({ isOk: true, message: "Declined" });
   });
@@ -154,7 +172,13 @@ describe("declineOrderRequest", () => {
   it("returns { isOk: false } for non-ok response", async () => {
     mockFetchOk({ message: "Not found" }, false);
 
-    const result = await declineOrderRequest(declineData, "order-2", "gallery", "art-2", TOKEN);
+    const result = await declineOrderRequest(
+      declineData,
+      "order-2",
+      "gallery",
+      "art-2",
+      TOKEN,
+    );
 
     expect(result.isOk).toBe(false);
   });
@@ -162,7 +186,13 @@ describe("declineOrderRequest", () => {
   it("returns fallback message and logs error when fetch throws", async () => {
     mockFetchThrows();
 
-    const result = await declineOrderRequest(declineData, "order-2", "gallery", "art-2", TOKEN);
+    const result = await declineOrderRequest(
+      declineData,
+      "order-2",
+      "gallery",
+      "art-2",
+      TOKEN,
+    );
 
     expect(result).toEqual({ isOk: false, message: NETWORK_ERROR_MSG });
     expect(logRollbarServerError).toHaveBeenCalledOnce();
@@ -180,7 +210,7 @@ describe("confirmOrderDelivery", () => {
     await confirmOrderDelivery(true, "order-3", TOKEN);
 
     expect(fetch).toHaveBeenCalledWith(
-      "http://test-api.com/api/orders/confirmOrderDelivery",
+      "https://test-api.com/api/orders/confirmOrderDelivery",
       expect.objectContaining({
         method: "POST",
         body: JSON.stringify({ confirm_delivery: true, order_id: "order-3" }),
@@ -255,7 +285,7 @@ describe("createShippingOrder", () => {
     );
 
     expect(fetch).toHaveBeenCalledWith(
-      "http://test-api.com/api/orders/createOrder",
+      "https://test-api.com/api/orders/createOrder",
       expect.objectContaining({
         method: "POST",
         body: JSON.stringify({
@@ -277,7 +307,14 @@ describe("createShippingOrder", () => {
     mockFetchOk({ message: "Order created" });
 
     const result = await createShippingOrder(
-      "buyer-1", "art-1", "seller-1", true, shippingAddress, null, "artist", TOKEN,
+      "buyer-1",
+      "art-1",
+      "seller-1",
+      true,
+      shippingAddress,
+      null,
+      "artist",
+      TOKEN,
     );
 
     expect(result).toEqual({ isOk: true, message: "Order created" });
@@ -287,7 +324,14 @@ describe("createShippingOrder", () => {
     mockFetchOk({ message: "Validation failed" }, false);
 
     const result = await createShippingOrder(
-      "buyer-1", "art-1", "seller-1", false, shippingAddress, null, "gallery", TOKEN,
+      "buyer-1",
+      "art-1",
+      "seller-1",
+      false,
+      shippingAddress,
+      null,
+      "gallery",
+      TOKEN,
     );
 
     expect(result.isOk).toBe(false);
@@ -298,7 +342,14 @@ describe("createShippingOrder", () => {
     mockFetchThrows();
 
     const result = await createShippingOrder(
-      "buyer-1", "art-1", "seller-1", true, shippingAddress, null, "gallery", TOKEN,
+      "buyer-1",
+      "art-1",
+      "seller-1",
+      true,
+      shippingAddress,
+      null,
+      "gallery",
+      TOKEN,
     );
 
     expect(result).toEqual({ isOk: false, message: NETWORK_ERROR_MSG });
@@ -330,7 +381,7 @@ describe("updatePickupAddress", () => {
     });
 
     expect(fetch).toHaveBeenCalledWith(
-      "http://test-api.com/api/orders/updateOrderPickupAddress",
+      "https://test-api.com/api/orders/updateOrderPickupAddress",
       expect.objectContaining({
         method: "PATCH",
         body: JSON.stringify({

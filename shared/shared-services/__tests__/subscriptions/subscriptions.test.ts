@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
 vi.mock("@omenai/url-config/src/config", () => ({
-  getApiUrl: vi.fn().mockReturnValue("http://test-api.com"),
+  getApiUrl: vi.fn().mockReturnValue("https://test-api.com"),
 }));
 
 vi.mock("@omenai/rollbar-config", () => ({
@@ -46,7 +46,7 @@ describe("cancelSubscription", () => {
     await cancelSubscription("gallery-1", TOKEN);
 
     expect(fetch).toHaveBeenCalledWith(
-      "http://test-api.com/api/subscriptions/cancelSubscription",
+      "https://test-api.com/api/subscriptions/cancelSubscription",
       expect.objectContaining({
         method: "POST",
         body: JSON.stringify({ gallery_id: "gallery-1" }),
@@ -97,7 +97,7 @@ describe("retrieveSubscriptionData", () => {
     await retrieveSubscriptionData("gallery-2", TOKEN);
 
     expect(fetch).toHaveBeenCalledWith(
-      "http://test-api.com/api/subscriptions/retrieveSubData",
+      "https://test-api.com/api/subscriptions/retrieveSubData",
       expect.objectContaining({
         method: "POST",
         body: JSON.stringify({ gallery_id: "gallery-2" }),
@@ -149,7 +149,7 @@ describe("verifySubscriptionCharge", () => {
     await verifySubscriptionCharge("pi_abc_123", TOKEN);
 
     expect(fetch).toHaveBeenCalledWith(
-      "http://test-api.com/api/subscriptions/stripe/verifyStripeSubscriptionCharge",
+      "https://test-api.com/api/subscriptions/stripe/verifyStripeSubscriptionCharge",
       expect.objectContaining({
         method: "POST",
         body: JSON.stringify({ paymentIntentId: "pi_abc_123" }),
@@ -207,7 +207,7 @@ describe("createSubscriptionPaymentIntent", () => {
     await createSubscriptionPaymentIntent(9900, "gallery-3", meta, TOKEN);
 
     expect(fetch).toHaveBeenCalledWith(
-      "http://test-api.com/api/subscriptions/stripe/createSubscriptionPaymentIntent",
+      "https://test-api.com/api/subscriptions/stripe/createSubscriptionPaymentIntent",
       expect.objectContaining({
         method: "POST",
         body: JSON.stringify({ amount: 9900, gallery_id: "gallery-3", meta }),
@@ -220,7 +220,12 @@ describe("createSubscriptionPaymentIntent", () => {
   it("returns { isOk, message, client_secret } on success", async () => {
     mockFetchOk({ message: "Created", paymentIntent: "cs_secret_xyz" });
 
-    const result = await createSubscriptionPaymentIntent(9900, "gallery-3", meta, TOKEN);
+    const result = await createSubscriptionPaymentIntent(
+      9900,
+      "gallery-3",
+      meta,
+      TOKEN,
+    );
 
     expect(result).toEqual({
       isOk: true,
@@ -232,7 +237,12 @@ describe("createSubscriptionPaymentIntent", () => {
   it("maps paymentIntent response field to client_secret", async () => {
     mockFetchOk({ message: "OK", paymentIntent: "pi_secret_abc" });
 
-    const result = await createSubscriptionPaymentIntent(9900, "gallery-3", meta, TOKEN);
+    const result = await createSubscriptionPaymentIntent(
+      9900,
+      "gallery-3",
+      meta,
+      TOKEN,
+    );
 
     expect(result.client_secret).toBe("pi_secret_abc");
   });
@@ -240,7 +250,12 @@ describe("createSubscriptionPaymentIntent", () => {
   it("returns { isOk: false } for a non-ok response", async () => {
     mockFetchOk({ message: "Validation failed", paymentIntent: null }, false);
 
-    const result = await createSubscriptionPaymentIntent(9900, "gallery-3", meta, TOKEN);
+    const result = await createSubscriptionPaymentIntent(
+      9900,
+      "gallery-3",
+      meta,
+      TOKEN,
+    );
 
     expect(result.isOk).toBe(false);
     expect(result.message).toBe("Validation failed");
@@ -249,7 +264,12 @@ describe("createSubscriptionPaymentIntent", () => {
   it("returns fallback message and logs error when fetch throws", async () => {
     mockFetchThrows();
 
-    const result = await createSubscriptionPaymentIntent(9900, "gallery-3", meta, TOKEN);
+    const result = await createSubscriptionPaymentIntent(
+      9900,
+      "gallery-3",
+      meta,
+      TOKEN,
+    );
 
     expect(result).toEqual({ isOk: false, message: NETWORK_ERROR_MSG });
     expect(logRollbarServerError).toHaveBeenCalledOnce();

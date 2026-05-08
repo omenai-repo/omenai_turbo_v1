@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
 vi.mock("@omenai/url-config/src/config", () => ({
-  getApiUrl: vi.fn().mockReturnValue("http://test-api.com"),
+  getApiUrl: vi.fn().mockReturnValue("https://test-api.com"),
 }));
 
 vi.mock("@omenai/rollbar-config", () => ({
@@ -44,7 +44,7 @@ describe("getSingleOrder", () => {
     await getSingleOrder("order-1");
 
     expect(fetch).toHaveBeenCalledWith(
-      "http://test-api.com/api/orders/getSingleOrder",
+      "https://test-api.com/api/orders/getSingleOrder",
       expect.objectContaining({
         method: "POST",
         body: JSON.stringify({ order_id: "order-1" }),
@@ -91,7 +91,7 @@ describe("getOrderByFilter", () => {
     await getOrderByFilter("session-xyz");
 
     expect(fetch).toHaveBeenCalledWith(
-      "http://test-api.com/api/orders/getOrderByFilter?id=session-xyz",
+      "https://test-api.com/api/orders/getOrderByFilter?id=session-xyz",
       expect.objectContaining({ method: "GET" }),
     );
   });
@@ -134,7 +134,7 @@ describe("getOrdersForUser", () => {
     await getOrdersForUser("user-42");
 
     expect(fetch).toHaveBeenCalledWith(
-      "http://test-api.com/api/orders/getOrdersByUserId",
+      "https://test-api.com/api/orders/getOrdersByUserId",
       expect.objectContaining({
         method: "POST",
         body: JSON.stringify({ id: "user-42" }),
@@ -180,7 +180,7 @@ describe("getOverviewOrders", () => {
     await getOverviewOrders("seller-session-1");
 
     expect(fetch).toHaveBeenCalledWith(
-      "http://test-api.com/api/orders/getOrdersBySellerId?id=seller-session-1",
+      "https://test-api.com/api/orders/getOrdersBySellerId?id=seller-session-1",
       expect.objectContaining({ method: "GET" }),
     );
   });
@@ -223,7 +223,7 @@ describe("getTrackingData", () => {
     await getTrackingData("order-track-1");
 
     expect(fetch).toHaveBeenCalledWith(
-      "http://test-api.com/api/shipment/shipment_tracking?order_id=order-track-1",
+      "https://test-api.com/api/shipment/shipment_tracking?order_id=order-track-1",
       expect.objectContaining({ method: "GET" }),
     );
   });
