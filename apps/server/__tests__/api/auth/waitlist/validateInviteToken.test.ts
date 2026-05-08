@@ -22,7 +22,8 @@ vi.mock("@omenai/shared-lib/encryption/encrypt_token", () => ({
   hashPayloadToken: vi.fn().mockReturnValue("correct-hash"),
 }));
 vi.mock("../../../../app/api/util", async () => {
-  const { buildValidateRequestBodyMock } = await import("../../../helpers/util-mock");
+  const { buildValidateRequestBodyMock } =
+    await import("../../../helpers/util-mock");
   return buildValidateRequestBodyMock();
 });
 
@@ -65,7 +66,9 @@ describe("POST /api/auth/waitlist/validateInviteToken", () => {
   });
 
   it("returns 403 when user is already registered", async () => {
-    vi.mocked(AccountGallery.exists).mockResolvedValue({ _id: "existing" } as any);
+    vi.mocked(AccountGallery.exists).mockResolvedValue({
+      _id: "existing",
+    } as any);
 
     const response = await POST(makeRequest(validPayload));
     const body = await response.json();
@@ -98,8 +101,9 @@ describe("POST /api/auth/waitlist/validateInviteToken", () => {
   });
 
   it("returns 400 when entity is invalid", async () => {
-    const response = await POST(makeRequest({ ...validPayload, entity: "user" }));
-    const body = await response.json();
+    const response = await POST(
+      makeRequest({ ...validPayload, entity: "user" }),
+    );
 
     expect(response.status).toBe(400);
   });
@@ -114,6 +118,8 @@ describe("POST /api/auth/waitlist/validateInviteToken", () => {
 
     await POST(makeRequest({ ...validPayload, entity: "artist" }));
 
-    expect(AccountArtist.exists).toHaveBeenCalledWith({ email: "alice@example.com" });
+    expect(AccountArtist.exists).toHaveBeenCalledWith({
+      email: "alice@example.com",
+    });
   });
 });

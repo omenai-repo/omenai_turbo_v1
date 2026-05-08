@@ -13,7 +13,8 @@ vi.mock("@omenai/shared-models/models/auth/ArtistSchema", () => ({
   AccountArtist: { updateOne: vi.fn() },
 }));
 vi.mock("../../../../app/api/util", async () => {
-  const { buildValidateRequestBodyMock } = await import("../../../helpers/util-mock");
+  const { buildValidateRequestBodyMock } =
+    await import("../../../helpers/util-mock");
   return buildValidateRequestBodyMock();
 });
 
@@ -32,9 +33,13 @@ describe("POST /api/requests/artist/logo", () => {
   beforeEach(() => vi.clearAllMocks());
 
   it("returns 200 when logo is updated successfully", async () => {
-    vi.mocked(AccountArtist.updateOne).mockResolvedValue({ modifiedCount: 1 } as any);
+    vi.mocked(AccountArtist.updateOne).mockResolvedValue({
+      modifiedCount: 1,
+    } as any);
 
-    const response = await POST(makeRequest({ id: "artist-1", url: "https://example.com/logo.jpg" }));
+    const response = await POST(
+      makeRequest({ id: "artist-1", url: "https://example.com/logo.jpg" }),
+    );
     const body = await response.json();
 
     expect(response.status).toBe(200);
@@ -42,9 +47,13 @@ describe("POST /api/requests/artist/logo", () => {
   });
 
   it("passes the correct id and url to updateOne", async () => {
-    vi.mocked(AccountArtist.updateOne).mockResolvedValue({ modifiedCount: 1 } as any);
+    vi.mocked(AccountArtist.updateOne).mockResolvedValue({
+      modifiedCount: 1,
+    } as any);
 
-    await POST(makeRequest({ id: "artist-1", url: "https://cdn.example.com/image.png" }));
+    await POST(
+      makeRequest({ id: "artist-1", url: "https://cdn.example.com/image.png" }),
+    );
 
     expect(AccountArtist.updateOne).toHaveBeenCalledWith(
       { artist_id: "artist-1" },
@@ -53,9 +62,13 @@ describe("POST /api/requests/artist/logo", () => {
   });
 
   it("returns 500 when update has no effect", async () => {
-    vi.mocked(AccountArtist.updateOne).mockResolvedValue({ modifiedCount: 0 } as any);
+    vi.mocked(AccountArtist.updateOne).mockResolvedValue({
+      modifiedCount: 0,
+    } as any);
 
-    const response = await POST(makeRequest({ id: "artist-1", url: "https://example.com/logo.jpg" }));
+    const response = await POST(
+      makeRequest({ id: "artist-1", url: "https://example.com/logo.jpg" }),
+    );
     const body = await response.json();
 
     expect(response.status).toBe(500);
@@ -72,7 +85,6 @@ describe("POST /api/requests/artist/logo", () => {
 
   it("returns 400 when url is missing", async () => {
     const response = await POST(makeRequest({ id: "artist-1" }));
-    const body = await response.json();
 
     expect(response.status).toBe(400);
   });

@@ -9,9 +9,12 @@ vi.mock("@omenai/shared-lib/auth/configs/rate_limit_configs", () => ({
 vi.mock("@omenai/shared-lib/mongo_connect/mongoConnect", () => ({
   connectMongoDB: vi.fn().mockResolvedValue(undefined),
 }));
-vi.mock("@omenai/shared-models/models/WaitlistFunnel/WaitlistLeadModel", () => ({
-  default: { findOne: vi.fn(), create: vi.fn() },
-}));
+vi.mock(
+  "@omenai/shared-models/models/WaitlistFunnel/WaitlistLeadModel",
+  () => ({
+    default: { findOne: vi.fn(), create: vi.fn() },
+  }),
+);
 vi.mock("@omenai/rollbar-config", () => ({
   rollbarServerInstance: { error: vi.fn() },
 }));
@@ -41,7 +44,9 @@ describe("POST /api/analytics/waitlist-lead", () => {
   beforeEach(() => vi.clearAllMocks());
 
   it("returns 201 when a new lead is created", async () => {
-    vi.mocked(WaitlistLead.findOne).mockReturnValue({ lean: vi.fn().mockResolvedValue(null) } as any);
+    vi.mocked(WaitlistLead.findOne).mockReturnValue({
+      lean: vi.fn().mockResolvedValue(null),
+    } as any);
     vi.mocked(WaitlistLead.create).mockResolvedValue({} as any);
 
     const response = await POST(makeRequest(validPayload));
@@ -73,14 +78,17 @@ describe("POST /api/analytics/waitlist-lead", () => {
   });
 
   it("returns 400 when email is missing", async () => {
-    const response = await POST(makeRequest({ name: "Alice", entity: "gallery" }));
-    const body = await response.json();
+    const response = await POST(
+      makeRequest({ name: "Alice", entity: "gallery" }),
+    );
 
     expect(response.status).toBe(400);
   });
 
   it("creates the lead with correct email and entity", async () => {
-    vi.mocked(WaitlistLead.findOne).mockReturnValue({ lean: vi.fn().mockResolvedValue(null) } as any);
+    vi.mocked(WaitlistLead.findOne).mockReturnValue({
+      lean: vi.fn().mockResolvedValue(null),
+    } as any);
     vi.mocked(WaitlistLead.create).mockResolvedValue({} as any);
 
     await POST(makeRequest(validPayload));

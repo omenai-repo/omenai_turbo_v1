@@ -20,7 +20,9 @@ import { GET } from "../../../../app/api/requests/artist/fetchTrendingArtists/ro
 import { Artworkuploads } from "@omenai/shared-models/models/artworks/UploadArtworkSchema";
 
 function makeRequest() {
-  return new Request("http://localhost/api/requests/artist/fetchTrendingArtists");
+  return new Request(
+    "http://localhost/api/requests/artist/fetchTrendingArtists",
+  );
 }
 
 const mockTrendingData = [
@@ -37,7 +39,9 @@ describe("GET /api/requests/artist/fetchTrendingArtists", () => {
   beforeEach(() => vi.clearAllMocks());
 
   it("returns 200 with trending artists", async () => {
-    vi.mocked(Artworkuploads.aggregate).mockResolvedValue(mockTrendingData as any);
+    vi.mocked(Artworkuploads.aggregate).mockResolvedValue(
+      mockTrendingData as any,
+    );
 
     const response = await GET(makeRequest());
     const body = await response.json();
@@ -59,10 +63,11 @@ describe("GET /api/requests/artist/fetchTrendingArtists", () => {
   });
 
   it("returns 500 when aggregation fails", async () => {
-    vi.mocked(Artworkuploads.aggregate).mockRejectedValue(new Error("Aggregation error"));
+    vi.mocked(Artworkuploads.aggregate).mockRejectedValue(
+      new Error("Aggregation error"),
+    );
 
     const response = await GET(makeRequest());
-    const body = await response.json();
 
     expect(response.status).toBe(500);
   });

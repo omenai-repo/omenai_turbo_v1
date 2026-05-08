@@ -96,7 +96,7 @@ describe("POST /api/wallet/add_primary_account", () => {
 
     expect(response.status).toBe(200);
     expect(body.message).toBe("Primary account added successfully");
-    expect(global.fetch).toHaveBeenCalledWith(
+    expect(globalThis.fetch).toHaveBeenCalledWith(
       "https://api.flutterwave.com/v3/beneficiaries",
       expect.objectContaining({ method: "POST" }),
     );

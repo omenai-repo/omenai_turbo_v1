@@ -20,7 +20,9 @@ import { GET } from "../../../../app/api/requests/artist/fetchFeaturedArtists/ro
 import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
 
 function makeRequest() {
-  return new Request("http://localhost/api/requests/artist/fetchFeaturedArtists");
+  return new Request(
+    "http://localhost/api/requests/artist/fetchFeaturedArtists",
+  );
 }
 
 const mockArtists = [
@@ -62,7 +64,6 @@ describe("GET /api/requests/artist/fetchFeaturedArtists", () => {
     } as any);
 
     const response = await GET(makeRequest());
-    const body = await response.json();
 
     expect(response.status).toBe(500);
   });

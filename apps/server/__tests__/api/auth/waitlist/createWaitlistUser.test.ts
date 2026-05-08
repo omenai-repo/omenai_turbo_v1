@@ -18,14 +18,18 @@ vi.mock("@omenai/shared-models/models/auth/GallerySchema", () => ({
 vi.mock("@omenai/shared-models/models/auth/WaitlistSchema", () => ({
   Waitlist: { findOne: vi.fn(), create: vi.fn() },
 }));
-vi.mock("@omenai/shared-emails/src/models/waitlist/SendWaitlistRegistrationEmail", () => ({
-  SendWaitlistRegistrationEmail: vi.fn().mockResolvedValue(undefined),
-}));
+vi.mock(
+  "@omenai/shared-emails/src/models/waitlist/SendWaitlistRegistrationEmail",
+  () => ({
+    SendWaitlistRegistrationEmail: vi.fn().mockResolvedValue(undefined),
+  }),
+);
 vi.mock("@omenai/rollbar-config", () => ({
   rollbarServerInstance: { error: vi.fn() },
 }));
 vi.mock("../../../../app/api/util", async () => {
-  const { buildValidateRequestBodyMock } = await import("../../../helpers/util-mock");
+  const { buildValidateRequestBodyMock } =
+    await import("../../../helpers/util-mock");
   return buildValidateRequestBodyMock();
 });
 
@@ -42,7 +46,11 @@ function makeRequest(body: object) {
   });
 }
 
-const validPayload = { name: "Alice", email: "alice@example.com", entity: "gallery" };
+const validPayload = {
+  name: "Alice",
+  email: "alice@example.com",
+  entity: "gallery",
+};
 
 describe("POST /api/auth/waitlist/createWaitlistUser", () => {
   beforeEach(() => vi.clearAllMocks());
@@ -60,7 +68,9 @@ describe("POST /api/auth/waitlist/createWaitlistUser", () => {
   });
 
   it("returns 403 when user is already registered as a gallery", async () => {
-    vi.mocked(AccountGallery.exists).mockResolvedValue({ _id: "existing" } as any);
+    vi.mocked(AccountGallery.exists).mockResolvedValue({
+      _id: "existing",
+    } as any);
 
     const response = await POST(makeRequest(validPayload));
     const body = await response.json();
@@ -98,7 +108,9 @@ describe("POST /api/auth/waitlist/createWaitlistUser", () => {
 
     await POST(makeRequest({ ...validPayload, entity: "artist" }));
 
-    expect(AccountArtist.exists).toHaveBeenCalledWith({ email: "alice@example.com" });
+    expect(AccountArtist.exists).toHaveBeenCalledWith({
+      email: "alice@example.com",
+    });
   });
 
   it("returns 400 when required fields are missing", async () => {
@@ -110,8 +122,9 @@ describe("POST /api/auth/waitlist/createWaitlistUser", () => {
   });
 
   it("returns 400 when entity is invalid", async () => {
-    const response = await POST(makeRequest({ ...validPayload, entity: "admin" }));
-    const body = await response.json();
+    const response = await POST(
+      makeRequest({ ...validPayload, entity: "admin" }),
+    );
 
     expect(response.status).toBe(400);
   });
