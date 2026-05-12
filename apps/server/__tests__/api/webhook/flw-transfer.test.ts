@@ -5,10 +5,6 @@ vi.mock("../../../app/api/webhook/resource-global", () => ({
   verifyFlutterwaveTransaction: vi.fn(),
 }));
 
-vi.mock("@omenai/shared-lib/mongo_connect/mongoConnect", () => ({
-  connectMongoDB: vi.fn(),
-}));
-
 vi.mock("@omenai/shared-models/models/wallet/WalletSchema", () => ({
   Wallet: { updateOne: vi.fn() },
 }));

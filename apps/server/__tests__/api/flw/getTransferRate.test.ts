@@ -1,13 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 
-vi.mock("@omenai/shared-lib/auth/middleware/combined_middleware", () => ({
-  withRateLimitHighlightAndCsrf: () => (fn: any) => fn,
-}));
-
-vi.mock("@omenai/shared-lib/auth/configs/rate_limit_configs", () => ({
-  strictRateLimit: {},
-}));
-
 vi.mock("../../../app/api/util", () => ({
   createErrorRollbarReport: vi.fn(),
 }));

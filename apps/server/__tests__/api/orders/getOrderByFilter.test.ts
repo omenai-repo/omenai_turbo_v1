@@ -1,9 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
-vi.mock("@omenai/shared-lib/mongo_connect/mongoConnect", () => ({
-  connectMongoDB: vi.fn().mockResolvedValue(undefined),
-}));
-
 vi.mock("@omenai/shared-models/models/orders/CreateOrderSchema", () => ({
   CreateOrder: { find: vi.fn() },
 }));

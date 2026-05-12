@@ -2,10 +2,6 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 
 // mocks must be declared before the route import
 
-vi.mock("next/headers", () => ({
-  cookies: vi.fn().mockResolvedValue({}),
-}));
-
 vi.mock("@omenai/shared-lib/auth/session", () => ({
   getSessionFromCookie: vi.fn(),
   getSession: vi.fn(),

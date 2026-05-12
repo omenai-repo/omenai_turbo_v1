@@ -1,10 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { buildValidateRequestBodyMock } from "../../helpers/util-mock";
 
-vi.mock("@omenai/shared-lib/auth/configs/rate_limit_configs", () => ({
-  standardRateLimit: {},
-}));
-
 vi.mock("@omenai/shared-models/models/follows/FollowSchema", () => ({
   Follow: { deleteOne: vi.fn() },
 }));

@@ -1,14 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
-vi.mock("@omenai/shared-lib/auth/middleware/rate_limit_middleware", () => ({
-  withRateLimit: () => (fn: any) => fn,
-}));
-
-vi.mock("@omenai/shared-lib/auth/configs/rate_limit_configs", () => ({
-  standardRateLimit: {},
-  strictRateLimit: {},
-}));
-
 vi.mock("@omenai/shared-utils/src/getFutureShipmentDate", () => ({
   getFutureShipmentDate: vi.fn(),
 }));

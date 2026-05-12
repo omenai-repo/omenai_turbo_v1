@@ -1,13 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
-vi.mock("@omenai/shared-lib/auth/middleware/rate_limit_middleware", () => ({
-  withRateLimit: () => (fn: any) => fn,
-}));
-
-vi.mock("@omenai/shared-lib/auth/configs/rate_limit_configs", () => ({
-  standardRateLimit: {},
-}));
-
 vi.mock("next/server", () => ({
   NextResponse: {
     json: (body: unknown, init?: ResponseInit) =>
@@ -25,10 +17,6 @@ vi.mock("next/server", () => ({
       );
     }
   },
-}));
-
-vi.mock("@omenai/shared-lib/mongo_connect/mongoConnect", () => ({
-  connectMongoDB: vi.fn(),
 }));
 
 vi.mock("@omenai/shared-models/models/orders/CreateOrderSchema", () => ({

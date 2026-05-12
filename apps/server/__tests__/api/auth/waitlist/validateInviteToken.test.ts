@@ -1,14 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
-vi.mock("@omenai/shared-lib/auth/middleware/rate_limit_middleware", () => ({
-  withRateLimit: () => (fn: any) => fn,
-}));
-vi.mock("@omenai/shared-lib/auth/configs/rate_limit_configs", () => ({
-  strictRateLimit: {},
-}));
-vi.mock("@omenai/shared-lib/mongo_connect/mongoConnect", () => ({
-  connectMongoDB: vi.fn().mockResolvedValue(undefined),
-}));
 vi.mock("@omenai/shared-models/models/auth/ArtistSchema", () => ({
   AccountArtist: { exists: vi.fn() },
 }));

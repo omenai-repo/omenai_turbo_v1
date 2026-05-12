@@ -15,10 +15,6 @@ vi.mock(
   () => ({ sendSellerShipmentEmail: vi.fn().mockResolvedValue(undefined) }),
 );
 
-vi.mock("@omenai/shared-lib/mongo_connect/mongoConnect", () => ({
-  connectMongoDB: vi.fn().mockResolvedValue(undefined),
-}));
-
 vi.mock("@omenai/shared-utils/src/priceFormatter", () => ({
   formatPrice: vi.fn((p: number) => `$${p}`),
 }));

@@ -1,13 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 
-vi.mock("@omenai/shared-lib/auth/middleware/rate_limit_middleware", () => ({
-  withRateLimit: () => (fn: any) => fn,
-}));
-
-vi.mock("@omenai/shared-lib/auth/configs/rate_limit_configs", () => ({
-  lenientRateLimit: {},
-}));
-
 vi.mock("../../../app/api/util", async () => {
   const { buildValidateRequestBodyMock } = await import("../../helpers/util-mock");
   return buildValidateRequestBodyMock();

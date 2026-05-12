@@ -1,19 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { buildValidateRequestBodyMock } from "../../helpers/util-mock";
 
-vi.mock("@omenai/shared-lib/auth/middleware/combined_middleware", () => ({
-  withRateLimitHighlightAndCsrf: () => (fn: any) => fn,
-}));
-
-vi.mock("@omenai/shared-lib/auth/configs/rate_limit_configs", () => ({
-  standardRateLimit: {},
-  strictRateLimit: {},
-}));
-
-vi.mock("@omenai/shared-lib/mongo_connect/mongoConnect", () => ({
-  connectMongoDB: vi.fn().mockResolvedValue(undefined),
-}));
-
 vi.mock("@omenai/shared-models/models/follows/FollowSchema", () => ({
   Follow: { create: vi.fn() },
 }));

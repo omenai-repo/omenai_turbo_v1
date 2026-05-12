@@ -2,18 +2,6 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 
 // mocks must be declared before the route import
 
-vi.mock("@omenai/shared-lib/auth/middleware/combined_middleware", () => ({
-  withRateLimitHighlightAndCsrf: () => (fn: any) => fn,
-}));
-
-vi.mock("@omenai/shared-lib/auth/configs/rate_limit_configs", () => ({
-  strictRateLimit: {},
-}));
-
-vi.mock("@omenai/shared-lib/mongo_connect/mongoConnect", () => ({
-  connectMongoDB: vi.fn().mockResolvedValue(undefined),
-}));
-
 vi.mock("@omenai/shared-models/models/auth/AccountAdmin", () => ({
   AccountAdmin: {
     findOne: vi.fn(),

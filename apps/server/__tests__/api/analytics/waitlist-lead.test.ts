@@ -1,23 +1,11 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
-vi.mock("@omenai/shared-lib/auth/middleware/rate_limit_middleware", () => ({
-  withRateLimit: () => (fn: any) => fn,
-}));
-vi.mock("@omenai/shared-lib/auth/configs/rate_limit_configs", () => ({
-  standardRateLimit: {},
-}));
-vi.mock("@omenai/shared-lib/mongo_connect/mongoConnect", () => ({
-  connectMongoDB: vi.fn().mockResolvedValue(undefined),
-}));
 vi.mock(
   "@omenai/shared-models/models/WaitlistFunnel/WaitlistLeadModel",
   () => ({
     default: { findOne: vi.fn(), create: vi.fn() },
   }),
 );
-vi.mock("@omenai/rollbar-config", () => ({
-  rollbarServerInstance: { error: vi.fn() },
-}));
 
 import { POST } from "../../../app/api/analytics/waitlist-lead/route";
 import WaitlistLead from "@omenai/shared-models/models/WaitlistFunnel/WaitlistLeadModel";

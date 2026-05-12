@@ -5,10 +5,6 @@ vi.mock("@upstash/workflow/nextjs", async () => {
   return buildWorkflowServeMock();
 });
 
-vi.mock("@omenai/shared-lib/mongo_connect/mongoConnect", () => ({
-  connectMongoDB: vi.fn().mockResolvedValue(undefined),
-}));
-
 vi.mock("@omenai/shared-models/models/invoice/InvoiceSchema", () => ({
   Invoice: {
     findOneAndUpdate: vi.fn(),

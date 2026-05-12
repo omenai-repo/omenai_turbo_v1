@@ -6,23 +6,11 @@ vi.mock("mongoose", () => ({
   },
 }));
 
-vi.mock("@omenai/shared-lib/auth/middleware/rate_limit_middleware", () => ({
-  withRateLimit: () => (fn: any) => fn,
-}));
-
-vi.mock("@omenai/shared-lib/auth/configs/rate_limit_configs", () => ({
-  standardRateLimit: {},
-}));
-
 vi.mock("@omenai/shared-lib/payments/stripe/stripe", () => ({
   stripe: {
     webhooks: { constructEvent: vi.fn() },
     paymentIntents: { retrieve: vi.fn() },
   },
-}));
-
-vi.mock("@omenai/shared-lib/mongo_connect/mongoConnect", () => ({
-  connectMongoDB: vi.fn(),
 }));
 
 vi.mock("@omenai/shared-models/models/orders/CreateOrderSchema", () => ({
