@@ -41,6 +41,17 @@ describe("POST /api/artworks/getSingleArtworkImpression", () => {
     expect(body.data).toEqual(mockImpression);
   });
 
+  it("queries the artwork by art_id and selects only like_IDs", async () => {
+    mockFindOne(mockImpression);
+
+    await POST(makeRequest({ id: "art-123" }));
+
+    expect(Artworkuploads.findOne).toHaveBeenCalledWith(
+      { art_id: "art-123" },
+      "like_IDs",
+    );
+  });
+
   it("returns 500 when the artwork is not found", async () => {
     mockFindOne(null);
 

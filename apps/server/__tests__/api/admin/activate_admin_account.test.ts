@@ -83,6 +83,49 @@ describe("POST /api/admin/activate_admin_account", () => {
     });
   });
 
+  it("calls AccountAdmin.updateOne with verified: true and the hashed password", async () => {
+    await POST(makeRequest(validBody));
+
+    expect(AccountAdmin.updateOne).toHaveBeenCalledWith(
+      { email: validBody.email },
+      expect.objectContaining({
+        $set: expect.objectContaining({
+          password: "$2b$10$hashedpassword",
+          name: validBody.name,
+          verified: true,
+          admin_active: true,
+        }),
+      }),
+    );
+  });
+
+  it("deletes the invite token after successful activation", async () => {
+    await POST(makeRequest(validBody));
+
+    expect(AdminInviteToken.deleteOne).toHaveBeenCalledWith({
+      token: validBody.token,
+    });
+  });
+
+  it("does not send activation email when admin account is not found", async () => {
+    vi.mocked(AccountAdmin.findOne).mockResolvedValue(null);
+
+    await POST(makeRequest(validBody));
+
+    expect(sendAdminActivationEmail).not.toHaveBeenCalled();
+  });
+
+  it("does not delete token or send email when update fails", async () => {
+    vi.mocked(AccountAdmin.updateOne).mockResolvedValue({
+      modifiedCount: 0,
+    } as any);
+
+    await POST(makeRequest(validBody));
+
+    expect(AdminInviteToken.deleteOne).not.toHaveBeenCalled();
+    expect(sendAdminActivationEmail).not.toHaveBeenCalled();
+  });
+
   it("returns 403 when admin account does not exist", async () => {
     vi.mocked(AccountAdmin.findOne).mockResolvedValue(null);
 

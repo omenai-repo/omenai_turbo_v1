@@ -58,6 +58,24 @@ describe("GET /api/admin/fetch_artist_verif_info", () => {
     expect(body.data.request).toEqual(mockVerifReq.request);
   });
 
+  it("queries AccountArtist with artist_id and selected fields", async () => {
+    await GET(makeRequest("artist-123"));
+
+    expect(AccountArtist.findOne).toHaveBeenCalledWith(
+      { artist_id: "artist-123" },
+      "name logo email documentation artist_id art_style logo address",
+    );
+  });
+
+  it("queries ArtistCategorization with artist_id and request field", async () => {
+    await GET(makeRequest("artist-123"));
+
+    expect(ArtistCategorization.findOne).toHaveBeenCalledWith(
+      { artist_id: "artist-123" },
+      "request",
+    );
+  });
+
   it("returns 500 when artist is not found", async () => {
     vi.mocked(AccountArtist.findOne).mockResolvedValue(null);
 

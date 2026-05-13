@@ -67,6 +67,7 @@ import { RejectedGallery } from "@omenai/shared-models/models/auth/RejectedGalle
 import { VerificationCodes } from "@omenai/shared-models/models/auth/verification/codeTimeoutSchema";
 import { DeviceManagement } from "@omenai/shared-models/models/device_management/DeviceManagementSchema";
 import { fetchConfigCatValue } from "@omenai/shared-lib/configcat/configCatFetch";
+import { sendGalleryMail } from "@omenai/shared-emails/src/models/gallery/sendGalleryMail";
 
 const validBody = {
   name: "Test Gallery",
@@ -133,6 +134,41 @@ describe("POST /api/auth/gallery/register", () => {
     expect(response.status).toBe(201);
     expect(body.message).toBe("Account successfully registered");
     expect(body.data).toBe("gallery-abc-123");
+  });
+
+  it("creates a VerificationCodes entry with the generated token and gallery_id", async () => {
+    await POST(makeRequest(validBody));
+
+    expect(VerificationCodes.create).toHaveBeenCalledWith({
+      code: "1234567",
+      author: "gallery-abc-123",
+    });
+  });
+
+  it("sends gallery verification email with name, email, and token", async () => {
+    await POST(makeRequest(validBody));
+
+    expect(sendGalleryMail).toHaveBeenCalledWith({
+      name: mockCreatedGallery.name,
+      email: mockCreatedGallery.email,
+      token: "1234567",
+    });
+  });
+
+  it("does not send email when AccountGallery.create fails", async () => {
+    vi.mocked(AccountGallery.create).mockResolvedValue(null as any);
+
+    await POST(makeRequest(validBody));
+
+    expect(sendGalleryMail).not.toHaveBeenCalled();
+  });
+
+  it("does not send email when account already exists", async () => {
+    mockFindOne(AccountGallery, { email: "gallery@example.com" });
+
+    await POST(makeRequest(validBody));
+
+    expect(sendGalleryMail).not.toHaveBeenCalled();
   });
 
   it("returns 409 when the account already exists", async () => {

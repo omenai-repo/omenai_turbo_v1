@@ -68,6 +68,12 @@ describe("GET /api/admin/analytics/getFinancialMetrics", () => {
     expect(body.data.trendChart).toEqual(mockChartResponse.data);
   });
 
+  it("calls getCoreFinancials once to compute KPIs", async () => {
+    await GET(makeRequest());
+
+    expect(getCoreFinancials).toHaveBeenCalledOnce();
+  });
+
   it("passes year query param to getFinancialChartData", async () => {
     await GET(makeRequest({ year: "2023" }));
 

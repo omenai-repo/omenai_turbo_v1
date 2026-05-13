@@ -55,6 +55,28 @@ describe("POST /api/auth/waitlist/createWaitlistUser", () => {
     expect(body.message).toBe("Successfully added to waitlist");
   });
 
+  it("calls Waitlist.create with name, email, and entity", async () => {
+    vi.mocked(AccountGallery.exists).mockResolvedValue(null);
+    vi.mocked(Waitlist.findOne).mockResolvedValue(null);
+    vi.mocked(Waitlist.create).mockResolvedValue({} as any);
+
+    await POST(makeRequest(validPayload));
+
+    expect(Waitlist.create).toHaveBeenCalledWith({
+      name: validPayload.name,
+      email: validPayload.email,
+      entity: validPayload.entity,
+    });
+  });
+
+  it("does not create waitlist entry when user is already registered", async () => {
+    vi.mocked(AccountGallery.exists).mockResolvedValue({ _id: "existing" } as any);
+
+    await POST(makeRequest(validPayload));
+
+    expect(Waitlist.create).not.toHaveBeenCalled();
+  });
+
   it("returns 403 when user is already registered as a gallery", async () => {
     vi.mocked(AccountGallery.exists).mockResolvedValue({
       _id: "existing",

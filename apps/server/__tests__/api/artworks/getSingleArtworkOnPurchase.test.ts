@@ -35,6 +35,14 @@ describe("POST /api/artworks/getSingleArtworkOnPurchase", () => {
     expect(body.data).toEqual(mockArtwork);
   });
 
+  it("calls getCachedArtwork with the provided art_id", async () => {
+    vi.mocked(getCachedArtwork).mockResolvedValue(mockArtwork);
+
+    await POST(makeRequest({ art_id: "art-123" }));
+
+    expect(getCachedArtwork).toHaveBeenCalledWith("art-123");
+  });
+
   it("returns 404 when artwork is not found in cache or DB", async () => {
     const { NotFoundError } = await import(
       "../../../custom/errors/dictionary/errorDictionary"

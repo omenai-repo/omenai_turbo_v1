@@ -46,6 +46,14 @@ describe("POST /api/artworks/getPopularArtworks", () => {
     expect(body.data).toHaveLength(2);
   });
 
+  it("queries Artworkuploads filtered by the provided author_id", async () => {
+    mockFindChain([]);
+
+    await POST(makeRequest({ id: "author-123" }));
+
+    expect(Artworkuploads.find).toHaveBeenCalledWith({ author_id: "author-123" });
+  });
+
   it("filters out artworks with zero impressions", async () => {
     mockFindChain([
       { art_id: "art-1", impressions: 5 },

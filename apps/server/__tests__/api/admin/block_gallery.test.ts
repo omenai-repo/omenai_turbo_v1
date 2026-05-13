@@ -56,6 +56,25 @@ describe("POST /api/admin/block_gallery", () => {
     });
   });
 
+  it("calls AccountGallery.updateOne with the correct query and status", async () => {
+    await POST(makeRequest({ gallery_id: "gallery-123", status: "blocked" }));
+
+    expect(AccountGallery.updateOne).toHaveBeenCalledWith(
+      { gallery_id: "gallery-123" },
+      { $set: { status: "blocked" } },
+    );
+  });
+
+  it("does not send blocked email when update fails", async () => {
+    vi.mocked(AccountGallery.updateOne).mockResolvedValue({
+      modifiedCount: 0,
+    } as any);
+
+    await POST(makeRequest({ gallery_id: "gallery-123", status: "blocked" }));
+
+    expect(sendGalleryBlockedEmail).not.toHaveBeenCalled();
+  });
+
   it("returns 500 when update modifiedCount is 0", async () => {
     vi.mocked(AccountGallery.updateOne).mockResolvedValue({
       modifiedCount: 0,

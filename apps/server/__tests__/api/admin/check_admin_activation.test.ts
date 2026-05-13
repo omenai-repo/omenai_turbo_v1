@@ -42,6 +42,20 @@ describe("GET /api/admin/check_admin_activation", () => {
     expect(body.isActive).toBe(true);
   });
 
+  it("queries AdminInviteToken by the provided token with selected fields", async () => {
+    vi.mocked(AdminInviteToken.findOne).mockResolvedValue({
+      token: "valid-token-abc",
+      email: "admin@example.com",
+    });
+
+    await GET(makeRequest("valid-token-abc"));
+
+    expect(AdminInviteToken.findOne).toHaveBeenCalledWith(
+      { token: "valid-token-abc" },
+      "token email",
+    );
+  });
+
   it("returns isActive false when invite token does not exist", async () => {
     vi.mocked(AdminInviteToken.findOne).mockResolvedValue(null);
 

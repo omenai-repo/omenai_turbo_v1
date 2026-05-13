@@ -56,6 +56,25 @@ describe("POST /api/admin/block_artist", () => {
     });
   });
 
+  it("calls AccountArtist.updateOne with the correct query and status", async () => {
+    await POST(makeRequest({ artist_id: "artist-123", status: "blocked" }));
+
+    expect(AccountArtist.updateOne).toHaveBeenCalledWith(
+      { artist_id: "artist-123" },
+      { $set: { status: "blocked" } },
+    );
+  });
+
+  it("does not send blocked email when update fails", async () => {
+    vi.mocked(AccountArtist.updateOne).mockResolvedValue({
+      modifiedCount: 0,
+    } as any);
+
+    await POST(makeRequest({ artist_id: "artist-123", status: "blocked" }));
+
+    expect(sendArtistBlockedMail).not.toHaveBeenCalled();
+  });
+
   it("returns 500 when update modifiedCount is 0", async () => {
     vi.mocked(AccountArtist.updateOne).mockResolvedValue({
       modifiedCount: 0,

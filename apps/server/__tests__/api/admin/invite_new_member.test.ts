@@ -78,6 +78,36 @@ describe("POST /api/admin/invite_new_member", () => {
     });
   });
 
+  it("creates an AccountAdmin record with email and access_role", async () => {
+    await POST(makeRequest(validBody));
+
+    expect(AccountAdmin.create).toHaveBeenCalledWith({
+      email: validBody.email,
+      access_role: validBody.access_role,
+    });
+  });
+
+  it("creates an AdminInviteToken with author and generated token", async () => {
+    await POST(makeRequest(validBody));
+
+    expect(AdminInviteToken.create).toHaveBeenCalledWith({
+      author: validBody.email,
+      token: "mock-token-abc123",
+    });
+  });
+
+  it("does not create account or send email when member already exists", async () => {
+    vi.mocked(AccountAdmin.findOne).mockResolvedValue({
+      email: validBody.email,
+    });
+
+    await POST(makeRequest(validBody));
+
+    expect(AccountAdmin.create).not.toHaveBeenCalled();
+    expect(AdminInviteToken.create).not.toHaveBeenCalled();
+    expect(sendMemberInviteEmail).not.toHaveBeenCalled();
+  });
+
   it("returns 403 when email is already associated with a team member", async () => {
     vi.mocked(AccountAdmin.findOne).mockResolvedValue({
       email: "newmember@example.com",

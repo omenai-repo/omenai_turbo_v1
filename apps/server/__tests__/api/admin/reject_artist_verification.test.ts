@@ -62,6 +62,32 @@ describe("POST /api/admin/reject_artist_verification", () => {
     });
   });
 
+  it("calls RejectedGallery.create with name and email", async () => {
+    await POST(makeRequest(validBody));
+
+    expect(RejectedGallery.create).toHaveBeenCalledWith({
+      name: validBody.name,
+      email: validBody.email,
+    });
+  });
+
+  it("calls AccountArtist.deleteOne with the artist_id", async () => {
+    await POST(makeRequest(validBody));
+
+    expect(AccountArtist.deleteOne).toHaveBeenCalledWith({
+      artist_id: validBody.artist_id,
+    });
+  });
+
+  it("does not delete artist or send email when create fails", async () => {
+    vi.mocked(RejectedGallery.create).mockResolvedValue(null as any);
+
+    await POST(makeRequest(validBody));
+
+    expect(AccountArtist.deleteOne).not.toHaveBeenCalled();
+    expect(sendArtistRejectedMail).not.toHaveBeenCalled();
+  });
+
   it("returns 500 when RejectedGallery.create returns falsy", async () => {
     vi.mocked(RejectedGallery.create).mockResolvedValue(null as any);
 

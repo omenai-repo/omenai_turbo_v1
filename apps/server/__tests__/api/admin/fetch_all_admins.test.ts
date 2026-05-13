@@ -48,6 +48,17 @@ describe("GET /api/admin/fetch_all_admins", () => {
     expect(body.data).toEqual(mockAdmins);
   });
 
+  it("queries all admin records with only the required fields", async () => {
+    vi.mocked(AccountAdmin.find).mockResolvedValue(mockAdmins as any);
+
+    await GET();
+
+    expect(AccountAdmin.find).toHaveBeenCalledWith(
+      {},
+      "name email access_role admin_id joinedAt verified",
+    );
+  });
+
   it("returns 200 with an empty array when no admins exist", async () => {
     vi.mocked(AccountAdmin.find).mockResolvedValue([] as any);
 

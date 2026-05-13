@@ -36,6 +36,12 @@ describe("GET /api/admin/analytics/getOperationalMetrics", () => {
     expect(body.message).toBe("Operational metrics retrieved successfully");
   });
 
+  it("calls getOperationalMetrics once to compute the data", async () => {
+    await GET();
+
+    expect(getOperationalMetrics).toHaveBeenCalledOnce();
+  });
+
   it("returns 500 when getOperationalMetrics returns success:false", async () => {
     vi.mocked(getOperationalMetrics).mockResolvedValue({ success: false } as any);
 

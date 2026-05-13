@@ -45,6 +45,14 @@ describe("GET /api/admin/get_nexus_data", () => {
     expect(body.data).toEqual(mockNexus);
   });
 
+  it("queries NexusTransactions by the provided stateCode", async () => {
+    vi.mocked(NexusTransactions.findOne).mockResolvedValue(mockNexus);
+
+    await GET(makeRequest("NG-LA"));
+
+    expect(NexusTransactions.findOne).toHaveBeenCalledWith({ stateCode: "NG-LA" });
+  });
+
   it("returns 500 when nexus data is not found", async () => {
     vi.mocked(NexusTransactions.findOne).mockResolvedValue(null);
 

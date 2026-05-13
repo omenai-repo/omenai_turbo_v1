@@ -49,6 +49,16 @@ describe("GET /api/admin/support/id", () => {
     expect(body.data).toEqual(mockTicket);
   });
 
+  it("queries SupportTicket by the provided ticketId", async () => {
+    vi.mocked(SupportTicket.findOne).mockReturnValue({
+      lean: vi.fn().mockResolvedValue(mockTicket),
+    } as any);
+
+    await GET(makeRequest("TK-001"));
+
+    expect(SupportTicket.findOne).toHaveBeenCalledWith({ ticketId: "TK-001" });
+  });
+
   it("returns 404 when ticket is not found", async () => {
     vi.mocked(SupportTicket.findOne).mockReturnValue({
       lean: vi.fn().mockResolvedValue(null),

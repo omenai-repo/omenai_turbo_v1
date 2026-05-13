@@ -26,6 +26,7 @@ vi.mock("../../../app/api/util", async () => {
 import { POST } from "../../../app/api/admin/accept_gallery_verification/route";
 import { AccountGallery } from "@omenai/shared-models/models/auth/GallerySchema";
 import { sendGalleryAcceptedMail } from "@omenai/shared-emails/src/models/gallery/sendGalleryAcceptedMail";
+import { redis } from "@omenai/upstash-config";
 
 function makeRequest(body: object): Request {
   return new Request(
@@ -62,6 +63,39 @@ describe("POST /api/admin/accept_gallery_verification", () => {
       name: mockGallery.name,
       email: mockGallery.email,
     });
+  });
+
+  it("calls AccountGallery.updateOne with gallery_verified: true", async () => {
+    await POST(makeRequest({ gallery_id: "gallery-123" }));
+
+    expect(AccountGallery.updateOne).toHaveBeenCalledWith(
+      { gallery_id: "gallery-123" },
+      { $set: { gallery_verified: true } },
+    );
+  });
+
+  it("invalidates the Redis cache for the gallery account", async () => {
+    await POST(makeRequest({ gallery_id: "gallery-123" }));
+
+    expect(redis.del).toHaveBeenCalledWith("account:gallery-123");
+  });
+
+  it("does not send acceptance email when gallery is not found", async () => {
+    vi.mocked(AccountGallery.findOne).mockResolvedValue(null);
+
+    await POST(makeRequest({ gallery_id: "ghost-gallery" }));
+
+    expect(sendGalleryAcceptedMail).not.toHaveBeenCalled();
+  });
+
+  it("does not send acceptance email when update fails", async () => {
+    vi.mocked(AccountGallery.updateOne).mockResolvedValue({
+      modifiedCount: 0,
+    } as any);
+
+    await POST(makeRequest({ gallery_id: "gallery-123" }));
+
+    expect(sendGalleryAcceptedMail).not.toHaveBeenCalled();
   });
 
   it("returns 404 when gallery is not found", async () => {

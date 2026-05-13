@@ -64,6 +64,47 @@ describe("PUT /api/admin/update_admin_credentials", () => {
     expect(body.message).toBe("Admin credentials updated successfully");
   });
 
+  it("calls AccountAdmin.updateOne with the hashed password", async () => {
+    vi.mocked(bcrypt.compareSync)
+      .mockReturnValueOnce(true)
+      .mockReturnValueOnce(false);
+
+    await PUT(makeRequest(validBody));
+
+    expect(AccountAdmin.updateOne).toHaveBeenCalledWith(
+      { admin_id: validBody.admin_id },
+      { $set: { password: "$2b$10$newhashed" } },
+    );
+  });
+
+  it("does not call updateOne when current password is incorrect", async () => {
+    vi.mocked(bcrypt.compareSync)
+      .mockReturnValueOnce(false)
+      .mockReturnValueOnce(false);
+
+    await PUT(makeRequest(validBody));
+
+    expect(AccountAdmin.updateOne).not.toHaveBeenCalled();
+  });
+
+  it("does not call updateOne when new password matches current password", async () => {
+    vi.mocked(bcrypt.compareSync)
+      .mockReturnValueOnce(true)
+      .mockReturnValueOnce(true);
+
+    await PUT(makeRequest(validBody));
+
+    expect(AccountAdmin.updateOne).not.toHaveBeenCalled();
+  });
+
+  it("does not call updateOne when admin is not found", async () => {
+    vi.mocked(AccountAdmin.findOne).mockResolvedValue(null);
+
+    await PUT(makeRequest(validBody));
+
+    expect(AccountAdmin.updateOne).not.toHaveBeenCalled();
+  });
+
   it("returns 400 when admin account is not found", async () => {
     vi.mocked(AccountAdmin.findOne).mockResolvedValue(null);
 

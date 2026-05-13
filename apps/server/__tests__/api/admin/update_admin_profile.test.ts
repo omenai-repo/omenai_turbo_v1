@@ -45,6 +45,23 @@ describe("PUT /api/admin/update_admin_profile", () => {
     expect(body.message).toMatch(/Admin credentials updated successfully/i);
   });
 
+  it("calls AccountAdmin.updateOne with the correct query and name", async () => {
+    await PUT(makeRequest(validBody));
+
+    expect(AccountAdmin.updateOne).toHaveBeenCalledWith(
+      { admin_id: validBody.admin_id },
+      { $set: { name: validBody.name } },
+    );
+  });
+
+  it("does not call updateOne when admin is not found", async () => {
+    vi.mocked(AccountAdmin.findOne).mockResolvedValue(null);
+
+    await PUT(makeRequest(validBody));
+
+    expect(AccountAdmin.updateOne).not.toHaveBeenCalled();
+  });
+
   it("returns 400 when admin is not found", async () => {
     vi.mocked(AccountAdmin.findOne).mockResolvedValue(null);
 

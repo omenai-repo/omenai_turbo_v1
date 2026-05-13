@@ -59,6 +59,25 @@ describe("PUT /api/admin/edit_member_role", () => {
     });
   });
 
+  it("calls AccountAdmin.updateOne with the correct query and role", async () => {
+    await PUT(makeRequest({ admin_id: "admin-123", role: "Admin" }));
+
+    expect(AccountAdmin.updateOne).toHaveBeenCalledWith(
+      { admin_id: "admin-123" },
+      { $set: { access_role: "Admin" } },
+    );
+  });
+
+  it("does not send role change email when modifiedCount is 0", async () => {
+    vi.mocked(AccountAdmin.updateOne).mockResolvedValue({
+      modifiedCount: 0,
+    } as any);
+
+    await PUT(makeRequest({ admin_id: "admin-123", role: "Admin" }));
+
+    expect(sendRoleChangeMail).not.toHaveBeenCalled();
+  });
+
   it("returns 500 when modifiedCount is 0", async () => {
     vi.mocked(AccountAdmin.updateOne).mockResolvedValue({
       modifiedCount: 0,

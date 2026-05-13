@@ -53,6 +53,18 @@ describe("PATCH /api/admin/support/patch", () => {
     expect(body.data).toEqual(mockUpdatedTicket);
   });
 
+  it("calls findOneAndUpdate with correct ticketId filter and status/priority fields", async () => {
+    await PATCH(makeRequest("TK-001", { status: "resolved", priority: "low" }));
+
+    expect(SupportTicket.findOneAndUpdate).toHaveBeenCalledWith(
+      { ticketId: "TK-001" },
+      expect.objectContaining({
+        $set: expect.objectContaining({ status: "resolved", priority: "low" }),
+      }),
+      { new: true },
+    );
+  });
+
   it("returns 400 when id param is missing", async () => {
     const response = await PATCH(
       makeRequest(undefined, { status: "resolved", priority: "low" }),

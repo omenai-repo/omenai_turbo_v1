@@ -36,6 +36,17 @@ describe("POST /api/artworks/updateArtwork", () => {
     expect(body.message).toBe("Successfully updated artwork data");
   });
 
+  it("calls Artworkuploads.updateOne with the correct query and update payload", async () => {
+    vi.mocked(Artworkuploads.updateOne).mockResolvedValue({ modifiedCount: 1 } as any);
+
+    await POST(makeRequest({ art_id: "art-123", filter: { title: "New Title" } }));
+
+    expect(Artworkuploads.updateOne).toHaveBeenCalledWith(
+      { art_id: "art-123" },
+      { $set: { title: "New Title" } },
+    );
+  });
+
   it("invalidates the Redis cache for the updated artwork", async () => {
     vi.mocked(Artworkuploads.updateOne).mockResolvedValue({ modifiedCount: 1 } as any);
 

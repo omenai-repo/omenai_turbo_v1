@@ -70,6 +70,36 @@ describe("POST /api/admin/resend_admin_invite", () => {
     });
   });
 
+  it("creates an AdminInviteToken with the admin's email and generated token", async () => {
+    await POST(makeRequest({ admin_id: "admin-123" }));
+
+    expect(AdminInviteToken.create).toHaveBeenCalledWith({
+      author: mockAdmin.email,
+      token: "new-token-xyz",
+    });
+  });
+
+  it("does not create a token or send email when admin does not exist", async () => {
+    vi.mocked(AccountAdmin.findOne).mockResolvedValue(null);
+
+    await POST(makeRequest({ admin_id: "ghost-admin" }));
+
+    expect(AdminInviteToken.create).not.toHaveBeenCalled();
+    expect(sendMemberInviteEmail).not.toHaveBeenCalled();
+  });
+
+  it("does not create a token or send email when an active invite already exists", async () => {
+    vi.mocked(AdminInviteToken.findOne).mockResolvedValue({
+      token: "existing-token",
+      author: mockAdmin.email,
+    });
+
+    await POST(makeRequest({ admin_id: "admin-123" }));
+
+    expect(AdminInviteToken.create).not.toHaveBeenCalled();
+    expect(sendMemberInviteEmail).not.toHaveBeenCalled();
+  });
+
   it("returns 403 when admin does not exist", async () => {
     vi.mocked(AccountAdmin.findOne).mockResolvedValue(null);
 

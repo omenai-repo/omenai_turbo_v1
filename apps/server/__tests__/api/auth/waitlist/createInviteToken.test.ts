@@ -52,6 +52,27 @@ describe("POST /api/auth/waitlist/createInviteToken", () => {
     expect(body.referrerKey).toBe("hashed-referrer-key");
   });
 
+  it("saves the generated referrerKey to the waitlist record", async () => {
+    vi.mocked(AccountGallery.exists).mockResolvedValue(null);
+    vi.mocked(Waitlist.exists).mockResolvedValue({ _id: "wl-1" } as any);
+    vi.mocked(Waitlist.updateOne).mockResolvedValue({ modifiedCount: 1 } as any);
+
+    await POST(makeRequest(validPayload));
+
+    expect(Waitlist.updateOne).toHaveBeenCalledWith(
+      { email: validPayload.email, inviteCode: validPayload.inviteCode, entity: validPayload.entity },
+      { $set: { referrerKey: "hashed-referrer-key" } },
+    );
+  });
+
+  it("does not call Waitlist.updateOne when user is already registered", async () => {
+    vi.mocked(AccountGallery.exists).mockResolvedValue({ _id: "existing" } as any);
+
+    await POST(makeRequest(validPayload));
+
+    expect(Waitlist.updateOne).not.toHaveBeenCalled();
+  });
+
   it("returns 403 when user is already registered", async () => {
     vi.mocked(AccountGallery.exists).mockResolvedValue({ _id: "existing" } as any);
 

@@ -74,6 +74,14 @@ describe("POST /api/admin/send_waitlist_invites", () => {
     expect(body.message).toBe("Successfully invited waitlist users");
   });
 
+  it("queries WaitlistLead by the provided user emails", async () => {
+    await POST(makeRequest(validBody));
+
+    expect(WaitlistLead.find).toHaveBeenCalledWith({
+      email: { $in: ["alice@example.com", "bob@example.com"] },
+    });
+  });
+
   it("returns 400 when selectedUsers is not an array", async () => {
     const response = await POST(makeRequest({ selectedUsers: "invalid" }));
     const body = await response.json();

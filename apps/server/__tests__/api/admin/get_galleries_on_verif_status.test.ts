@@ -46,6 +46,19 @@ describe("GET /api/admin/get_galleries_on_verif_status", () => {
     expect(body.data).toEqual(mockGalleries);
   });
 
+  it("queries AccountGallery with empty filter and selected fields", async () => {
+    vi.mocked(AccountGallery.find).mockResolvedValue(mockGalleries as any);
+
+    await GET(
+      new Request("http://localhost/api/admin/get_galleries_on_verif_status"),
+    );
+
+    expect(AccountGallery.find).toHaveBeenCalledWith(
+      {},
+      "name address admin logo description email gallery_verified gallery_id status",
+    );
+  });
+
   it("returns 500 when AccountGallery.find throws", async () => {
     vi.mocked(AccountGallery.find).mockRejectedValue(new Error("DB error"));
 

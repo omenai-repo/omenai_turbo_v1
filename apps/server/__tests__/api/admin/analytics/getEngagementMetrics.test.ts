@@ -36,6 +36,12 @@ describe("GET /api/admin/analytics/getEngagementMetrics", () => {
     expect(body.message).toBe("Engagement metrics retrieved successfully");
   });
 
+  it("calls getEngagementMetrics once to compute the data", async () => {
+    await GET();
+
+    expect(getEngagementMetrics).toHaveBeenCalledOnce();
+  });
+
   it("returns 500 when getEngagementMetrics returns success:false", async () => {
     vi.mocked(getEngagementMetrics).mockResolvedValue({ success: false } as any);
 

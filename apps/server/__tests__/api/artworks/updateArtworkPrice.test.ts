@@ -32,6 +32,17 @@ describe("POST /api/artworks/updateArtworkPrice", () => {
     expect(body.message).toBe("Successful");
   });
 
+  it("calls Artworkuploads.updateOne with the correct query and price payload", async () => {
+    vi.mocked(Artworkuploads.updateOne).mockResolvedValue({ modifiedCount: 1 } as any);
+
+    await POST(makeRequest({ art_id: "art-123", filter: { price: 1000 } }));
+
+    expect(Artworkuploads.updateOne).toHaveBeenCalledWith(
+      { art_id: "art-123" },
+      { $set: { price: 1000 } },
+    );
+  });
+
   it("returns 500 when no document was modified", async () => {
     vi.mocked(Artworkuploads.updateOne).mockResolvedValue({ modifiedCount: 0 } as any);
 

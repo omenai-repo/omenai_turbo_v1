@@ -111,6 +111,53 @@ describe("POST /api/admin/accept_artist_verification", () => {
     });
   });
 
+  it("creates a wallet with the artist's owner_id and base_currency", async () => {
+    await POST(
+      makeRequest({ artist_id: "artist-123", recommendation: "emerging" }),
+    );
+
+    expect(Wallet.create).toHaveBeenCalledWith(
+      [{ owner_id: "artist-123", base_currency: mockArtist.base_currency }],
+      expect.objectContaining({ session: expect.anything() }),
+    );
+  });
+
+  it("updates artist account with artist_verified: true", async () => {
+    await POST(
+      makeRequest({ artist_id: "artist-123", recommendation: "emerging" }),
+    );
+
+    expect(AccountArtist.updateOne).toHaveBeenCalledWith(
+      { artist_id: "artist-123" },
+      expect.objectContaining({
+        $set: expect.objectContaining({ artist_verified: true }),
+      }),
+      expect.objectContaining({ session: expect.anything() }),
+    );
+  });
+
+  it("updates ArtistCategorization with the recommendation", async () => {
+    await POST(
+      makeRequest({ artist_id: "artist-123", recommendation: "emerging" }),
+    );
+
+    expect(ArtistCategorization.updateOne).toHaveBeenCalledWith(
+      { artist_id: "artist-123" },
+      expect.objectContaining({ $set: expect.any(Object) }),
+      expect.objectContaining({ session: expect.anything() }),
+    );
+  });
+
+  it("does not send email when artist is not found", async () => {
+    vi.mocked(AccountArtist.findOne).mockResolvedValue(null);
+
+    await POST(
+      makeRequest({ artist_id: "ghost-123", recommendation: "emerging" }),
+    );
+
+    expect(sendArtistAcceptedMail).not.toHaveBeenCalled();
+  });
+
   it("ends the session in finally block", async () => {
     await POST(
       makeRequest({ artist_id: "artist-123", recommendation: "emerging" }),

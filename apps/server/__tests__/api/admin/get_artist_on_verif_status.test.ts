@@ -44,6 +44,17 @@ describe("GET /api/admin/get_artist_on_verif_status", () => {
     expect(body.data).toEqual(mockArtists);
   });
 
+  it("queries AccountArtist with onboarding filter and selected fields", async () => {
+    vi.mocked(AccountArtist.find).mockResolvedValue(mockArtists as any);
+
+    await GET();
+
+    expect(AccountArtist.find).toHaveBeenCalledWith(
+      { isOnboardingCompleted: true },
+      "name logo email artist_verified artist_id",
+    );
+  });
+
   it("returns 500 when AccountArtist.find throws", async () => {
     vi.mocked(AccountArtist.find).mockRejectedValue(new Error("DB error"));
 
