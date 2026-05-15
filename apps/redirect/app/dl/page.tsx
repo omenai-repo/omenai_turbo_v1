@@ -23,10 +23,8 @@ export default async function FallbackPage(props: Props) {
     redirect(base_url());
   }
 
-  // 2. Decrypt the payload securely on the server
   const decryptedData = decryptLinkData(token);
 
-  // 3. Handle tampered or invalid tokens
   if (!decryptedData) {
     return (
       <main className="flex min-h-screen items-center justify-center bg-[#FAFAFA]">

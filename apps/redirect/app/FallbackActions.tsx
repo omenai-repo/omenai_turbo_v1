@@ -14,7 +14,6 @@ export default function FallbackActions({ data, rawToken }: Props) {
 
   const handleContinueOnWeb = () => {
     const finalUrl = data.route;
-
     window.location.href = finalUrl;
   };
 
