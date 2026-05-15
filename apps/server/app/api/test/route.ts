@@ -17,7 +17,7 @@ import {
   getApiUrl,
 } from "@omenai/url-config/src/config";
 
-export const GET = withRateLimit(standardRateLimit)(async function GET(
+export const POST = withRateLimit(standardRateLimit)(async function POST(
   request: Request,
 ) {
   const { email } = await request.json();
