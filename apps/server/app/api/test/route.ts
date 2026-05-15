@@ -24,6 +24,7 @@ const config: CombinedConfig = {
 export const POST = withRateLimit(config)(async function POST(
   request: Request,
 ) {
+  const { email } = await request.json();
   const data: DeepLinkPayload = {
     role: "user",
     route: `${base_url()}/artwork/7c36104d-9d87-4ab1-b9c8-a75e8258dc8a`,
@@ -39,9 +40,9 @@ export const POST = withRateLimit(config)(async function POST(
   const redirectLink = `${deeplink_url()}?token=${token}`;
   try {
     await sendTestMail({
-      name: "Moses Chukwunekwu",
+      name: "Test User",
       cta: redirectLink,
-      email: "moses@omenai.net",
+      email,
     });
 
     return NextResponse.json({});

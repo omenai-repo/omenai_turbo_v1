@@ -3,7 +3,7 @@
     "apps": [],
     "details": [
       {
-        "appID": "<YOUR_TEAM_ID>.<YOUR_BUNDLE_ID>",
+        "appID": "S4TT3CQRYQ.com.omenai.omenaimobile",
         "paths": [
           "/payment/*",
           "/artwork/*"
