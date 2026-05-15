@@ -11,7 +11,6 @@ import { sendTestMail } from "@omenai/shared-emails/src/models/test/sendTestMail
 export const POST = withRateLimit(standardRateLimit)(async function POST(
   request: Request,
 ) {
-  const { email } = await request.json();
   const data: DeepLinkPayload = {
     role: "user",
     route: `${base_url()}/artwork/7c36104d-9d87-4ab1-b9c8-a75e8258dc8a`,
@@ -26,13 +25,14 @@ export const POST = withRateLimit(standardRateLimit)(async function POST(
   const token = encryptLinkData(data);
   const redirectLink = `${deeplink_url()}?token=${token}`;
   try {
-    await sendTestMail({
+    const { email } = await request.json();
+    const data = await sendTestMail({
       name: "Test User",
       cta: redirectLink,
       email,
     });
 
-    return NextResponse.json({ message: "Successful" });
+    return NextResponse.json({ message: "Successful", data });
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
 
