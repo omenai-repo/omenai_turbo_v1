@@ -16,12 +16,8 @@ import {
   deeplink_url,
   getApiUrl,
 } from "@omenai/url-config/src/config";
-const config: CombinedConfig = {
-  ...standardRateLimit, // use strictRateLimit for sensitive operations to prevent brute force attacks
-  allowedRoles: ["admin"],
-};
 
-export const POST = withRateLimit(config)(async function POST(
+export const GET = withRateLimit(standardRateLimit)(async function GET(
   request: Request,
 ) {
   const { email } = await request.json();
@@ -45,14 +41,10 @@ export const POST = withRateLimit(config)(async function POST(
       email,
     });
 
-    return NextResponse.json({});
+    return NextResponse.json({ message: "Successful" });
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
-    createErrorRollbarReport(
-      "transactions: create transaction",
-      error,
-      error_response.status,
-    );
+
     return NextResponse.json(
       { message: error_response?.message },
       { status: error_response?.status },

@@ -9,7 +9,7 @@ interface Props {
 
 export default function FallbackActions({ data, rawToken }: Props) {
   const handleOpenApp = () => {
-    window.location.href = `omenai://${data.route}?token=${rawToken}`;
+    window.location.href = `omenaimobile://dl?token=${rawToken}`;
   };
 
   const handleContinueOnWeb = () => {
