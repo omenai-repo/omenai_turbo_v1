@@ -42,6 +42,20 @@ describe("GET /api/requests/artist/fetchIncomeData", () => {
     expect(body.data).toEqual({ netIncome: 0, salesRevenue: 0 });
   });
 
+  it("calls PurchaseTransactions.aggregate with a $match stage for the artist id", async () => {
+    vi.mocked(PurchaseTransactions.aggregate).mockResolvedValue([
+      { salesRevenue: 10000, netIncome: 8500 },
+    ] as any);
+
+    await GET(makeRequest("artist-1"));
+
+    expect(PurchaseTransactions.aggregate).toHaveBeenCalledOnce();
+    const pipeline = vi.mocked(PurchaseTransactions.aggregate).mock.calls[0][0];
+    expect(pipeline[0].$match).toEqual(
+      expect.objectContaining({ trans_recipient_id: "artist-1" }),
+    );
+  });
+
   it("returns 400 when id param is missing", async () => {
     const response = await GET(makeRequest());
     const body = await response.json();

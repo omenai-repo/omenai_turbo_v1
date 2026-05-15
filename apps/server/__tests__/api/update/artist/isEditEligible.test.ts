@@ -38,6 +38,10 @@ describe("POST /api/update/artist/profile/isEditEligible", () => {
     expect(body.message).toBe("Eligibility retrieved successfully");
     expect(body.eligibility.isEligible).toBe(true);
     expect(body.eligibility.daysLeft).toBe(0);
+    expect(ArtistCategorization.findOne).toHaveBeenCalledWith(
+      { artist_id: "artist-1" },
+      "updatedAt request",
+    );
   });
 
   it("returns 200 with isEligible=false when updatedAt is less than 1 year ago", async () => {

@@ -87,6 +87,29 @@ describe("POST /api/requests/individual/updatePassword", () => {
     expect(body.message).toMatch(/identical/i);
   });
 
+  it("updates the user password in the database on success", async () => {
+    vi.mocked(AccountIndividual.findOne).mockReturnValue(mockAccount as any);
+    vi.mocked(VerificationCodes.findOne).mockResolvedValue({ code: "abc1234" } as any);
+    vi.mocked(bcrypt.compareSync).mockReturnValue(false as never);
+
+    await POST(makeRequest(validBody));
+
+    expect(AccountIndividual.updateOne).toHaveBeenCalledWith(
+      { user_id: "user-123" },
+      { $set: { password: "$2b$10$hashed_new" } },
+    );
+  });
+
+  it("deletes the verification code after a successful password update", async () => {
+    vi.mocked(AccountIndividual.findOne).mockReturnValue(mockAccount as any);
+    vi.mocked(VerificationCodes.findOne).mockResolvedValue({ code: "abc1234" } as any);
+    vi.mocked(bcrypt.compareSync).mockReturnValue(false as never);
+
+    await POST(makeRequest(validBody));
+
+    expect(VerificationCodes.deleteOne).toHaveBeenCalledWith({ code: "abc1234" });
+  });
+
   it("returns 400 when required fields are missing", async () => {
     const response = await POST(makeRequest({ id: "user-123" }));
     const body = await response.json();

@@ -24,6 +24,7 @@ import { GET } from "../../../app/api/artworks/getArtworkPriceForArtist/route";
 import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
 import { fetchConfigCatValue } from "@omenai/shared-lib/configcat/configCatFetch";
 import { redis } from "@omenai/upstash-config";
+import { calculateArtworkPrice } from "@omenai/shared-lib/algorithms/priceGenerator";
 
 const validParams = {
   medium: "Photography",
@@ -130,6 +131,31 @@ describe("GET /api/artworks/getArtworkPriceForArtist", () => {
     const body = await response.json();
 
     expect(body.data.hasAutoApprovalsRemaining).toBe(true);
+  });
+
+  it("queries AccountArtist.findOne with the provided artist id", async () => {
+    await GET(makeRequest(validParams));
+
+    expect(AccountArtist.findOne).toHaveBeenCalledWith({ artist_id: "artist-123" });
+  });
+
+  it("reads exchange rate from Redis cache before computing price", async () => {
+    await GET(makeRequest(validParams));
+
+    expect(redis.get).toHaveBeenCalledWith(expect.stringContaining("USD"));
+  });
+
+  it("calls calculateArtworkPrice with parsed dimensions and category", async () => {
+    await GET(makeRequest(validParams));
+
+    expect(calculateArtworkPrice).toHaveBeenCalledWith(
+      expect.objectContaining({
+        medium: "Photography",
+        height: 50,
+        width: 40,
+        artistCategory: "Emerging",
+      }),
+    );
   });
 
   it("returns 400 when medium is not a valid enum value", async () => {

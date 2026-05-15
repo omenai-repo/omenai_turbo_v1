@@ -25,6 +25,7 @@ vi.mock("../../../../app/api/util", async () => {
 import { POST } from "../../../../app/api/requests/gallery/sendPasswordResetLink/route";
 import { AccountGallery } from "@omenai/shared-models/models/auth/GallerySchema";
 import { VerificationCodes } from "@omenai/shared-models/models/auth/verification/codeTimeoutSchema";
+import { sendPasswordRecoveryMail } from "@omenai/shared-emails/src/models/recovery/sendPasswordRecoveryMail";
 
 function makeRequest(body: object): Request {
   return new Request("http://localhost/api/requests/gallery/sendPasswordResetLink", {
@@ -94,6 +95,32 @@ describe("POST /api/requests/gallery/sendPasswordResetLink", () => {
 
     expect(response.status).toBe(403);
     expect(body.message).toMatch(/Token link already exists/i);
+  });
+
+  it("creates a VerificationCodes token for the gallery", async () => {
+    vi.mocked(AccountGallery.findOne).mockReturnValue({
+      exec: vi.fn().mockResolvedValue(mockGallery),
+    } as any);
+    vi.mocked(VerificationCodes.findOne).mockResolvedValue(null);
+
+    await POST(makeRequest({ recoveryEmail: "gallery@example.com" }));
+
+    expect(VerificationCodes.create).toHaveBeenCalledWith(
+      expect.objectContaining({ author: "gallery-123" }),
+    );
+  });
+
+  it("sends the password recovery email to the gallery", async () => {
+    vi.mocked(AccountGallery.findOne).mockReturnValue({
+      exec: vi.fn().mockResolvedValue(mockGallery),
+    } as any);
+    vi.mocked(VerificationCodes.findOne).mockResolvedValue(null);
+
+    await POST(makeRequest({ recoveryEmail: "gallery@example.com" }));
+
+    expect(sendPasswordRecoveryMail).toHaveBeenCalledWith(
+      expect.objectContaining({ email: "gallery@example.com" }),
+    );
   });
 
   it("returns 400 when recoveryEmail is missing", async () => {

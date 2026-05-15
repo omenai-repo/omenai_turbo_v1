@@ -61,6 +61,28 @@ describe("GET /api/requests/artist/fetchFeaturedArtistData", () => {
     expect(body.message).toBe("Artist not found");
   });
 
+  it("calls AccountArtist.findOne with the provided artist id", async () => {
+    vi.mocked(AccountArtist.findOne).mockResolvedValue(mockArtist as any);
+    vi.mocked(Artworkuploads.find).mockReturnValue({
+      exec: vi.fn().mockResolvedValue(mockArtworks),
+    } as any);
+
+    await GET(makeRequest("artist-1"));
+
+    expect(AccountArtist.findOne).toHaveBeenCalledWith({ artist_id: "artist-1" }, expect.any(String));
+  });
+
+  it("calls Artworkuploads.find filtered by author_id", async () => {
+    vi.mocked(AccountArtist.findOne).mockResolvedValue(mockArtist as any);
+    vi.mocked(Artworkuploads.find).mockReturnValue({
+      exec: vi.fn().mockResolvedValue(mockArtworks),
+    } as any);
+
+    await GET(makeRequest("artist-1"));
+
+    expect(Artworkuploads.find).toHaveBeenCalledWith({ author_id: "artist-1" });
+  });
+
   it("returns 400 when id param is missing", async () => {
     const response = await GET(makeRequest());
     const body = await response.json();

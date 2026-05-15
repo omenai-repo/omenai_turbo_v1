@@ -53,6 +53,14 @@ describe("GET /api/requests/artist/fetchTrendingArtists", () => {
     expect(body.data).toEqual([]);
   });
 
+  it("calls Artworkuploads.aggregate once to compute trending data", async () => {
+    vi.mocked(Artworkuploads.aggregate).mockResolvedValue(mockTrendingData as any);
+
+    await GET(makeRequest());
+
+    expect(Artworkuploads.aggregate).toHaveBeenCalledOnce();
+  });
+
   it("returns 500 when aggregation fails", async () => {
     vi.mocked(Artworkuploads.aggregate).mockRejectedValue(
       new Error("Aggregation error"),

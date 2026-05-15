@@ -117,6 +117,53 @@ describe("DELETE /api/requests/artist/deleteAccount", () => {
     expect(body.message).toMatch(/active deletion request/i);
   });
 
+  it("calls hasFinancialCommitments with the artist wallet_id", async () => {
+    vi.mocked(AccountArtist.findOne).mockResolvedValue(mockArtist as any);
+    vi.mocked(DeletionRequestModel.findOne).mockResolvedValue(null);
+    vi.mocked(CreateOrder.findOne).mockResolvedValue(null);
+    vi.mocked(hasFinancialCommitments).mockResolvedValue({
+      hasPendingTransactions: false,
+      hasPositiveBalance: false,
+    });
+    vi.mocked(generateDeletionCommitments).mockReturnValue({ can_delete: true, reasons: [] } as any);
+    vi.mocked(createDeletionRequestAndRespond).mockResolvedValue(new Date("2025-06-01") as any);
+
+    await DELETE(makeRequest({ id: "artist-1", reason: "Moving on" }));
+
+    expect(hasFinancialCommitments).toHaveBeenCalledWith(mockArtist.wallet_id);
+  });
+
+  it("calls createDeletionRequestAndRespond when can_delete is true", async () => {
+    vi.mocked(AccountArtist.findOne).mockResolvedValue(mockArtist as any);
+    vi.mocked(DeletionRequestModel.findOne).mockResolvedValue(null);
+    vi.mocked(CreateOrder.findOne).mockResolvedValue(null);
+    vi.mocked(hasFinancialCommitments).mockResolvedValue({
+      hasPendingTransactions: false,
+      hasPositiveBalance: false,
+    });
+    vi.mocked(generateDeletionCommitments).mockReturnValue({ can_delete: true, reasons: [] } as any);
+    vi.mocked(createDeletionRequestAndRespond).mockResolvedValue(new Date("2025-06-01") as any);
+
+    await DELETE(makeRequest({ id: "artist-1", reason: "Moving on" }));
+
+    expect(createDeletionRequestAndRespond).toHaveBeenCalledOnce();
+  });
+
+  it("does not call createDeletionRequestAndRespond when can_delete is false", async () => {
+    vi.mocked(AccountArtist.findOne).mockResolvedValue(mockArtist as any);
+    vi.mocked(DeletionRequestModel.findOne).mockResolvedValue(null);
+    vi.mocked(CreateOrder.findOne).mockResolvedValue({ payment_information: {} } as any);
+    vi.mocked(hasFinancialCommitments).mockResolvedValue({
+      hasPendingTransactions: false,
+      hasPositiveBalance: true,
+    });
+    vi.mocked(generateDeletionCommitments).mockReturnValue({ can_delete: false, reasons: ["balance"] } as any);
+
+    await DELETE(makeRequest({ id: "artist-1", reason: "Moving on" }));
+
+    expect(createDeletionRequestAndRespond).not.toHaveBeenCalled();
+  });
+
   it("returns 400 when body fields are missing", async () => {
     const response = await DELETE(makeRequest({}));
     const body = await response.json();

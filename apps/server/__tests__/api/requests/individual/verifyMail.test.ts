@@ -75,6 +75,38 @@ describe("POST /api/requests/individual/verifyMail", () => {
     expect(body.message).toBe("Invalid token data");
   });
 
+  it("marks the user account as verified in the database", async () => {
+    vi.mocked(AccountIndividual.findOne).mockReturnValue({
+      exec: vi.fn().mockResolvedValue({ verified: false }),
+    } as any);
+    vi.mocked(VerificationCodes.findOne).mockReturnValue({
+      exec: vi.fn().mockResolvedValue({ code: "tok1234", author: "user-123" }),
+    } as any);
+
+    await POST(makeRequest({ params: "user-123", token: "tok1234" }));
+
+    expect(AccountIndividual.updateOne).toHaveBeenCalledWith(
+      { user_id: "user-123" },
+      { verified: true },
+    );
+  });
+
+  it("deletes the verification token after successful verification", async () => {
+    vi.mocked(AccountIndividual.findOne).mockReturnValue({
+      exec: vi.fn().mockResolvedValue({ verified: false }),
+    } as any);
+    vi.mocked(VerificationCodes.findOne).mockReturnValue({
+      exec: vi.fn().mockResolvedValue({ code: "tok1234", author: "user-123" }),
+    } as any);
+
+    await POST(makeRequest({ params: "user-123", token: "tok1234" }));
+
+    expect(VerificationCodes.deleteOne).toHaveBeenCalledWith({
+      code: "tok1234",
+      author: "user-123",
+    });
+  });
+
   it("returns 400 when required fields are missing", async () => {
     const response = await POST(makeRequest({ params: "user-123" }));
     const body = await response.json();

@@ -22,6 +22,7 @@ describe("getFeaturedShowsCarousel", () => {
 
     expect(result.isOk).toBe(true);
     expect(result.data).toEqual(mockShows);
+    expect(GalleryEvent.aggregate).toHaveBeenCalledOnce();
   });
 
   it("runs aggregate with $limit 10", async () => {

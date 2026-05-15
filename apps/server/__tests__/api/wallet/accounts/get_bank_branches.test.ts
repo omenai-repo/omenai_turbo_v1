@@ -39,6 +39,10 @@ describe("GET /api/wallet/accounts/get_bank_branches", () => {
     expect(body.message).toBe("Bank branches fetched successfully");
     expect(body.bank_branches).toEqual(mockBranches);
     expect(body.no_of_bank_branches).toBe(2);
+    expect(globalThis.fetch).toHaveBeenCalledWith(
+      expect.stringContaining("/banks/057/branches"),
+      expect.objectContaining({ method: "GET" }),
+    );
   });
 
   it("returns 200 with empty branches when FLW returns no branches error", async () => {

@@ -42,6 +42,7 @@ describe("GET /api/wallet/fetch_wallet", () => {
     expect(response.status).toBe(200);
     expect(body.message).toBe("Wallet validation fetched");
     expect(body.wallet).toEqual(mockWallet);
+    expect(Wallet.findOne).toHaveBeenCalledWith({ owner_id: "artist-123" });
   });
 
   it("returns 404 when wallet does not exist for user", async () => {

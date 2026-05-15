@@ -58,6 +58,10 @@ describe("GET /api/wallet/fetch_wallet_transactions", () => {
     expect(body.message).toBe("Wallet transactions retrieved successfully");
     expect(body.data).toEqual(mockTransactions);
     expect(body.pageCount).toBe(1);
+    expect(WalletTransaction.find).toHaveBeenCalledWith(
+      expect.objectContaining({ wallet_id: "wallet-abc", "trans_date.year": 2024 }),
+    );
+    expect(WalletTransaction.countDocuments).toHaveBeenCalledOnce();
   });
 
   it("returns 200 when filtering by valid status", async () => {
@@ -69,6 +73,9 @@ describe("GET /api/wallet/fetch_wallet_transactions", () => {
 
     expect(response.status).toBe(200);
     expect(body.data).toEqual([mockTransactions[0]]);
+    expect(WalletTransaction.find).toHaveBeenCalledWith(
+      expect.objectContaining({ trans_status: "SUCCESSFUL" }),
+    );
   });
 
   it("returns 400 when year param is not a number", async () => {

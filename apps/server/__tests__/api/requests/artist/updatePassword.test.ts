@@ -87,6 +87,29 @@ describe("POST /api/requests/artist/updatePassword", () => {
     expect(body.message).toMatch(/identical/i);
   });
 
+  it("updates the artist password in the database on success", async () => {
+    vi.mocked(AccountArtist.findOne).mockReturnValue(mockAccount as any);
+    vi.mocked(VerificationCodes.findOne).mockResolvedValue({ code: "abc1234" } as any);
+    vi.mocked(bcrypt.compareSync).mockReturnValue(false as never);
+
+    await POST(makeRequest(validBody));
+
+    expect(AccountArtist.updateOne).toHaveBeenCalledWith(
+      { artist_id: "artist-123" },
+      { $set: { password: "$2b$10$hashed_new_password" } },
+    );
+  });
+
+  it("deletes the verification code after a successful password update", async () => {
+    vi.mocked(AccountArtist.findOne).mockReturnValue(mockAccount as any);
+    vi.mocked(VerificationCodes.findOne).mockResolvedValue({ code: "abc1234" } as any);
+    vi.mocked(bcrypt.compareSync).mockReturnValue(false as never);
+
+    await POST(makeRequest(validBody));
+
+    expect(VerificationCodes.deleteOne).toHaveBeenCalledWith({ code: "abc1234" });
+  });
+
   it("returns 400 when required fields are missing", async () => {
     const response = await POST(makeRequest({ id: "artist-123" }));
     const body = await response.json();

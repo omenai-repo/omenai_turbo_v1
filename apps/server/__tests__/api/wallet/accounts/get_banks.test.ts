@@ -39,6 +39,10 @@ describe("GET /api/wallet/accounts/get_banks", () => {
     expect(body.message).toBe("Banks fetched successfully");
     expect(body.banks).toEqual(mockBanks);
     expect(body.no_of_banks).toBe(2);
+    expect(globalThis.fetch).toHaveBeenCalledWith(
+      expect.stringContaining("/banks/NG"),
+      expect.objectContaining({ method: "GET" }),
+    );
   });
 
   it("returns FLW error status when FLW API fails", async () => {

@@ -49,6 +49,16 @@ describe("GET /api/requests/artist/fetchFeaturedArtists", () => {
     expect(body.data).toEqual([]);
   });
 
+  it("calls AccountArtist.find once to query artists", async () => {
+    vi.mocked(AccountArtist.find).mockReturnValue({
+      limit: vi.fn().mockResolvedValue(mockArtists),
+    } as any);
+
+    await GET(makeRequest());
+
+    expect(AccountArtist.find).toHaveBeenCalledOnce();
+  });
+
   it("returns 500 when a database error occurs", async () => {
     vi.mocked(AccountArtist.find).mockReturnValue({
       limit: vi.fn().mockRejectedValue(new Error("DB error")),

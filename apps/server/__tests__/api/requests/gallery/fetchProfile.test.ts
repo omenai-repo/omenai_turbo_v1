@@ -70,6 +70,14 @@ describe("GET /api/requests/gallery/fetchProfile", () => {
     expect(body.message).toBe("Gallery data not found");
   });
 
+  it("calls AccountGallery.findOne with the provided gallery id", async () => {
+    mockFindOne(mockGallery);
+
+    await GET(makeGetRequest("gallery-123") as any);
+
+    expect(AccountGallery.findOne).toHaveBeenCalledWith({ gallery_id: "gallery-123" });
+  });
+
   it("returns 400 when id param is missing", async () => {
     const response = await GET(makeGetRequest() as any);
     const body = await response.json();

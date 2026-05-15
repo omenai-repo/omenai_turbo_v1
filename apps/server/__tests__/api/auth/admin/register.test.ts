@@ -68,6 +68,14 @@ describe("POST /api/auth/admin/register", () => {
     } as any);
   });
 
+  it("checks for an existing admin account before attempting to create", async () => {
+    mockFindOne({ email: "admin@example.com" });
+
+    await POST(makeRequest(validBody));
+
+    expect(AccountAdmin.findOne).toHaveBeenCalledWith({ email: "admin@example.com" }, expect.any(String));
+  });
+
   // The route spreads an undefined `data` variable in AccountAdmin.create(),
   // which causes a ReferenceError. This test reflects the current behavior.
   it("returns 500 due to undefined `data` spread in AccountAdmin.create()", async () => {

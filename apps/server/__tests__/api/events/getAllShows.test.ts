@@ -35,6 +35,12 @@ describe("GET /api/events/getAllShows", () => {
     expect(body.shows).toEqual(mockShows);
   });
 
+  it("calls getAllShowsService once to fetch shows data", async () => {
+    await GET();
+
+    expect(getAllShowsService).toHaveBeenCalledOnce();
+  });
+
   it("returns 500 when service throws", async () => {
     vi.mocked(getAllShowsService).mockRejectedValue(new Error("DB error"));
 

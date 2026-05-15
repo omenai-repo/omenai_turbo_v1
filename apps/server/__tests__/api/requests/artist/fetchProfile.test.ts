@@ -71,6 +71,14 @@ describe("GET /api/requests/artist/fetchProfile", () => {
     expect(body.message).toBe("Artist not found");
   });
 
+  it("calls AccountArtist.findOne with the provided artist id", async () => {
+    mockFindOne(mockArtist);
+
+    await GET(makeGetRequest("artist-123") as any);
+
+    expect(AccountArtist.findOne).toHaveBeenCalledWith({ artist_id: "artist-123" });
+  });
+
   it("returns 400 when id param is missing", async () => {
     const response = await GET(makeGetRequest() as any);
     const body = await response.json();

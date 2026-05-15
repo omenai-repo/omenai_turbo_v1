@@ -54,6 +54,20 @@ describe("GET /api/admin/support", () => {
     expect(body.pagination.total).toBe(2);
   });
 
+  it("calls SupportTicket.find with the correct status and priority filter", async () => {
+    await GET(makeRequest({ status: "open", priority: "high" }));
+
+    expect(SupportTicket.find).toHaveBeenCalledWith(
+      expect.objectContaining({ status: "open", priority: "high" }),
+    );
+  });
+
+  it("calls SupportTicket.countDocuments to compute pagination total", async () => {
+    await GET(makeRequest());
+
+    expect(SupportTicket.countDocuments).toHaveBeenCalledOnce();
+  });
+
   it("filters by status ALL and does not add status to query", async () => {
     const response = await GET(makeRequest({ status: "ALL", priority: "ALL" }));
     const body = await response.json();

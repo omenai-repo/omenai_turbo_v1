@@ -34,6 +34,12 @@ describe("GET /api/events/getFeaturedShows", () => {
     expect(body.shows).toEqual(mockFeaturedShows);
   });
 
+  it("calls getFeaturedShowsCarousel once to fetch shows", async () => {
+    await GET();
+
+    expect(getFeaturedShowsCarousel).toHaveBeenCalledOnce();
+  });
+
   it("returns 500 when service throws", async () => {
     vi.mocked(getFeaturedShowsCarousel).mockRejectedValue(new Error("DB error"));
 

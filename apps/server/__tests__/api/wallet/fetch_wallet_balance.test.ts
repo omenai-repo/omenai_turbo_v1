@@ -45,6 +45,10 @@ describe("GET /api/wallet/fetch_wallet_balance", () => {
       pending: mockWallet.pending_balance,
       wallet_id: mockWallet.wallet_id,
     });
+    expect(Wallet.findOne).toHaveBeenCalledWith(
+      { owner_id: "artist-123" },
+      "available_balance pending_balance wallet_id",
+    );
   });
 
   it("returns 404 when wallet is not found", async () => {

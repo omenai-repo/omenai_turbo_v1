@@ -57,6 +57,14 @@ describe("GET /api/requests/artist/verifyOnboardingCompletion", () => {
     expect(body.message).toBe("Gallery data not found");
   });
 
+  it("calls AccountArtist.findOne with the provided artist id", async () => {
+    mockFindOne({ isOnboardingCompleted: true, artist_verified: true });
+
+    await GET(makeRequest("artist-1"));
+
+    expect(AccountArtist.findOne).toHaveBeenCalledWith({ artist_id: "artist-1" }, expect.any(String));
+  });
+
   it("returns 400 when id param is missing", async () => {
     const response = await GET(makeRequest());
     const body = await response.json();

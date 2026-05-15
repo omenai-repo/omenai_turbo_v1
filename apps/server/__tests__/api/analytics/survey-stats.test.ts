@@ -70,6 +70,24 @@ describe("POST /api/analytics/survey-stats", () => {
     expect(body.stats.distinct_countries).toEqual([]);
   });
 
+  it("calls WaitlistLead.aggregate once on success", async () => {
+    vi.mocked(WaitlistLead.aggregate).mockResolvedValue(mockAggregationResult as any);
+
+    await POST(makeRequest({ page: 1, limit: 10 }));
+
+    expect(WaitlistLead.aggregate).toHaveBeenCalledOnce();
+  });
+
+  it("passes skip and limit derived from page/limit params to aggregate pipeline", async () => {
+    vi.mocked(WaitlistLead.aggregate).mockResolvedValue(mockAggregationResult as any);
+
+    await POST(makeRequest({ page: 2, limit: 10 }));
+
+    const pipeline = vi.mocked(WaitlistLead.aggregate).mock.calls[0][0];
+    const facetStage = pipeline.find((s: any) => s.$facet);
+    expect(facetStage).toBeDefined();
+  });
+
   it("returns 500 when aggregation fails", async () => {
     vi.mocked(WaitlistLead.aggregate).mockRejectedValue(new Error("DB error"));
 

@@ -18,6 +18,7 @@ vi.mock("../../../app/api/util", async () => {
 import { POST } from "../../../app/api/artworks/getPaginatedArtworks/route";
 import { Artworkuploads } from "@omenai/shared-models/models/artworks/UploadArtworkSchema";
 import { fetchArtworksFromCache } from "../../../app/api/artworks/utils";
+import { buildMongoQuery } from "@omenai/shared-utils/src/buildMongoFilterQuery";
 
 const mockArtworks = [{ art_id: "art-1" }];
 
@@ -57,6 +58,24 @@ describe("POST /api/artworks/getPaginatedArtworks", () => {
     expect(body.data).toEqual(mockArtworks);
     expect(body.pageCount).toBe(3);
     expect(body.total).toBe(90);
+  });
+
+  it("calls fetchArtworksFromCache with extracted art IDs", async () => {
+    await POST(makeRequest({ page: 1, filters: {} }));
+
+    expect(fetchArtworksFromCache).toHaveBeenCalledWith(["art-1"]);
+  });
+
+  it("calls Artworkuploads.countDocuments for pagination total", async () => {
+    await POST(makeRequest({ page: 1, filters: {} }));
+
+    expect(Artworkuploads.countDocuments).toHaveBeenCalledOnce();
+  });
+
+  it("calls buildMongoQuery with the provided filters", async () => {
+    await POST(makeRequest({ page: 1, filters: { priceMin: 200 } }));
+
+    expect(buildMongoQuery).toHaveBeenCalledWith(expect.objectContaining({ priceMin: 200 }));
   });
 
   it("returns 400 when page is missing", async () => {

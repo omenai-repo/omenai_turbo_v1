@@ -25,6 +25,7 @@ vi.mock("../../../../app/api/util", async () => {
 import { POST } from "../../../../app/api/requests/individual/sendPasswordResetLink/route";
 import { AccountIndividual } from "@omenai/shared-models/models/auth/IndividualSchema";
 import { VerificationCodes } from "@omenai/shared-models/models/auth/verification/codeTimeoutSchema";
+import { sendPasswordRecoveryMail } from "@omenai/shared-emails/src/models/recovery/sendPasswordRecoveryMail";
 
 function makeRequest(body: object): Request {
   return new Request("http://localhost/api/requests/individual/sendPasswordResetLink", {
@@ -93,6 +94,32 @@ describe("POST /api/requests/individual/sendPasswordResetLink", () => {
 
     expect(response.status).toBe(403);
     expect(body.message).toMatch(/Token link already exists/i);
+  });
+
+  it("creates a VerificationCodes token for the user", async () => {
+    vi.mocked(AccountIndividual.findOne).mockReturnValue({
+      exec: vi.fn().mockResolvedValue(mockUser),
+    } as any);
+    vi.mocked(VerificationCodes.findOne).mockResolvedValue(null);
+
+    await POST(makeRequest({ recoveryEmail: "user@example.com" }));
+
+    expect(VerificationCodes.create).toHaveBeenCalledWith(
+      expect.objectContaining({ author: "user-123" }),
+    );
+  });
+
+  it("sends the password recovery email to the user", async () => {
+    vi.mocked(AccountIndividual.findOne).mockReturnValue({
+      exec: vi.fn().mockResolvedValue(mockUser),
+    } as any);
+    vi.mocked(VerificationCodes.findOne).mockResolvedValue(null);
+
+    await POST(makeRequest({ recoveryEmail: "user@example.com" }));
+
+    expect(sendPasswordRecoveryMail).toHaveBeenCalledWith(
+      expect.objectContaining({ email: "user@example.com" }),
+    );
   });
 
   it("returns 400 when recoveryEmail is missing", async () => {

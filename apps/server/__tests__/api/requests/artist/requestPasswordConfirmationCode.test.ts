@@ -25,6 +25,7 @@ vi.mock("../../../../app/api/util", async () => {
 import { POST } from "../../../../app/api/requests/artist/requestPasswordConfirmationCode/route";
 import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
 import { VerificationCodes } from "@omenai/shared-models/models/auth/verification/codeTimeoutSchema";
+import { sendPasswordConfirmationCodeMail } from "@omenai/shared-emails/src/models/gallery/sendPasswordChangeConfirmationCode";
 
 function makeRequest(body: object): Request {
   return new Request("http://localhost/api/requests/artist/requestPasswordConfirmationCode", {
@@ -73,6 +74,28 @@ describe("POST /api/requests/artist/requestPasswordConfirmationCode", () => {
 
     expect(response.status).toBe(409);
     expect(body.message).toMatch(/already been sent/i);
+  });
+
+  it("creates a VerificationCodes record when sending the confirmation code", async () => {
+    vi.mocked(AccountArtist.findOne).mockResolvedValue(mockAccount as any);
+    vi.mocked(VerificationCodes.findOne).mockResolvedValue(null);
+
+    await POST(makeRequest({ id: "artist-123" }));
+
+    expect(VerificationCodes.create).toHaveBeenCalledWith(
+      expect.objectContaining({ author: "artist-123" }),
+    );
+  });
+
+  it("sends the confirmation code email to the artist", async () => {
+    vi.mocked(AccountArtist.findOne).mockResolvedValue(mockAccount as any);
+    vi.mocked(VerificationCodes.findOne).mockResolvedValue(null);
+
+    await POST(makeRequest({ id: "artist-123" }));
+
+    expect(sendPasswordConfirmationCodeMail).toHaveBeenCalledWith(
+      expect.objectContaining({ email: mockAccount.email }),
+    );
   });
 
   it("returns 400 when id is missing", async () => {

@@ -51,6 +51,12 @@ describe("POST /api/orders/retrieveOrderLockStatus", () => {
     expect(body.message).toMatch(/No order matching/i);
   });
 
+  it("calls CreateOrder.findOne with the provided order_id", async () => {
+    await POST(makeRequest({ order_id: "order-abc" }));
+
+    expect(CreateOrder.findOne).toHaveBeenCalledWith({ order_id: "order-abc" }, expect.any(String));
+  });
+
   it("returns 400 when order_id is missing", async () => {
     const response = await POST(makeRequest({}));
     const body = await response.json();

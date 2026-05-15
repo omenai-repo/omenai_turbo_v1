@@ -50,6 +50,32 @@ describe("GET /api/requests/artist/fetchCredentials", () => {
     expect(body.message).toMatch(/No credentials were found/i);
   });
 
+  it("calls ArtistCategorization.findOne with the provided artist id", async () => {
+    vi.mocked(ArtistCategorization.findOne).mockResolvedValue({
+      current: { category: "painter", style: "abstract" },
+    } as any);
+    vi.mocked(AccountArtist.findOne).mockResolvedValue({
+      documentation: { passport: "url" },
+    } as any);
+
+    await GET(makeRequest("artist-1"));
+
+    expect(ArtistCategorization.findOne).toHaveBeenCalledWith({ artist_id: "artist-1" }, expect.any(String));
+  });
+
+  it("also calls AccountArtist.findOne to fetch documentation", async () => {
+    vi.mocked(ArtistCategorization.findOne).mockResolvedValue({
+      current: { category: "painter" },
+    } as any);
+    vi.mocked(AccountArtist.findOne).mockResolvedValue({
+      documentation: { passport: "url" },
+    } as any);
+
+    await GET(makeRequest("artist-1"));
+
+    expect(AccountArtist.findOne).toHaveBeenCalledOnce();
+  });
+
   it("returns 400 when id param is missing", async () => {
     const response = await GET(makeRequest());
     const body = await response.json();

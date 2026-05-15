@@ -62,6 +62,20 @@ describe("POST /api/artworks/getArtworksByArtist", () => {
     expect(body.message).toMatch(/Validation Failed/i);
   });
 
+  it("calls fetchArtworksFromCache with extracted art IDs", async () => {
+    await POST(makeRequest({ artist: "artist-name", page: 1 }));
+
+    expect(fetchArtworksFromCache).toHaveBeenCalledWith(["art-1"]);
+  });
+
+  it("queries Artworkuploads.find filtered by the given artist name", async () => {
+    await POST(makeRequest({ artist: "artist-name", page: 1 }));
+
+    expect(Artworkuploads.find).toHaveBeenCalledWith(
+      expect.objectContaining({ artist: "artist-name" }),
+    );
+  });
+
   it("uses page 1 by default when page is not provided", async () => {
     const response = await POST(makeRequest({ artist: "artist-name" }));
 

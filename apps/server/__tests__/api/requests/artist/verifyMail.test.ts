@@ -94,6 +94,30 @@ describe("POST /api/requests/artist/verifyMail", () => {
     expect(body.message).toMatch(/Validation Failed/i);
   });
 
+  it("marks the artist account as verified in the database", async () => {
+    mockArtistFindOne({ verified: false });
+    mockCodeFindOne({ code: "tok1234", author: "artist-123" });
+
+    await POST(makeRequest({ params: "artist-123", token: "tok1234" }));
+
+    expect(AccountArtist.updateOne).toHaveBeenCalledWith(
+      { artist_id: "artist-123" },
+      { verified: true },
+    );
+  });
+
+  it("deletes the verification token after successful verification", async () => {
+    mockArtistFindOne({ verified: false });
+    mockCodeFindOne({ code: "tok1234", author: "artist-123" });
+
+    await POST(makeRequest({ params: "artist-123", token: "tok1234" }));
+
+    expect(VerificationCodes.deleteOne).toHaveBeenCalledWith({
+      code: "tok1234",
+      author: "artist-123",
+    });
+  });
+
   it("returns 400 when token field is missing", async () => {
     const response = await POST(makeRequest({ params: "artist-123" }));
     const body = await response.json();

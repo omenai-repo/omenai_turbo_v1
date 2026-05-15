@@ -25,6 +25,7 @@ vi.mock("../../../../app/api/util", async () => {
 import { POST } from "../../../../app/api/requests/gallery/requestPasswordConfirmationCode/route";
 import { AccountGallery } from "@omenai/shared-models/models/auth/GallerySchema";
 import { VerificationCodes } from "@omenai/shared-models/models/auth/verification/codeTimeoutSchema";
+import { sendPasswordConfirmationCodeMail } from "@omenai/shared-emails/src/models/gallery/sendPasswordChangeConfirmationCode";
 
 function makeRequest(body: object): Request {
   return new Request("http://localhost/api/requests/gallery/requestPasswordConfirmationCode", {
@@ -73,6 +74,28 @@ describe("POST /api/requests/gallery/requestPasswordConfirmationCode", () => {
 
     expect(response.status).toBe(409);
     expect(body.message).toBe("Token active, check your email or try later");
+  });
+
+  it("creates a VerificationCodes record with the gallery id", async () => {
+    vi.mocked(AccountGallery.findOne).mockResolvedValue(mockAccount as any);
+    vi.mocked(VerificationCodes.findOne).mockResolvedValue(null);
+
+    await POST(makeRequest({ id: "gallery-123" }));
+
+    expect(VerificationCodes.create).toHaveBeenCalledWith(
+      expect.objectContaining({ author: "gallery-123" }),
+    );
+  });
+
+  it("sends the confirmation code email to the gallery admin", async () => {
+    vi.mocked(AccountGallery.findOne).mockResolvedValue(mockAccount as any);
+    vi.mocked(VerificationCodes.findOne).mockResolvedValue(null);
+
+    await POST(makeRequest({ id: "gallery-123" }));
+
+    expect(sendPasswordConfirmationCodeMail).toHaveBeenCalledWith(
+      expect.objectContaining({ email: mockAccount.email }),
+    );
   });
 
   it("returns 400 when id is missing", async () => {

@@ -70,6 +70,14 @@ describe("GET /api/requests/individual/getUser", () => {
     expect(body.message).toBe("user data not found");
   });
 
+  it("calls AccountIndividual.findOne with the provided user id", async () => {
+    mockFindOne(mockUser);
+
+    await GET(makeGetRequest("user-123") as any);
+
+    expect(AccountIndividual.findOne).toHaveBeenCalledWith({ user_id: "user-123" });
+  });
+
   it("returns 400 when id param is missing", async () => {
     const response = await GET(makeGetRequest() as any);
     const body = await response.json();

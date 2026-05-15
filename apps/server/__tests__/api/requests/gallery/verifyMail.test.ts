@@ -88,6 +88,38 @@ describe("POST /api/requests/gallery/verifyMail", () => {
     expect(body.message).toBe("Invalid token data");
   });
 
+  it("marks the gallery account as verified in the database", async () => {
+    vi.mocked(AccountGallery.findOne).mockReturnValue({
+      exec: vi.fn().mockResolvedValue({ verified: false }),
+    } as any);
+    vi.mocked(VerificationCodes.findOne).mockReturnValue({
+      exec: vi.fn().mockResolvedValue({ code: "tok1234", author: "gallery-123" }),
+    } as any);
+
+    await POST(makeRequest({ params: "gallery-123", token: "tok1234" }));
+
+    expect(AccountGallery.updateOne).toHaveBeenCalledWith(
+      { gallery_id: "gallery-123" },
+      { verified: true },
+    );
+  });
+
+  it("deletes the verification token after successful verification", async () => {
+    vi.mocked(AccountGallery.findOne).mockReturnValue({
+      exec: vi.fn().mockResolvedValue({ verified: false }),
+    } as any);
+    vi.mocked(VerificationCodes.findOne).mockReturnValue({
+      exec: vi.fn().mockResolvedValue({ code: "tok1234", author: "gallery-123" }),
+    } as any);
+
+    await POST(makeRequest({ params: "gallery-123", token: "tok1234" }));
+
+    expect(VerificationCodes.deleteOne).toHaveBeenCalledWith({
+      code: "tok1234",
+      author: "gallery-123",
+    });
+  });
+
   it("returns 400 when required fields are missing", async () => {
     const response = await POST(makeRequest({ params: "gallery-123" }));
     const body = await response.json();

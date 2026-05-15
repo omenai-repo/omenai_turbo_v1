@@ -33,6 +33,7 @@ import { POST } from "../../../../app/api/requests/gallery/resetPassword/route";
 import { AccountGallery } from "@omenai/shared-models/models/auth/GallerySchema";
 import { VerificationCodes } from "@omenai/shared-models/models/auth/verification/codeTimeoutSchema";
 import bcrypt from "bcrypt";
+import { hashPassword } from "@omenai/shared-lib/hash/hashPassword";
 
 function makeRequest(body: object): Request {
   return new Request("http://localhost/api/requests/gallery/resetPassword", {
@@ -98,6 +99,33 @@ describe("POST /api/requests/gallery/resetPassword", () => {
 
     expect(response.status).toBe(409);
     expect(body.message).toMatch(/identical/i);
+  });
+
+  it("updates the gallery password hash in the database", async () => {
+    vi.mocked(VerificationCodes.findOne).mockReturnValue({
+      exec: vi.fn().mockResolvedValue({ author: "gallery-123", code: "tok1234" }),
+    } as any);
+    vi.mocked(AccountGallery.findOne).mockReturnValue(mockAccount as any);
+    vi.mocked(bcrypt.compareSync).mockReturnValue(false as never);
+
+    await POST(makeRequest({ password: "NewPass123!", id: "tok1234" }));
+
+    expect(AccountGallery.updateOne).toHaveBeenCalledWith(
+      { gallery_id: "gallery-123" },
+      { password: "$2b$10$hashed_new" },
+    );
+  });
+
+  it("deletes the verification token after a successful password reset", async () => {
+    vi.mocked(VerificationCodes.findOne).mockReturnValue({
+      exec: vi.fn().mockResolvedValue({ author: "gallery-123", code: "tok1234" }),
+    } as any);
+    vi.mocked(AccountGallery.findOne).mockReturnValue(mockAccount as any);
+    vi.mocked(bcrypt.compareSync).mockReturnValue(false as never);
+
+    await POST(makeRequest({ password: "NewPass123!", id: "tok1234" }));
+
+    expect(VerificationCodes.findOneAndDelete).toHaveBeenCalledWith({ code: "tok1234" });
   });
 
   it("returns 400 when required fields are missing", async () => {
