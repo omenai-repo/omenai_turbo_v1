@@ -9,23 +9,12 @@ interface Props {
 
 export default function FallbackActions({ data, rawToken }: Props) {
   const handleOpenApp = () => {
-    // Triggers the custom URI scheme (e.g., omenai://)
-    // We pass the raw encrypted token so the mobile app's interceptor
-    // can securely verify and process it via an API call to your backend.
     window.location.href = `omenai://${data.route}?token=${rawToken}`;
   };
 
   const handleContinueOnWeb = () => {
-    // Reconstruct the full web URL
-    const baseUrl = "https://omenai.app";
+    const finalUrl = data.route;
 
-    // Convert the params object into a standard URL query string
-    const queryParams = new URLSearchParams(data.params).toString();
-
-    // Construct the final URL (e.g., https://omenai.app/payment?artworkId=123)
-    const finalUrl = `${baseUrl}/${data.route}${queryParams ? `?${queryParams}` : ""}`;
-
-    // Execute the web redirect
     window.location.href = finalUrl;
   };
 

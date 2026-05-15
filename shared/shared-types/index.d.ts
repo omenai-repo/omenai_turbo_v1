@@ -1940,7 +1940,7 @@ export interface DeepLinkPayload {
   role: "user" | "artist" | "gallery";
   route: string;
   payload: Record<string, any>;
-  params: Record<string, string>;
+  params?: Record<string, string>;
 }
 export interface DecryptedLinkResponse {
   success: boolean;
