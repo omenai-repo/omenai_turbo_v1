@@ -1,10 +1,10 @@
-import { sendMailVerification } from "../../controller/emailController";
 import SendTestMail from "../../views/test/SendTestMail";
 type EmailData = {
   name: string;
   email: string;
   cta: string;
 };
+import { sendMailVerification } from "../../controller/emailController";
 export const sendTestMail = async ({ name, email, cta }: EmailData) => {
   const data = await sendMailVerification({
     prefix: "Omenai",

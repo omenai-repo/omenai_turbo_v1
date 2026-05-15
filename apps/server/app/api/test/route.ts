@@ -1,21 +1,12 @@
-import { sendTestMail } from "./../../../../../node_modules/@omenai/shared-emails/src/models/test/sendTestMail";
 import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
-import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
-import {
-  CombinedConfig,
-  DeepLinkPayload,
-  SessionData,
-} from "@omenai/shared-types";
+import { DeepLinkPayload } from "@omenai/shared-types";
 import { NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../custom/errors/handler/errorHandler";
-import { createErrorRollbarReport } from "../util";
 import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
 import { encryptLinkData } from "@omenai/shared-utils/src/deeplinkCrypto";
-import {
-  base_url,
-  deeplink_url,
-  getApiUrl,
-} from "@omenai/url-config/src/config";
+import { base_url, deeplink_url } from "@omenai/url-config/src/config";
+
+import { sendTestMail } from "@omenai/shared-emails/src/models/test/sendTestMail";
 
 export const POST = withRateLimit(standardRateLimit)(async function POST(
   request: Request,
