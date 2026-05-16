@@ -1,30 +1,41 @@
 import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
-import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
-import { CombinedConfig, SessionData } from "@omenai/shared-types";
+import { DeepLinkPayload } from "@omenai/shared-types";
 import { NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../custom/errors/handler/errorHandler";
-import { createErrorRollbarReport } from "../util";
-const config: CombinedConfig = {
-  ...standardRateLimit, // use strictRateLimit for sensitive operations to prevent brute force attacks
-  allowedRoles: ["admin"],
-};
+import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
+import { encryptLinkData } from "@omenai/shared-utils/src/deeplinkCrypto";
+import { base_url, deeplink_url } from "@omenai/url-config/src/config";
 
-export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
+import { sendTestMail } from "@omenai/shared-emails/src/models/test/sendTestMail";
+
+export const POST = withRateLimit(standardRateLimit)(async function POST(
   request: Request,
-  _?: Response | NextResponse<unknown>,
-  session?: SessionData & { csrfToken: string },
 ) {
-  try {
-    // Code blocks
+  const data: DeepLinkPayload = {
+    role: "user",
+    route: `${base_url()}/artwork/7c36104d-9d87-4ab1-b9c8-a75e8258dc8a`,
+    payload: {
+      page: "artwork",
+    },
+    params: {
+      art_id: "7c36104d-9d87-4ab1-b9c8-a75e8258dc8a",
+    },
+  };
 
-    return NextResponse.json({});
+  const token = encryptLinkData(data);
+  const redirectLink = `${deeplink_url()}?token=${token}`;
+  try {
+    const { email } = await request.json();
+    const data = await sendTestMail({
+      name: "Test User",
+      cta: redirectLink,
+      email,
+    });
+
+    return NextResponse.json({ message: "Successful", data });
   } catch (error) {
     const error_response = handleErrorEdgeCases(error);
-    createErrorRollbarReport(
-      "transactions: create transaction",
-      error,
-      error_response.status,
-    );
+
     return NextResponse.json(
       { message: error_response?.message },
       { status: error_response?.status },

@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.omenai.omenaiapp",
+      "sha256_cert_fingerprints": [
+        "97:8E:6A:8C:E0:60:27:81:53:F2:32:75:E3:2C:EE:5C:B3:44:76:E8:A8:46:09:AC:B9:FB:C8:11:9F:1E:97:CF"
+      ]
+    }
+  }
+]
