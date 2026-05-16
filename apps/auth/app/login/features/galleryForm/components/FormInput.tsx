@@ -64,7 +64,6 @@ export default function FormInput() {
         "success",
       );
 
-      router.refresh();
       router.replace(`${dashboard_base_url}/gallery/overview`);
     } catch (clerkError) {
       if (clerkError instanceof Error) {
