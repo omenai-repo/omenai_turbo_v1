@@ -1,26 +1,26 @@
 "use client";
-import { useWindowSize } from "usehooks-ts";
 import { OnboardingRequestCompleted } from "./modals/OnboardingRequestCompletedModal";
 import NoMobileView from "./components/NoMobileView";
-
+import { useDeviceBlock } from "@omenai/shared-hooks/hooks/useDeviceBlock";
 export default function ArtistLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const { width } = useWindowSize();
+  const { shouldBlock, isMounted } = useDeviceBlock();
+
+  if (!isMounted) {
+    return null;
+  }
+
+  if (shouldBlock) {
+    return <NoMobileView />;
+  }
+
   return (
-    <>
-      {width < 1024 ? (
-        <NoMobileView />
-      ) : (
-        <>
-          <main className="relative">
-            {children}
-            <OnboardingRequestCompleted />
-          </main>
-        </>
-      )}
-    </>
+    <main className="relative">
+      {children}
+      <OnboardingRequestCompleted />
+    </main>
   );
 }

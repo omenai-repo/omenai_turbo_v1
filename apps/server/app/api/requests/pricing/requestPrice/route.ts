@@ -68,20 +68,6 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
         "Something went wrong, please try again or contact support",
       );
 
-    // --- NEW: Uniqueness Gate ---
-    // Check if this specific user has already requested this specific artwork
-    const existingRequest = await PriceRequest.findOne({
-      buyer_id: user_id,
-      art_id: art_id,
-    }).lean();
-
-    if (existingRequest) {
-      throw new BadRequestError(
-        "You have already requested the price for this artwork.",
-      );
-    }
-    // ----------------------------
-
     const { name, email, user_id: userId } = account;
     const { art_id: artId } = artwork;
     const session_id = sessionData.csrfToken;
@@ -90,17 +76,26 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     const expiresAt = new Date();
     expiresAt.setDate(expiresAt.getDate() + 30); // 30-day TTL
 
-    await PriceRequest.create({
-      art_id: artwork.art_id,
-      buyer_id: userId,
-      seller_id: artwork.author_id, // Pulled from the updated projection
-      artwork_snapshot: {
-        title: artwork.title,
-        artist: artwork.artist,
-        url: artwork.url,
-      },
-      expires_at: expiresAt, // Activates MongoDB TTL deletion
-    });
+    const existingRequest = await PriceRequest.findOne({
+      buyer_id: user_id,
+      art_id: art_id,
+    }).lean();
+
+    if (!existingRequest) {
+      await PriceRequest.create({
+        art_id: artwork.art_id,
+        buyer_id: userId,
+        seller_id: artwork.author_id,
+        artwork_snapshot: {
+          title: artwork.title,
+          artist: artwork.artist,
+          url: artwork.url,
+        },
+        expires_at: expiresAt,
+      });
+    }
+    // ----------------------------
+
     // ----------------------------------------------
 
     // Fire off the email and analytics in parallel so we don't block the response
