@@ -227,14 +227,6 @@ export const PaymentSuccessfulGalleryMail = ({
             >
               Warmly,
               <br />
-              <br />
-              <strong
-                className="heading-main text-gray-900"
-                style={{ fontWeight: "600" }}
-              >
-                Moses
-              </strong>
-              <br />
               <span
                 className="text-muted text-gray-500"
                 style={{ fontSize: "14px" }}
