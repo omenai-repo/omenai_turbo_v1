@@ -75,7 +75,7 @@ export const GET = withRateLimit(standardRateLimit)(async function GET(
         return {
           from: "Subscription <omenai@omenai.app>",
           to: [subscription.customer.email],
-          subject: `YourOmenai Gallery Subscription Expires ${subscription.days_until_expiry > 1 ? `in ${subscription.days_until_expiry} days` : "tomorrow"}`,
+          subject: `Your Omenai Gallery Subscription Expires ${subscription.days_until_expiry > 1 ? `in ${subscription.days_until_expiry} days` : "tomorrow"}`,
           html,
         };
       }),

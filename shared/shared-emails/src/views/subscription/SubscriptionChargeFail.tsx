@@ -31,7 +31,7 @@ export const PaymentFailedEmail = ({
   subscriptionPlan,
   lastPaymentAttemptDate,
   amountDue,
-  accountUrl = "https://omenai.com/account/billing",
+  accountUrl,
   lastFourDigits,
   cardType,
 }: PaymentFailedEmailProps) => {
