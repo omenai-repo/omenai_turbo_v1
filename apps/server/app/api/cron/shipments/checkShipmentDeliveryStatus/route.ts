@@ -15,6 +15,7 @@ import {
   getDHLTracking,
   UnifiedTrackingResponse,
 } from "../../../services/dhl_service";
+import { generateDashboardDeeplink } from "@omenai/shared-lib/deeplink/config";
 
 /**
  * Checks if a given date is at least two days in the past from now.
@@ -167,6 +168,7 @@ async function processOrder(order: any, dbConnection: any) {
           seller_designation === "artist"
         ) {
           if (seller_designation === "gallery") {
+            const orderUrl = generateDashboardDeeplink("gallery", "orders");
             await sendGalleryShipmentSuccessfulMail({
               name: seller_details.name,
               email: seller_details.email,
@@ -175,6 +177,7 @@ async function processOrder(order: any, dbConnection: any) {
               artwork: order.artwork_data.title,
               artistName: order.artwork_data.artist,
               price: order.artwork_data.pricing.usd_price,
+              orderUrl,
             });
           }
         }

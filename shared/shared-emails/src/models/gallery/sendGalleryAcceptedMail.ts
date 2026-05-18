@@ -1,4 +1,3 @@
-import { auth_uri } from "@/configs/url-config/src/config";
 import { sendMailVerification } from "../../controller/emailController";
 import AcceptGalleryMail from "../../views/gallery/AcceptGalleryMail";
 type EmailData = {
