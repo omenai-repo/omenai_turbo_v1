@@ -16,6 +16,11 @@ import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
 import { createErrorRollbarReport } from "../../../util";
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
 import { verifyAuthVercel } from "../../utils";
+import {
+  generateArtworkDeeplink,
+  generateCatalogDeeplink,
+  generateDashboardDeeplink,
+} from "@omenai/shared-lib/deeplink/config";
 
 export const revalidate = 0;
 export const dynamic = "force-dynamic";
@@ -66,18 +71,23 @@ async function processAutoDeclines(
   // Update artwork rejection counts and check for breaches
   await updateArtworkRejectionCounts(autoDeclinedOrders);
 
+  const catalogUrl = generateCatalogDeeplink();
   try {
     // Render all emails concurrently
     const [buyerEmailPayload, sellerEmailPayload] = await Promise.all([
       // Buyer emails
       Promise.all(
         autoDeclinedOrders.map(async (order) => {
+          const artworkUrl = generateArtworkDeeplink(order.artwork_data.art_id);
+
           const html = await render(
             OrderDeclinedEmail({
               recipientName: order.buyer_details.name,
               declineReason:
                 "Seller did not respond within the designated timeframe",
               artwork: order.artwork_data,
+              artworkUrl,
+              catalogUrl,
             }),
           );
           return {
@@ -91,10 +101,13 @@ async function processAutoDeclines(
       // Seller emails
       Promise.all(
         autoDeclinedOrders.map(async (order) => {
+          const artworkUrl = generateArtworkDeeplink(order.artwork_data.art_id);
+
           const html = await render(
             OrderAutoDeclinedEmail({
               name: order.seller_details.name,
               artwork: order.artwork_data,
+              artworkUrl,
             }),
           );
           return {
@@ -185,6 +198,11 @@ async function sendReminderEmails(
     // Use consistent rendering approach
     const reminderEmailPayload = await Promise.all(
       orders24.map(async (order) => {
+        const orderUrl = generateDashboardDeeplink(
+          order.seller_designation,
+          "orders",
+        );
+
         const html = await render(
           OrderRequestReminder({
             name: order.seller_details.name,
@@ -192,7 +210,7 @@ async function sendReminderEmails(
             artistName: order.artwork_data.artist_name,
             price: order.artwork_data.price,
             artworkImage: order.artwork_data.image_url,
-            entity: order.seller_designation,
+            url: orderUrl,
           }),
         );
         return {

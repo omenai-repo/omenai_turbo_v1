@@ -14,6 +14,7 @@ import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middlewar
 import { CombinedConfig } from "@omenai/shared-types";
 import { createErrorRollbarReport, validateRequestBody } from "../../util";
 import z from "zod";
+import { generateAuthDeeplink } from "@omenai/shared-lib/deeplink/config";
 
 const config: CombinedConfig = {
   ...strictRateLimit,
@@ -116,10 +117,12 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
         throw new ServerError("Failed to update artist account");
     });
 
+    const authUrl = generateAuthDeeplink("artist", "login");
     // Send email AFTER transaction succeeds
     await sendArtistAcceptedMail({
       name: artist.name,
       email: artist.email,
+      authUrl,
     });
 
     return NextResponse.json(

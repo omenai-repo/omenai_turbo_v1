@@ -111,8 +111,7 @@ export const OrderDeclinedWarningEmail = ({
                 className="text-main text-gray-800"
                 style={{ ...listItemStyle, margin: "0" }}
               >
-                • Unresolved requests may impact your gallery's placement on the
-                platform.
+                • Unresolved requests may impact your placement on the platform.
               </Text>
             </Section>
 

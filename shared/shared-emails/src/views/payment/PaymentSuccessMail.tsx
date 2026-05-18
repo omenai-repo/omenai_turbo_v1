@@ -42,7 +42,6 @@ export const PurchaseConfirmationEmail = ({
   order_id,
 }: PurchaseConfirmationEmailProps) => {
   const optimizedImage = getImageFileView(artworkImage, 400);
-  const dashboardUrl = `${base_url()}/dashboard/user/orders`;
 
   return (
     <Html>

@@ -4,7 +4,11 @@ import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/error
 import { sendPriceEmail } from "@omenai/shared-emails/src/models/orders/requestPriceEmail";
 import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
-import { ArtworkSchemaTypes, CombinedConfig } from "@omenai/shared-types";
+import {
+  ArtworkSchemaTypes,
+  CombinedConfig,
+  DeepLinkPayload,
+} from "@omenai/shared-types";
 import { createErrorRollbarReport, validateRequestBody } from "../../../util";
 import z from "zod";
 import { trackPlatformEvent } from "@omenai/shared-lib/analytics/trackPlatformEvents";
@@ -18,6 +22,8 @@ import {
   ForbiddenError,
   ServerError,
 } from "../../../../../custom/errors/dictionary/errorDictionary";
+import { base_url, deeplink_url } from "@omenai/url-config/src/config";
+import { encryptLinkData } from "@omenai/shared-utils/src/deeplinkCrypto";
 
 const config: CombinedConfig = {
   ...standardRateLimit,
@@ -48,7 +54,6 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
         "name email user_id",
       ).lean() as unknown as { name: string; email: string; user_id: string },
 
-      // FIXED: Added 'author_id' to the projection so we know who the seller is
       Artworkuploads.findOne(
         { art_id },
         "title artist art_id url medium pricing author_id",
@@ -72,7 +77,6 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     const { art_id: artId } = artwork;
     const session_id = sessionData.csrfToken;
 
-    // --- NEW: Create the Price Request Document ---
     const expiresAt = new Date();
     expiresAt.setDate(expiresAt.getDate() + 30); // 30-day TTL
 
@@ -96,6 +100,19 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     }
     // ----------------------------
 
+    const data: DeepLinkPayload = {
+      role: "user",
+      route: `${base_url()}/artwork/${artwork.art_id}`,
+      payload: {
+        page: "artwork",
+      },
+      params: {
+        art_id: artwork.art_id,
+      },
+    };
+
+    const token = encryptLinkData(data);
+    const redirectLink = `${deeplink_url()}?token=${token}`;
     // ----------------------------------------------
 
     // Fire off the email and analytics in parallel so we don't block the response
@@ -104,6 +121,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
         name,
         email,
         artwork_data: artwork,
+        cta: redirectLink,
       }),
       trackPlatformEvent({
         req: request,

@@ -26,7 +26,7 @@ interface OrderRequestReminderProps {
   artistName: string;
   price: string;
   artworkImage: string;
-  entity: "artist" | "gallery";
+  url: string;
 }
 
 export const OrderRequestReminder = ({
@@ -35,12 +35,9 @@ export const OrderRequestReminder = ({
   artistName,
   price,
   artworkImage,
-  entity,
+  url,
 }: OrderRequestReminderProps) => {
-  const url = dashboard_url();
   const optimizedImage = getImageFileView(artworkImage, 400);
-  const route_url =
-    entity === "artist" ? `${url}/artist/app/orders` : `${url}/gallery/orders`;
 
   return (
     <Html>
@@ -103,7 +100,7 @@ export const OrderRequestReminder = ({
 
             <Section style={{ textAlign: "center", margin: "32px 0" }}>
               <Button
-                href={route_url}
+                href={url}
                 className="btn-main"
                 style={{
                   backgroundColor: "#000000",

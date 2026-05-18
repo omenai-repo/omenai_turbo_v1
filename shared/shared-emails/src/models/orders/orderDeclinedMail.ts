@@ -5,12 +5,16 @@ type EmailData = {
   name: string;
   email: string;
   reason: string;
+  artworkUrl: string;
+  catalogUrl: string;
   artwork_data: any;
 };
 export const sendOrderDeclinedMail = async ({
   name,
   email,
   reason,
+  artworkUrl,
+  catalogUrl,
   artwork_data,
 }: EmailData) => {
   await sendMailVerification({
@@ -22,6 +26,8 @@ export const sendOrderDeclinedMail = async ({
       recipientName: name,
       declineReason: reason,
       artwork: artwork_data,
+      artworkUrl,
+      catalogUrl,
     }),
   });
 };

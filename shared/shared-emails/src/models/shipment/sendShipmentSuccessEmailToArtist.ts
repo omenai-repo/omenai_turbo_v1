@@ -8,6 +8,7 @@ type EmailData = {
   artworkImage: string;
   artistName: string;
   price: string;
+  walletUrl: string;
 };
 export const sendArtistShipmentSuccessEmail = async ({
   name,
@@ -17,6 +18,7 @@ export const sendArtistShipmentSuccessEmail = async ({
   artworkImage,
   artistName,
   price,
+  walletUrl,
 }: EmailData) => {
   await sendMailVerification({
     prefix: "Omenai Advisory",
@@ -30,6 +32,7 @@ export const sendArtistShipmentSuccessEmail = async ({
       artworkImage,
       artistName,
       price,
+      walletUrl,
     }),
   });
 };

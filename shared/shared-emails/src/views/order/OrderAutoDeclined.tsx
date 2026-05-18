@@ -27,15 +27,16 @@ interface OrderAutoDeclinedEmailProps {
     ArtworkSchemaTypes,
     "title" | "artist" | "art_id" | "pricing" | "url"
   >;
+  artworkUrl: string;
   email?: string;
 }
 
 export const OrderAutoDeclinedEmail = ({
   name,
+  artworkUrl,
   artwork,
 }: OrderAutoDeclinedEmailProps) => {
   const baseUrl = base_url();
-  const artworkUrl = `${baseUrl}/artwork/${artwork.url}`;
   const optimizedImage = getImageFileView(artwork.url, 400);
 
   return (

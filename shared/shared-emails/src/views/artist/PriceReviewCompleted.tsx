@@ -47,12 +47,9 @@ const PriceReviewCompleted = ({
 
         {/* Call to Action */}
         <Section className="mt-8 mb-6">
-          <Button
-            href={`${auth_uri()}/login/artist`}
-            className="bg-[#1a1a1a] text-white text-sm font-semibold py-3.5 px-6 rounded-lg text-center no-underline tracking-wide block w-fit"
-          >
+          <Text className="text-[#b45309] text-sm leading-relaxed m-0">
             Login to View Results
-          </Button>
+          </Text>
         </Section>
       </Container>
     </ArtistEmailLayout>

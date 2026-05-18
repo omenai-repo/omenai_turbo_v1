@@ -2,8 +2,7 @@ import { auth_uri } from "@omenai/url-config/src/config";
 import { Link, Text } from "@react-email/components";
 import GalleryEmailLayout from "./GalleryEmailLayout";
 
-const AcceptGalleryMail = (gallery_name: string) => {
-  const url = auth_uri();
+const AcceptGalleryMail = (gallery_name: string, url: string) => {
   return (
     <GalleryEmailLayout gallery_name={gallery_name}>
       <Text className="text-dark text-fluid-xxs leading-[24px]">
@@ -20,8 +19,7 @@ const AcceptGalleryMail = (gallery_name: string) => {
       <ul>
         <li>
           <Text className="m-0 text-fluid-xxs leading-[28px] text-gray-900">
-            <Link href={`${url}/login/gallery`}>Login</Link> to your gallery
-            account.
+            <Link href={url}>Login</Link> to your gallery account.
           </Text>
         </li>
         <li>

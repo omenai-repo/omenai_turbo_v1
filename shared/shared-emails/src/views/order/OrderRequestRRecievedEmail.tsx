@@ -27,14 +27,15 @@ interface OrderRequestReceivedEmailProps {
     "title" | "artist" | "art_id" | "pricing" | "url"
   >;
   orderId: string;
+  artworkUrl: string;
 }
 
 export const OrderRequestReceivedEmail = ({
   name,
   artwork,
   orderId,
+  artworkUrl,
 }: OrderRequestReceivedEmailProps) => {
-  const artworkUrl = `${base_url()}/artwork/${artwork.url}`;
   const optimizedImage = getImageFileView(artwork.url, 400);
 
   return (

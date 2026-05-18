@@ -11,6 +11,7 @@ interface SendArtistShipmentSuccessProps {
   artworkImage: string;
   artistName: string;
   price: string;
+  walletUrl: string;
 }
 
 export default function SendArtistShipmentSuccess({
@@ -20,6 +21,7 @@ export default function SendArtistShipmentSuccess({
   artworkImage,
   artistName,
   price,
+  walletUrl,
 }: SendArtistShipmentSuccessProps) {
   const optimizedImage = getImageFileView(artworkImage, 400);
 
@@ -99,7 +101,7 @@ export default function SendArtistShipmentSuccess({
 
         <Section style={{ textAlign: "center", margin: "32px 0" }}>
           <Link
-            href={`${dashboard_url()}/artist/app/wallet`}
+            href={walletUrl}
             style={{
               display: "inline-block",
               backgroundColor: "#000000",

@@ -16,15 +16,13 @@ import {
   UnifiedTrackingResponse,
 } from "../../../services/dhl_service";
 
-// TODO: Check 2 days past and In transit
 /**
  * Checks if a given date is at least two days in the past from now.
- * NOTE: This means we only check tracking for orders that are 2 days PAST their ETA?
- * Please verify if this business logic is intentional. usually you check all "In Transit" orders.
+ * NOTE: This means we only check tracking for orders that are 2 days PAST their ETA
  */
 const isDateAtLeastTwoDaysPast = (targetDate: Date): boolean => {
   const now = new Date();
-  const twoDaysInMillis = 1 * 24 * 60 * 60 * 1000;
+  const twoDaysInMillis = 2 * 24 * 60 * 60 * 1000;
   return now.getTime() - targetDate.getTime() >= twoDaysInMillis;
 };
 
