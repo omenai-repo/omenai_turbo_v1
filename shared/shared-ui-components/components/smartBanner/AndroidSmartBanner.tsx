@@ -34,7 +34,7 @@ export default function AndroidSmartBanner() {
     "intent://home#Intent;scheme=omenaimobile;package=com.omenai.omenaiapp;end;";
 
   return (
-    <div className="relative z-[50] flex items-center justify-between bg-white px-4 py-2 shadow-sm border-b border-zinc-100">
+    <div className="relative z-[10] flex items-center justify-between bg-white px-4 py-2 shadow-sm border-b border-zinc-100">
       <div className="flex items-center gap-3">
         <button
           onClick={handleDismiss}
