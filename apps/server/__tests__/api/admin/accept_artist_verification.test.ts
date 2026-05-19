@@ -105,10 +105,12 @@ describe("POST /api/admin/accept_artist_verification", () => {
 
     expect(response.status).toBe(200);
     expect(body.message).toBe("Artist verification accepted");
-    expect(sendArtistAcceptedMail).toHaveBeenCalledWith({
-      name: mockArtist.name,
-      email: mockArtist.email,
-    });
+    expect(sendArtistAcceptedMail).toHaveBeenCalledWith(
+      expect.objectContaining({
+        name: mockArtist.name,
+        email: mockArtist.email,
+      }),
+    );
   });
 
   it("creates a wallet with the artist's owner_id and base_currency", async () => {

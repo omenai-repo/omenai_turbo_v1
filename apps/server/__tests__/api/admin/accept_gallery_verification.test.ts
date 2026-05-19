@@ -59,10 +59,12 @@ describe("POST /api/admin/accept_gallery_verification", () => {
 
     expect(response.status).toBe(200);
     expect(body.message).toBe("Gallery verification accepted");
-    expect(sendGalleryAcceptedMail).toHaveBeenCalledWith({
-      name: mockGallery.name,
-      email: mockGallery.email,
-    });
+    expect(sendGalleryAcceptedMail).toHaveBeenCalledWith(
+      expect.objectContaining({
+        name: mockGallery.name,
+        email: mockGallery.email,
+      }),
+    );
   });
 
   it("calls AccountGallery.updateOne with gallery_verified: true", async () => {

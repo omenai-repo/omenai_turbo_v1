@@ -7,5 +7,9 @@ export default defineConfig({
     include: ["__tests__/**/*.{test,spec}.ts"],
     exclude: ["node_modules", "dist", ".next", "__tests__/helpers/**"],
     setupFiles: ["__tests__/setup.ts"],
+    env: {
+      DEEPLINK_SECRET:
+        "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+    },
   },
 });

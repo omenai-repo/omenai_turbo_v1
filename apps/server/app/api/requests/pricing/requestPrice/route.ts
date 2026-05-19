@@ -85,19 +85,23 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       art_id: art_id,
     }).lean();
 
-    if (!existingRequest) {
-      await PriceRequest.create({
-        art_id: artwork.art_id,
-        buyer_id: userId,
-        seller_id: artwork.author_id,
-        artwork_snapshot: {
-          title: artwork.title,
-          artist: artwork.artist,
-          url: artwork.url,
-        },
-        expires_at: expiresAt,
-      });
+    if (existingRequest) {
+      throw new BadRequestError(
+        "You have already requested a price for this artwork",
+      );
     }
+
+    await PriceRequest.create({
+      art_id: artwork.art_id,
+      buyer_id: userId,
+      seller_id: artwork.author_id,
+      artwork_snapshot: {
+        title: artwork.title,
+        artist: artwork.artist,
+        url: artwork.url,
+      },
+      expires_at: expiresAt,
+    });
     // ----------------------------
 
     const data: DeepLinkPayload = {
