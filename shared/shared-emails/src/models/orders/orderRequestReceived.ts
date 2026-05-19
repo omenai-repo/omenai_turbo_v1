@@ -6,18 +6,25 @@ type EmailData = {
   email: string;
   artwork_data: any;
   orderId: string;
+  artworkUrl: string;
 };
 export const sendOrderRequestReceivedMail = async ({
   name,
   email,
   artwork_data,
   orderId,
+  artworkUrl,
 }: EmailData) => {
   await sendMailVerification({
     prefix: "Omenai Advisory",
     from: "orders",
     to: email,
     subject: "We’ve received your request",
-    react: OrderRequestReceivedEmail({ name, artwork: artwork_data, orderId }),
+    react: OrderRequestReceivedEmail({
+      name,
+      artwork: artwork_data,
+      orderId,
+      artworkUrl,
+    }),
   });
 };

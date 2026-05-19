@@ -11,6 +11,7 @@ import { useAuth } from "@omenai/shared-hooks/hooks/useAuth";
 import { toast_notif } from "@omenai/shared-utils/src/toast_notification";
 import { useRollbar } from "@rollbar/react";
 import { INPUT_CLASS } from "@omenai/shared-ui-components/components/styles/inputClasses";
+
 // Input field configuration
 const INPUT_CONFIG = {
   email: {
@@ -37,7 +38,6 @@ const showErrorToast = (error: any) => {
       errorMessage ||
       "Something went wrong, please try again or contact support",
     style: { background: "red", color: "white" },
-    className: "class",
   });
 };
 
@@ -47,7 +47,9 @@ export default function FormInput() {
   const dashboard_base_url = dashboard_url();
 
   const { setIsLoading } = individualLoginStore();
-  const { signOut } = useAuth({ requiredRole: "artist" });
+
+  const { signOut } = useAuth();
+
   const [form, setForm] = useState<Form>({ email: "", password: "" });
   const rollbar = useRollbar();
 
@@ -57,6 +59,7 @@ export default function FormInput() {
       description: "You will be redirected to verify your account",
     });
   };
+
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
@@ -64,9 +67,8 @@ export default function FormInput() {
   const handleVerifiedArtist = async (data: any) => {
     try {
       toast_notif("Login successful", "success");
-
       const redirectUrl = getRedirectUrl(data, dashboard_base_url);
-      router.refresh();
+
       router.replace(redirectUrl);
     } catch (clerkError) {
       if (clerkError instanceof Error) {
@@ -87,7 +89,10 @@ export default function FormInput() {
 
     const { data } = response;
 
-    if (data.role !== "artist") return;
+    if (data.role !== "artist") {
+      toast_notif("Unauthorized: This login is strictly for artists.", "error");
+      return;
+    }
 
     if (data.verified) {
       await handleVerifiedArtist(data);
@@ -101,6 +106,7 @@ export default function FormInput() {
     e: FormEvent<HTMLFormElement> | React.MouseEvent<HTMLButtonElement>,
   ) => {
     e.preventDefault();
+
     setIsLoading();
 
     try {

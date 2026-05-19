@@ -52,6 +52,7 @@ import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
 import { Waitlist } from "@omenai/shared-models/models/auth/WaitlistSchema";
 import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
+import { generateDashboardDeeplink } from "@omenai/shared-lib/deeplink/config";
 
 /* -------------------------------------------------------------------------- */
 /*                            ROUTE ENTRY                                     */
@@ -655,6 +656,7 @@ async function processSubscriptionSuccess(
   sendSubscriptionPaymentSuccessfulMail({
     name: meta.name ?? "",
     email: meta.email ?? "",
+    billingUrl: generateDashboardDeeplink("gallery", "billing"),
   }).catch((emailError) => {
     createErrorRollbarReport(
       "Failed to send subscription success email",

@@ -69,7 +69,6 @@ export default function FormInput() {
       if (redirectTo) {
         router.replace(redirectTo);
       } else {
-        router.refresh();
         router.replace(base_uri);
       }
     } catch (error) {

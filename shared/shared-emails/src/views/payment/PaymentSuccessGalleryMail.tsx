@@ -18,7 +18,6 @@ import * as React from "react";
 import EmailFooter from "../../components/Footer";
 import EmailArtworkCard from "../components/EmailArtworkCard";
 import { getImageFileView } from "@omenai/shared-lib/storage/getImageFileView";
-import { COMPANY_INFO } from "../../constants/constants";
 
 interface PaymentSuccessfulGalleryMailProps {
   name: string;
@@ -29,6 +28,7 @@ interface PaymentSuccessfulGalleryMailProps {
   order_id: string;
   order_date: string;
   transaction_id: string;
+  payoutUrl: string;
 }
 
 export const PaymentSuccessfulGalleryMail = ({
@@ -40,8 +40,8 @@ export const PaymentSuccessfulGalleryMail = ({
   order_id,
   order_date,
   transaction_id,
+  payoutUrl,
 }: PaymentSuccessfulGalleryMailProps) => {
-  const url = dashboard_url();
   const optimizedImage = getImageFileView(artworkImage, 400);
 
   return (
@@ -92,8 +92,7 @@ export const PaymentSuccessfulGalleryMail = ({
 
             <Text className="text-main text-gray-800" style={textStyle}>
               Congratulations! We are thrilled to confirm that the collector's
-              payment for your artwork has been successfully processed. The
-              acquisition is now officially complete.
+              payment for your artwork has been successfully processed.
             </Text>
 
             <EmailArtworkCard
@@ -198,7 +197,7 @@ export const PaymentSuccessfulGalleryMail = ({
 
             <Section style={{ textAlign: "center", margin: "32px 0" }}>
               <Button
-                href={`${url}/gallery/payouts`}
+                href={payoutUrl}
                 className="btn-main"
                 style={{
                   backgroundColor: "#000000",
@@ -226,14 +225,6 @@ export const PaymentSuccessfulGalleryMail = ({
               style={{ ...textStyle, marginTop: "32px" }}
             >
               Warmly,
-              <br />
-              <br />
-              <strong
-                className="heading-main text-gray-900"
-                style={{ fontWeight: "600" }}
-              >
-                Moses
-              </strong>
               <br />
               <span
                 className="text-muted text-gray-500"

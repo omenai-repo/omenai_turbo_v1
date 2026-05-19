@@ -18,6 +18,7 @@ import { MobileSidebar } from "./features/MobileLayout";
 import { MainContent } from "./features/MainContent";
 import { GlobalCommandMenu } from "./features/GlobalCommandMenu";
 import VerificationBlockerModal from "./components/VerificationBlocker";
+import { useDeviceBlock } from "@omenai/shared-hooks/hooks/useDeviceBlock";
 
 export default function GalleryDashboardLayout({
   children,
@@ -25,9 +26,8 @@ export default function GalleryDashboardLayout({
   children: React.ReactNode;
 }) {
   const { user, csrf } = useAuth({ requiredRole: "gallery" });
-  const { width } = useWindowSize();
+  const { shouldBlock, isMounted } = useDeviceBlock();
 
-  // 1. Switched to isPending and added dependencies to the queryKey
   const {
     data: account,
     isPending,
@@ -35,27 +35,35 @@ export default function GalleryDashboardLayout({
   } = useQuery({
     queryKey: ["get_account_info", user?.gallery_id, csrf],
     queryFn: async () => {
+      if (!user?.gallery_id) return null;
+
       const acc = await getAccountId(user.gallery_id as string, csrf || "");
 
       if (!acc?.isOk) {
         toast_notif("Something went wrong, Please refresh the page", "error");
-        return null; // Return null instead of implicitly returning undefined
+        return null;
       }
       return acc.data;
     },
     refetchOnWindowFocus: false,
-    enabled: !!user?.gallery_id && !!csrf,
+    enabled: !!user?.gallery_id && !!csrf && !shouldBlock,
   });
 
-  // 2. Check isPending (v5) or if account data simply isn't available yet
+  if (!isMounted) {
+    return null;
+  }
+
+  if (shouldBlock) {
+    return <NoMobileView />;
+  }
+
+  // 3. Handle data loading states
   if (isPending || isLoading || account === undefined) {
     return <Load />;
   }
 
-  // 3. Optional chaining just in case 'account' is null from an error state
+  // 4. Safe derivations since we know 'account' is loaded
   const isNotStripeConnected = account?.connected_account_id === null;
-
-  // Force a strict boolean check so undefined/null don't accidentally trigger things
   const isGalleryVerified = account?.gallery_verified === true;
   const val = isNotStripeConnected && isGalleryVerified;
 
@@ -64,38 +72,35 @@ export default function GalleryDashboardLayout({
       {!isGalleryVerified && (
         <VerificationBlockerModal open={!isGalleryVerified} />
       )}
-      {width < 1280 ? (
-        <NoMobileView />
-      ) : (
-        <div className="flex h-full overflow-hidden">
-          <NextTopLoader color="#0f172a" height={6} />
 
-          <DesktopSidebar />
-          <GlobalCommandMenu />
+      <div className="flex h-full overflow-hidden">
+        <NextTopLoader color="#0f172a" height={6} />
 
-          <div className="flex flex-1 flex-col md:ml-64">
-            <header className="flex items-center gap-4 border-b bg-white px-4 py-3 md:hidden">
-              <MobileSidebar />
-              <span className="text-sm font-medium">Dashboard</span>
-            </header>
-            <MainContent>
-              {val ? (
-                <GetStartedWithStripe />
-              ) : (
-                <>
-                  <UploadOrderRejectionReason />
-                  <UpdatePasswordModal />
-                  <DeleteAccountConfirmationModal />
-                  <UpdateAddressModal />
-                  <UpdateLogoModal />
+        <DesktopSidebar />
+        <GlobalCommandMenu />
 
-                  {children}
-                </>
-              )}
-            </MainContent>
-          </div>
+        <div className="flex flex-1 flex-col md:ml-64">
+          <header className="flex items-center gap-4 border-b bg-white px-4 py-3 md:hidden">
+            <MobileSidebar />
+            <span className="text-sm font-medium">Dashboard</span>
+          </header>
+          <MainContent>
+            {val ? (
+              <GetStartedWithStripe />
+            ) : (
+              <>
+                <UploadOrderRejectionReason />
+                <UpdatePasswordModal />
+                <DeleteAccountConfirmationModal />
+                <UpdateAddressModal />
+                <UpdateLogoModal />
+
+                {children}
+              </>
+            )}
+          </MainContent>
         </div>
-      )}
+      </div>
     </>
   );
 }

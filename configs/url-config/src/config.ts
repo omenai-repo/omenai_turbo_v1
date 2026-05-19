@@ -69,3 +69,13 @@ export const tracking_url = (): string => {
       ? "https://staging.tracking.omenai.app"
       : "http://localhost:3002";
 };
+export const deeplink_url = (): string => {
+  const appEnv = process.env.APP_ENV || process.env.NEXT_PUBLIC_APP_ENV;
+
+  if (appEnv === "production") {
+    return "https://redirect.omenai.app/dl";
+  } else
+    return process.env.NODE_ENV === "production"
+      ? "https://staging.redirect.omenai.app/dl"
+      : "http://localhost:5001/dl";
+};

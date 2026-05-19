@@ -8,6 +8,7 @@ import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_conf
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import {
   CombinedConfig,
+  DeepLinkPayload,
   ExclusivityUpholdStatus,
   NotificationPayload,
 } from "@omenai/shared-types";
@@ -20,6 +21,12 @@ import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
 import mongoose from "mongoose";
 import { createErrorRollbarReport, validateRequestBody } from "../../util";
 import z from "zod";
+import {
+  generateArtworkDeeplink,
+  generateCatalogDeeplink,
+} from "@omenai/shared-lib/deeplink/config";
+import { encryptLinkData } from "@omenai/shared-utils/src/deeplinkCrypto";
+import { base_url, deeplink_url } from "@omenai/url-config/src/config";
 
 const config: CombinedConfig = {
   ...strictRateLimit,
@@ -159,6 +166,8 @@ async function sendBuyerNotification(
   }
 }
 
+const catalogUrl = generateCatalogDeeplink();
+
 /**
  * Sends email notification to buyer
  * Non-critical operation - failures are logged but don't fail the request
@@ -169,12 +178,16 @@ async function sendBuyerEmail(
   reason: string,
   artwork_data: any,
 ): Promise<void> {
+  const artworkUrl = generateArtworkDeeplink(artwork_data.art_id);
+
   try {
     await sendOrderDeclinedMail({
       name,
       email,
       reason,
       artwork_data,
+      artworkUrl,
+      catalogUrl,
     });
   } catch (error) {
     // Log but don't throw - email failure shouldn't fail the entire operation

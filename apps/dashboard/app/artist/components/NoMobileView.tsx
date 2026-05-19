@@ -59,7 +59,7 @@ export default function MobileBlockScreen() {
         {/* App CTAs */}
         <div className="flex flex-col items-center gap-4 pt-2">
           <Link
-            href="https://play.google.com/store/apps/details?id=com.omenai.app"
+            href="https://play.google.com/store/apps/details?id=com.omenai.omenaiapp"
             target="_blank"
             rel="noopener noreferrer"
             className="transition-opacity hover:opacity-90"
@@ -73,7 +73,7 @@ export default function MobileBlockScreen() {
           </Link>
 
           <Link
-            href="https://apps.apple.com/app/omenai/id1234567890"
+            href="https://apps.apple.com/ng/app/omenai/id6748387089"
             target="_blank"
             rel="noopener noreferrer"
             className="transition-opacity hover:opacity-90"

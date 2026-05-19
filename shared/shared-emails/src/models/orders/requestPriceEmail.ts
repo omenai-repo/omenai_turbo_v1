@@ -9,17 +9,19 @@ type EmailData = {
     ArtworkSchemaTypes,
     "title" | "artist" | "art_id" | "pricing" | "url" | "medium"
   >;
+  cta: string;
 };
 export const sendPriceEmail = async ({
   name,
   email,
   artwork_data,
+  cta,
 }: EmailData) => {
   await sendMailVerification({
     prefix: "Omenai Advisory",
     from: "orders",
     to: email,
     subject: `Private Price Inquiry Response`,
-    react: RequestPriceEmail({ name, artwork_data }),
+    react: RequestPriceEmail({ name, artwork_data, cta }),
   });
 };

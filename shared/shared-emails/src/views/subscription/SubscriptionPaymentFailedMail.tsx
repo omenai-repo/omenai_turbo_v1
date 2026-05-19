@@ -19,10 +19,12 @@ import * as React from "react";
 interface SubscriptionPaymentFailedMailProps {
   name: string;
   email?: string;
+  billingUrl: string;
 }
 
 export const SubscriptionPaymentFailedMail = ({
   name,
+  billingUrl,
 }: SubscriptionPaymentFailedMailProps) => {
   return (
     <Html>
@@ -97,7 +99,7 @@ export const SubscriptionPaymentFailedMail = ({
 
             <Section style={{ margin: "32px 0" }}>
               <Button
-                href={`${dashboard_url()}/gallery/billing/card`}
+                href={billingUrl}
                 className="btn-main"
                 style={{
                   backgroundColor: "#000000",
@@ -138,14 +140,6 @@ export const SubscriptionPaymentFailedMail = ({
               style={{ ...textStyle, marginTop: "32px" }}
             >
               Warm regards,
-              <br />
-              <br />
-              <strong
-                className="heading-main text-gray-900"
-                style={{ fontWeight: "600" }}
-              >
-                Moses
-              </strong>
               <br />
               <span
                 className="text-muted text-gray-500"

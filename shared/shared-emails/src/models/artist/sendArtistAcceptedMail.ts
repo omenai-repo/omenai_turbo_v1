@@ -3,13 +3,18 @@ import AcceptArtistMail from "../../views/artist/AcceptArtistMail";
 type EmailData = {
   name: string;
   email: string;
+  authUrl: string;
 };
-export const sendArtistAcceptedMail = async ({ name, email }: EmailData) => {
+export const sendArtistAcceptedMail = async ({
+  name,
+  email,
+  authUrl,
+}: EmailData) => {
   await sendMailVerification({
     prefix: "Omenai onboarding",
     from: "onboarding",
     to: email,
     subject: "Your Artist Account Has Been Successfully Verified!",
-    react: AcceptArtistMail(name),
+    react: AcceptArtistMail(name, authUrl),
   });
 };

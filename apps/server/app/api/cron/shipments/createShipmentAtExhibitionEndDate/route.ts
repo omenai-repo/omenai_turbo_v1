@@ -23,7 +23,6 @@ import { createErrorRollbarReport } from "../../../util";
 import { formatPrice } from "@omenai/shared-utils/src/priceFormatter";
 import { verifyAuthVercel } from "../../utils";
 // Run every hour
-// Utility function to send reminder emails
 async function sendReminderEmail(
   email: string,
   orderId: string,

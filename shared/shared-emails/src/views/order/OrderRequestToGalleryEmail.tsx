@@ -29,6 +29,7 @@ interface OrderRequestToGalleryMailProps {
     ArtworkSchemaTypes,
     "title" | "artist" | "art_id" | "pricing" | "url"
   >;
+  orderUrl: string;
   email?: string;
 }
 
@@ -37,9 +38,8 @@ export const OrderRequestToGalleryMail = ({
   buyer,
   date,
   artwork_data,
+  orderUrl,
 }: OrderRequestToGalleryMailProps) => {
-  const url = base_url();
-  const dashboard_uri = dashboard_url();
   const optimizedImage = getImageFileView(artwork_data.url, 400);
 
   return (
@@ -158,7 +158,7 @@ export const OrderRequestToGalleryMail = ({
 
             <Section style={{ textAlign: "center", margin: "32px 0" }}>
               <Button
-                href={`${dashboard_uri}/gallery/orders`}
+                href={orderUrl}
                 className="btn-main"
                 style={{
                   backgroundColor: "#000000",

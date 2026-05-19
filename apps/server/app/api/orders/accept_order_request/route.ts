@@ -9,6 +9,7 @@ import {
   ShipmentDimensions,
   ShipmentRateRequestTypes,
   AddressTypes,
+  DeepLinkPayload,
 } from "@omenai/shared-types";
 import {
   BadRequestError,
@@ -33,7 +34,12 @@ import {
 import z from "zod";
 import { stripe } from "@omenai/shared-lib/payments/stripe/stripe";
 import { getUPSRates } from "../../services/ups_service";
-
+import { base_url, deeplink_url } from "@omenai/url-config/src/config";
+import { encryptLinkData } from "@omenai/shared-utils/src/deeplinkCrypto";
+import {
+  generateArtworkDeeplink,
+  generatePaymentDeeplink,
+} from "@omenai/shared-lib/deeplink/config";
 // --------------------------------------------------------------------------
 // STRIPE TAX CALCULATION
 // --------------------------------------------------------------------------
@@ -182,11 +188,21 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     });
 
     await notifyBuyer(order);
+
+    // ----------------------------
+
+    const paymentUrl = generatePaymentDeeplink(
+      order.order_id,
+      order.buyer_details.id,
+    );
+    const artworkUrl = generateArtworkDeeplink(order.artwork_data.art_id);
+
+    // ----------------------------------------------
     await sendOrderAcceptedMail({
       name: order.buyer_details.name,
       email: order.buyer_details.email,
-      order_id: order.order_id,
-      user_id: order.buyer_details.id,
+      paymentUrl,
+      artworkUrl,
       artwork_data: order.artwork_data,
     });
 

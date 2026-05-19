@@ -4,7 +4,7 @@ import { Text } from "@react-email/components";
 
 export default function FundUnlockArtistEmail(
   artist_name: string,
-  amount: number
+  amount: number,
 ) {
   return (
     <ArtistEmailLayout artist_name={artist_name}>
@@ -28,7 +28,7 @@ export default function FundUnlockArtistEmail(
       </Text>
       <Text className="text-dark text-fluid-xxs leading-[24px]">
         If you have any questions about your balance or the withdrawal process,
-        feel free to reach out — we’re here to help.
+        feel free to reach out — we&apos;re here to help.
       </Text>
       <Text className="text-dark text-fluid-xxs leading-[24px]">
         Thank you for your patience and for being part of{" "}

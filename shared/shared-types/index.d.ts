@@ -1936,11 +1936,26 @@ export interface EngagementTrendItem {
   uniqueCollectors: number;
 }
 
+export type DeepLinkPages =
+  | "artwork"
+  | "artworks"
+  | "orders"
+  | "billing"
+  | "review"
+  | "payment"
+  | "purchase"
+  | "profile"
+  | "payouts"
+  | "wallet"
+  | "login"
+  | "register";
 export interface DeepLinkPayload {
   role: "user" | "artist" | "gallery";
   route: string;
-  payload: Record<string, any>;
-  params: Record<string, string>;
+  payload: {
+    page: DeepLinkPages;
+  };
+  params?: Record<string, string>;
 }
 export interface DecryptedLinkResponse {
   success: boolean;

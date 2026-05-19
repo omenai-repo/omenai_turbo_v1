@@ -2,7 +2,7 @@ import { auth_uri } from "@omenai/url-config/src/config";
 import { Link, Text } from "@react-email/components";
 import ArtistEmailLayout from "./ArtistEmailLayout";
 
-const AcceptArtistMail = (artist_name: string) => {
+const AcceptArtistMail = (artist_name: string, authUrl: string) => {
   const url = auth_uri();
   return (
     <ArtistEmailLayout artist_name={artist_name}>
@@ -23,7 +23,7 @@ const AcceptArtistMail = (artist_name: string) => {
       <ul>
         <li>
           <Text className="m-0 text-fluid-xxs leading-[28px] text-gray-900">
-            <Link href={`${url}/login`}>Login</Link> to your artist account.
+            <Link href={authUrl}>Login</Link> to your artist account.
           </Text>
         </li>
 

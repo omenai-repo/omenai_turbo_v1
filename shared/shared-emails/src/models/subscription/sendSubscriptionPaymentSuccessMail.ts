@@ -4,10 +4,12 @@ import SubscriptionPaymentSuccessfulMail from "../../views/subscription/Subscrip
 type EmailData = {
   name: string;
   email: string;
+  billingUrl: string;
 };
 export const sendSubscriptionPaymentSuccessfulMail = async ({
   name,
   email,
+  billingUrl,
 }: EmailData) => {
   // Set up resend here instead
   await sendMailVerification({
@@ -15,6 +17,6 @@ export const sendSubscriptionPaymentSuccessfulMail = async ({
     from: "orders",
     to: email,
     subject: "Confirmation: Successful Subscription Payment",
-    react: SubscriptionPaymentSuccessfulMail({ name }),
+    react: SubscriptionPaymentSuccessfulMail({ name, billingUrl }),
   });
 };

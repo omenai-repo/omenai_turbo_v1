@@ -1,16 +1,17 @@
-import { sendMailVerification } from "../../controller/emailController";
 import SendTestMail from "../../views/test/SendTestMail";
 type EmailData = {
   name: string;
   email: string;
+  cta: string;
 };
-export const sendTestMail = async ({ name, email }: EmailData) => {
+import { sendMailVerification } from "../../controller/emailController";
+export const sendTestMail = async ({ name, email, cta }: EmailData) => {
   const data = await sendMailVerification({
-    prefix: "Omenai onboarding",
+    prefix: "Omenai",
     from: "orders",
     to: email,
-    subject: "Your Artist Account Has Been Successfully Verified!",
-    react: SendTestMail(name),
+    subject: "Deeplink test mail",
+    react: SendTestMail({ name, cta }),
   });
   return data;
 };

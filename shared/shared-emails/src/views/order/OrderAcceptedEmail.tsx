@@ -23,8 +23,8 @@ import { getImageFileView } from "@omenai/shared-lib/storage/getImageFileView";
 
 interface OrderAcceptedEmailProps {
   name: string;
-  orderId: string;
-  userId: string;
+  paymentUrl: string;
+  artworkUrl: string;
   artwork: Pick<
     ArtworkSchemaTypes,
     "title" | "artist" | "art_id" | "pricing" | "url"
@@ -34,13 +34,10 @@ interface OrderAcceptedEmailProps {
 
 export const OrderAcceptedEmail = ({
   name,
-  orderId,
-  userId,
   artwork,
+  paymentUrl,
+  artworkUrl,
 }: OrderAcceptedEmailProps) => {
-  const baseUrl = base_url();
-  const paymentUrl = `${baseUrl}/payment/${orderId}?id_key=${userId}`;
-  const artworkUrl = `${baseUrl}/artwork/${artwork.title}`;
   const optimizedImage = getImageFileView(artwork.url, 400);
 
   return (

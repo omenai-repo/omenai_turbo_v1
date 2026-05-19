@@ -4,11 +4,17 @@ import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import { CreateOrder } from "@omenai/shared-models/models/orders/CreateOrderSchema";
 import { sendOrderDeclinedMail } from "@omenai/shared-emails/src/models/orders/orderDeclinedMail";
 import { toUTCDate } from "@omenai/shared-utils/src/toUtcDate";
-import { CreateOrderModelTypes } from "@omenai/shared-types";
+import { CreateOrderModelTypes, DeepLinkPayload } from "@omenai/shared-types";
 import { lenientRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
 import { createErrorRollbarReport } from "../../../util";
 import { verifyAuthVercel } from "../../utils";
+import {
+  generateArtworkDeeplink,
+  generateCatalogDeeplink,
+} from "@omenai/shared-lib/deeplink/config";
+import { base_url, deeplink_url } from "@omenai/url-config/src/config";
+import { encryptLinkData } from "@omenai/shared-utils/src/deeplinkCrypto";
 
 // NOTE: Run every 5 minutes
 export const GET = withRateLimit(lenientRateLimit)(async function GET(
@@ -81,14 +87,19 @@ export const GET = withRateLimit(lenientRateLimit)(async function GET(
       "order_accepted.status": "declined",
     });
 
+    const catalogUrl = generateCatalogDeeplink();
+
     await Promise.allSettled(
       updatedOrders.map(async (order) => {
+        const artworkUrl = generateArtworkDeeplink(order.artwork_data.art_id);
         try {
           await sendOrderDeclinedMail({
             name: order.buyer_details.name,
             email: order.buyer_details.email,
             reason: "The payment period for this artwork has expired.",
             artwork_data: order.artwork_data,
+            artworkUrl,
+            catalogUrl,
           });
         } catch (mailErr) {
           createErrorRollbarReport(

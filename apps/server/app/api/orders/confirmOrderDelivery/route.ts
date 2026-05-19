@@ -12,6 +12,7 @@ import { sendGalleryShipmentSuccessEmail } from "@omenai/shared-emails/src/model
 import { sendArtistShipmentSuccessEmail } from "@omenai/shared-emails/src/models/shipment/sendShipmentSuccessEmailToArtist";
 import { sendBuyerShipmentSuccessEmail } from "@omenai/shared-emails/src/models/shipment/sendShipmentSuccessEmailToBuyer";
 import z from "zod";
+import { generateDashboardDeeplink } from "@omenai/shared-lib/deeplink/config";
 
 const config: CombinedConfig = {
   ...strictRateLimit,
@@ -60,6 +61,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     });
 
     if (order.seller_designation === "artist") {
+      const walletUrl = generateDashboardDeeplink("artist", "wallet");
       await sendArtistShipmentSuccessEmail({
         email: order.seller_details.email,
         name: order.seller_details.name,
@@ -68,8 +70,10 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
         artwork: order.artwork_data.title,
         artistName: order.artwork_data.artist,
         price: formatPrice(order.artwork_data.pricing.usd_price),
+        walletUrl,
       });
     } else {
+      const orderUrl = generateDashboardDeeplink("gallery", "orders");
       await sendGalleryShipmentSuccessEmail({
         email: order.seller_details.email,
         name: order.seller_details.name,
@@ -78,6 +82,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
         artwork: order.artwork_data.title,
         artistName: order.artwork_data.artist,
         price: formatPrice(order.artwork_data.pricing.usd_price),
+        orderUrl,
       });
     }
 

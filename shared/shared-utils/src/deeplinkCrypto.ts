@@ -3,14 +3,14 @@ import crypto from "crypto";
 
 const ALGORITHM = "aes-256-gcm";
 
-const SECRET_KEY = process.env.DEEP_LINK_SECRET || "";
+const SECRET_KEY = process.env.DEEPLINK_SECRET || "";
 
 /**
  * Encrypts the payload into a URL-safe string
  */
 export function encryptLinkData(data: DeepLinkPayload): string {
   if (!SECRET_KEY || Buffer.from(SECRET_KEY, "hex").length !== 32) {
-    throw new Error("Invalid DEEP_LINK_SECRET. Must be a 32-byte hex string.");
+    throw new Error("Invalid DEEPLINK_SECRET. Must be a 32-byte hex string.");
   }
 
   // Generate a random 12-byte Initialization Vector (standard for GCM)
