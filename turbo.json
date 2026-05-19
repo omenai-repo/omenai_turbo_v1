@@ -290,6 +290,10 @@
       "dependsOn": ["^build"],
       "cache": false,
       "outputs": []
+    },
+    "test:integration": {
+      "cache": false,
+      "outputs": []
     }
   }
 }

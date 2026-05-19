@@ -7,8 +7,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "vitest run",
-    "test:watch": "vitest"
+    "test": "vitest run --config vitest.config.ts && vitest run --config vitest.integration.config.ts",
+    "test:watch": "vitest --config vitest.config.ts",
+    "test:unit": "vitest run --config vitest.config.ts",
+    "test:integration": "vitest run --config vitest.integration.config.ts"
   },
   "devDependencies": {
     "@omenai/cloudinary-config": "*",
@@ -25,6 +27,7 @@
     "@omenai/shared-utils": "*",
     "@omenai/typescript-config": "*",
     "@omenai/upstash-config": "*",
+    "mongodb-memory-server": "^10.1.4",
     "vitest": "*"
   },
   "dependencies": {
