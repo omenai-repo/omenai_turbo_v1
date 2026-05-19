@@ -5,7 +5,6 @@
       {
         "appID": "S4TT3CQRYQ.com.omenai.omenaimobile",
         "paths": [
-          "/*",
           "/dl",
           "/dl*",
           "/dl?*",
