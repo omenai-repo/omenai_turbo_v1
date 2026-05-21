@@ -28,6 +28,8 @@ interface OrderDeclinedEmailProps {
     ArtworkSchemaTypes,
     "title" | "artist" | "art_id" | "pricing" | "url"
   >;
+  artworkUrl: string;
+  catalogUrl: string;
   email?: string;
 }
 
@@ -35,10 +37,9 @@ const OrderDeclinedEmail = ({
   recipientName,
   declineReason,
   artwork,
+  artworkUrl,
+  catalogUrl,
 }: OrderDeclinedEmailProps) => {
-  const baseUrl = base_url();
-  const artworkUrl = `${baseUrl}/artwork/${artwork.url}`;
-  const catalogUrl = `${baseUrl}/catalog`;
   const optimizedImage = getImageFileView(artwork.url, 400);
 
   return (

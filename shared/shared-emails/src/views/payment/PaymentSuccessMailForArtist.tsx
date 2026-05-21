@@ -30,6 +30,7 @@ interface PaymentSuccessMailArtistProps {
   order_id: string;
   order_date: string;
   transaction_id: string;
+  walletUrl: string;
 }
 
 export const PaymentSuccessMailArtist = ({
@@ -41,6 +42,7 @@ export const PaymentSuccessMailArtist = ({
   order_date,
   order_id,
   transaction_id,
+  walletUrl,
 }: PaymentSuccessMailArtistProps) => {
   const optimizedImage = getImageFileView(artworkImage, 400);
 
@@ -242,7 +244,7 @@ export const PaymentSuccessMailArtist = ({
 
             <Section style={{ textAlign: "center", margin: "32px 0" }}>
               <Button
-                href={`${dashboard_url()}/dashboard/wallet`}
+                href={walletUrl}
                 className="btn-main"
                 style={{
                   backgroundColor: "#000000",

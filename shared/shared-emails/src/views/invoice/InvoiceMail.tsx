@@ -45,9 +45,9 @@ export default function InvoiceMail({ name }: InvoiceTestEmailProps) {
             <Text className="mb-4 text-gray-700">Hi {name},</Text>
 
             <Text className="mb-4 text-gray-700">
-              We’re happy to let you know that your transaction was successful.
-              Your receipt has been generated and is attached to this email as a
-              PDF for your records.
+              We&apos;re happy to let you know that your transaction was
+              successful. Your receipt has been generated and is attached to
+              this email as a PDF for your records.
             </Text>
 
             <Text className="mb-8 text-gray-700">

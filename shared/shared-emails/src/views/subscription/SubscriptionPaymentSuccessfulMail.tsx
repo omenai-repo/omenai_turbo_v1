@@ -19,10 +19,12 @@ import * as React from "react";
 interface SubscriptionPaymentSuccessfulEmailProps {
   name: string;
   email?: string;
+  billingUrl: string;
 }
 
 export const SubscriptionPaymentSuccessfulEmail = ({
   name,
+  billingUrl,
 }: SubscriptionPaymentSuccessfulEmailProps) => {
   return (
     <Html>
@@ -97,7 +99,7 @@ export const SubscriptionPaymentSuccessfulEmail = ({
             {/* Engagement CTA */}
             <Section style={{ margin: "32px 0", textAlign: "left" }}>
               <Button
-                href={`${dashboard_url()}/gallery/dashboard`}
+                href={billingUrl}
                 className="btn-main"
                 style={{
                   backgroundColor: "#000000",

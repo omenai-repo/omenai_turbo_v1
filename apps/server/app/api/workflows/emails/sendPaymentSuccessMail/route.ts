@@ -4,6 +4,7 @@ import { sendPaymentSuccessGalleryMail } from "@omenai/shared-emails/src/models/
 import { formatIntlDateTime } from "@omenai/shared-utils/src/formatIntlDateTime";
 import { serve } from "@upstash/workflow/nextjs";
 import { NextResponse } from "next/server";
+import { generateDashboardDeeplink } from "@omenai/shared-lib/deeplink/config";
 
 type Payload = {
   buyer_email: string;
@@ -40,6 +41,7 @@ export const { POST } = serve<Payload>(async (ctx) => {
     }),
     ctx.run("send_mail_to_seller", async () => {
       if (payload.seller_entity === "artist") {
+        const walletUrl = generateDashboardDeeplink("artist", "wallet");
         const data: { error: boolean; message: string } =
           await sendPaymentSuccessMailArtist({
             email: payload.seller_email,
@@ -51,12 +53,14 @@ export const { POST } = serve<Payload>(async (ctx) => {
             order_id: payload.order_id,
             artistName: payload.artist,
             artworkImage: payload.artwork_image,
+            walletUrl,
           });
 
         return data.error;
       }
 
       if (payload.seller_entity === "gallery") {
+        const payoutUrl = generateDashboardDeeplink("gallery", "payouts");
         const data: { error: boolean; message: string } =
           await sendPaymentSuccessGalleryMail({
             email: payload.seller_email,
@@ -68,6 +72,7 @@ export const { POST } = serve<Payload>(async (ctx) => {
             order_id: payload.order_id,
             artistName: payload.artist,
             artworkImage: payload.artwork_image,
+            payoutUrl,
           });
 
         return data.error;

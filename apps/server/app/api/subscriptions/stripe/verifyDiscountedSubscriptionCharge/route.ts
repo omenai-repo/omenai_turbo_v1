@@ -30,6 +30,7 @@ import { getUploadLimitLookup } from "@omenai/shared-utils/src/uploadLimitUtilit
 import { Waitlist } from "@omenai/shared-models/models/auth/WaitlistSchema";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import z from "zod";
+import { generateDashboardDeeplink } from "@omenai/shared-lib/deeplink/config";
 
 const config: CombinedConfig = {
   ...strictRateLimit,
@@ -257,11 +258,13 @@ async function processSubscriptionSuccess(
 
     const accountForEmail = await AccountGallery.findOne({ gallery_id });
 
+    const billingUrl = generateDashboardDeeplink("gallery", "billing");
     if (accountForEmail) {
       try {
         await sendSubscriptionPaymentSuccessfulMail({
           name: accountForEmail.name ?? "",
           email: accountForEmail.email ?? "",
+          billingUrl,
         });
       } catch (emailError) {
         createErrorRollbarReport(

@@ -15,16 +15,15 @@ import {
   getDHLTracking,
   UnifiedTrackingResponse,
 } from "../../../services/dhl_service";
+import { generateDashboardDeeplink } from "@omenai/shared-lib/deeplink/config";
 
-// TODO: Check 2 days past and In transit
 /**
  * Checks if a given date is at least two days in the past from now.
- * NOTE: This means we only check tracking for orders that are 2 days PAST their ETA?
- * Please verify if this business logic is intentional. usually you check all "In Transit" orders.
+ * NOTE: This means we only check tracking for orders that are 2 days PAST their ETA
  */
 const isDateAtLeastTwoDaysPast = (targetDate: Date): boolean => {
   const now = new Date();
-  const twoDaysInMillis = 1 * 24 * 60 * 60 * 1000;
+  const twoDaysInMillis = 2 * 24 * 60 * 60 * 1000;
   return now.getTime() - targetDate.getTime() >= twoDaysInMillis;
 };
 
@@ -169,6 +168,7 @@ async function processOrder(order: any, dbConnection: any) {
           seller_designation === "artist"
         ) {
           if (seller_designation === "gallery") {
+            const orderUrl = generateDashboardDeeplink("gallery", "orders");
             await sendGalleryShipmentSuccessfulMail({
               name: seller_details.name,
               email: seller_details.email,
@@ -177,6 +177,7 @@ async function processOrder(order: any, dbConnection: any) {
               artwork: order.artwork_data.title,
               artistName: order.artwork_data.artist,
               price: order.artwork_data.pricing.usd_price,
+              orderUrl,
             });
           }
         }

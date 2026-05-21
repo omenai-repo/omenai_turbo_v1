@@ -13,6 +13,7 @@ import { CombinedConfig } from "@omenai/shared-types";
 import { redis } from "@omenai/upstash-config";
 import { createErrorRollbarReport, validateRequestBody } from "../../util";
 import z from "zod";
+import { generateAuthDeeplink } from "@omenai/shared-lib/deeplink/config";
 
 const config: CombinedConfig = {
   ...strictRateLimit,
@@ -63,9 +64,11 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
         500,
       );
     }
+    const authUrl = generateAuthDeeplink("gallery", "login");
     await sendGalleryAcceptedMail({
       name,
       email,
+      authUrl,
     });
 
     return NextResponse.json(

@@ -19,6 +19,7 @@ interface SendGalleryShipmentSuccessProps {
   artworkImage: string;
   artistName: string;
   price: string;
+  orderUrl: string;
 }
 
 export default function SendGalleryShipmentSuccess({
@@ -28,6 +29,7 @@ export default function SendGalleryShipmentSuccess({
   artworkImage,
   artistName,
   price,
+  orderUrl,
 }: SendGalleryShipmentSuccessProps) {
   const optimizedImage = getImageFileView(artworkImage, 400);
 
@@ -123,7 +125,7 @@ export default function SendGalleryShipmentSuccess({
 
           <Section style={{ textAlign: "center", margin: "32px 0" }}>
             <Link
-              href={`${dashboard_url()}/gallery/orders`}
+              href={orderUrl}
               className="btn-main"
               style={{
                 display: "inline-block",

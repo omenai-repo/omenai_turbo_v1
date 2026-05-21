@@ -153,16 +153,8 @@ export const SubscriptionPaymentPendingEmail = ({
             >
               Thank you for your patience and for choosing Omenai.
               <br />
-              <br />
               Warm regards,
               <br />
-              <br />
-              <strong
-                className="heading-main text-gray-900"
-                style={{ fontWeight: "600" }}
-              >
-                Moses
-              </strong>
               <br />
               <span
                 className="text-muted text-gray-500"

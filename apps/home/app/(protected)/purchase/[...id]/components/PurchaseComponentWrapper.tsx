@@ -34,19 +34,16 @@ export default function PurchaseComponentWrapper({ slug }: { slug: string }) {
     queryKey: ["fetch_artwork_on purchase", slug],
     queryFn: async () => {
       const [userData, artwork] = await Promise.all([
-        fetchUserData(user.id),
+        fetchUserData(user.user_id),
         fetchSingleArtworkOnPurchase(slug),
       ]);
 
       if (!userData?.isOk || !artwork?.isOk) {
-        toast.error("Error notification", {
-          description: "Something went wrong, please try again later",
-          style: {
-            background: "red",
-            color: "white",
-            borderRadius: "0px", // Sharp corners for errors
-          },
-        });
+        toast_notif(
+          "Failed to fetch necessary data. Please try again later.",
+          "error",
+        );
+
         throw new Error("Something went wrong");
       } else {
         set_address_on_order(userData.data.address);

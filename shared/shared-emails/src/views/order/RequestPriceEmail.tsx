@@ -18,7 +18,6 @@ import {
 import { ArtworkSchemaTypes } from "@omenai/shared-types";
 import EmailFooter from "../../components/Footer";
 import EmailArtworkCard from "../components/EmailArtworkCard";
-import { COMPANY_INFO } from "../../constants/constants";
 import { getImageFileView } from "@omenai/shared-lib/storage/getImageFileView";
 import * as React from "react";
 
@@ -28,13 +27,16 @@ interface RequestPriceEmailProps {
     ArtworkSchemaTypes,
     "title" | "artist" | "art_id" | "pricing" | "url" | "medium"
   >;
+  cta: string;
+  artworkUrl: string;
 }
 
 export const RequestPriceEmail = ({
   name,
   artwork_data,
+  cta,
+  artworkUrl,
 }: RequestPriceEmailProps) => {
-  const artworkUrl = `${base_url()}/artwork/${artwork_data.art_id}`;
   const optimizedImage = getImageFileView(artwork_data.url, 400);
 
   return (
@@ -140,7 +142,7 @@ export const RequestPriceEmail = ({
 
             <Section style={{ textAlign: "center", margin: "32px 0" }}>
               <Button
-                href={`${base_url()}/purchase/${encodeURIComponent(artwork_data.art_id)}`}
+                href={cta}
                 className="btn-main"
                 style={{
                   backgroundColor: "#000000",
@@ -154,7 +156,7 @@ export const RequestPriceEmail = ({
                   letterSpacing: "0.3px",
                 }}
               >
-                Initiate Purchase
+                Initiate artwork Purchase
               </Button>
             </Section>
 

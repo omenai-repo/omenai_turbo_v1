@@ -32,6 +32,10 @@ import { createErrorRollbarReport, validateRequestBody } from "../../util";
 import { validateDHLAddress } from "../../util";
 import z from "zod";
 import { PriceRequest } from "@omenai/shared-models/models/artworks/ArtworkPriceRequestSchema";
+import {
+  generateArtworkDeeplink,
+  generateDashboardDeeplink,
+} from "@omenai/shared-lib/deeplink/config";
 
 const config: CombinedConfig = {
   ...standardRateLimit,
@@ -78,7 +82,7 @@ const CreateOrderSchema = z.object({
     stateCode: z.string(),
     zip: z.string(),
   }),
-  designation: z.string(),
+  designation: z.enum(["artist", "gallery"]),
 });
 
 export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
@@ -294,6 +298,8 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     }
 
     // Run all side effects concurrently
+    const artworkUrl = generateArtworkDeeplink(art_id);
+    const orderUrl = generateDashboardDeeplink(designation, "orders");
     const date = getCurrentDate();
     await Promise.all([
       sendOrderRequestToGalleryMail({
@@ -302,12 +308,14 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
         buyer: buyerData.name,
         date,
         artwork_data: artwork,
+        orderUrl,
       }),
       sendOrderRequestReceivedMail({
         name: buyerData.name,
         email: buyerData.email,
         artwork_data: artwork,
         orderId: createOrder.order_id,
+        artworkUrl,
       }),
       ...notificationTasks,
     ]);

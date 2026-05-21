@@ -28,6 +28,7 @@ import { ForbiddenError } from "../../../../../custom/errors/dictionary/errorDic
 import { createErrorRollbarReport } from "../../../util";
 import { Waitlist } from "@omenai/shared-models/models/auth/WaitlistSchema";
 import { getUploadLimitLookup } from "@omenai/shared-utils/src/uploadLimitUtility";
+import { generateDashboardDeeplink } from "@omenai/shared-lib/deeplink/config";
 
 /* -------------------------------------------------------------------------- */
 /*                                    TYPES                                   */
@@ -307,13 +308,15 @@ function getEmailForStatus(
   name: string,
   email: string,
 ) {
+  const billingUrl = generateDashboardDeeplink("gallery", "billing");
   if (status === "succeeded" && shouldSendSuccess) {
-    return () => sendSubscriptionPaymentSuccessfulMail({ name, email });
+    return () =>
+      sendSubscriptionPaymentSuccessfulMail({ name, email, billingUrl });
   }
   if (status === "processing") {
     return () => sendSubscriptionPaymentPendingMail({ name, email });
   }
-  return () => sendSubscriptionPaymentFailedMail({ name, email });
+  return () => sendSubscriptionPaymentFailedMail({ name, email, billingUrl });
 }
 
 function getResponseForStatus(
