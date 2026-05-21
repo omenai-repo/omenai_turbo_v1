@@ -41,7 +41,7 @@ const DesktopNavbar = () => {
       <nav
         className="
     sticky z-[30] top-0 left-0 right-0
-    p-4 md:p-8
+    px-4 py-2 md:px-8 
     bg-white/75 backdrop-blur-xl
     border-b border-neutral-200/60
     supports-[backdrop-filter]:bg-white/90
