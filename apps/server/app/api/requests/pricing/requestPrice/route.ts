@@ -24,6 +24,10 @@ import {
 } from "../../../../../custom/errors/dictionary/errorDictionary";
 import { base_url, deeplink_url } from "@omenai/url-config/src/config";
 import { encryptLinkData } from "@omenai/shared-utils/src/deeplinkCrypto";
+import {
+  generateArtworkDeeplink,
+  generatePurchaseDeeplink,
+} from "@omenai/shared-lib/deeplink/config";
 
 const config: CombinedConfig = {
   ...standardRateLimit,
@@ -115,8 +119,8 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
       },
     };
 
-    const token = encryptLinkData(data);
-    const redirectLink = `${deeplink_url()}?token=${token}`;
+    const artworkUrl = generateArtworkDeeplink(artwork.art_id);
+    const redirectLink = generatePurchaseDeeplink(artwork.art_id);
     // ----------------------------------------------
 
     // Fire off the email and analytics in parallel so we don't block the response
@@ -126,6 +130,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
         email,
         artwork_data: artwork,
         cta: redirectLink,
+        artworkUrl,
       }),
       trackPlatformEvent({
         req: request,

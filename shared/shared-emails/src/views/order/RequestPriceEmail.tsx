@@ -28,14 +28,15 @@ interface RequestPriceEmailProps {
     "title" | "artist" | "art_id" | "pricing" | "url" | "medium"
   >;
   cta: string;
+  artworkUrl: string;
 }
 
 export const RequestPriceEmail = ({
   name,
   artwork_data,
   cta,
+  artworkUrl,
 }: RequestPriceEmailProps) => {
-  const artworkUrl = `${base_url()}/artwork/${artwork_data.art_id}`;
   const optimizedImage = getImageFileView(artwork_data.url, 400);
 
   return (

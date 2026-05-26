@@ -29,9 +29,7 @@ export default function SearchResultWrapper() {
 
   return (
     <div className="min-h-screen bg-white flex flex-col justify-between">
-      <DesktopNavbar />
-
-      <main className=" px-4 md:px-8 mx-auto pb-10 flex-grow">
+      <main className=" px-4 md:px-8 mx-auto py-5 flex-grow">
         {isLoading ? (
           <ArtworksListingSkeletonLoader />
         ) : !artworks || artworks.length === 0 ? (

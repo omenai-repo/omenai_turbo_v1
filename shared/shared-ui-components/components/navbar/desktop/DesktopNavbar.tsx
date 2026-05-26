@@ -40,12 +40,12 @@ const DesktopNavbar = () => {
     <>
       <nav
         className="
-          fixed z-[30] top-0 left-0 right-0
-          px-4 py-2 md:px-8
-          bg-white/75 backdrop-blur-xl
-          border-b border-neutral-200/60
-          supports-[backdrop-filter]:bg-white/90
-        "
+    sticky z-[30] top-0 left-0 right-0
+    px-4 py-2 md:px-8 
+    bg-white/75 backdrop-blur-xl
+    border-b border-neutral-200/60
+    supports-[backdrop-filter]:bg-white/90
+  "
       >
         <div className="max-w-full mx-auto flex items-center justify-between">
           {/* LEFT: Logo + Nav links */}
@@ -133,9 +133,6 @@ const DesktopNavbar = () => {
       </nav>
 
       <MobileNavbar />
-
-      {/* Spacer */}
-      <div className="h-[65px]" />
     </>
   );
 };

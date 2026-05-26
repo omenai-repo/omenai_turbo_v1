@@ -10,9 +10,8 @@ import { HighRiskProvider } from "@omenai/package-provider/ConfigCatProvider";
 import "@mantine/core/styles.css";
 import "@mantine/dates/styles.css";
 import { LayoutWrapper } from "./LayoutWrapper";
-import { ColorSchemeScript, mantineHtmlProps } from "@mantine/core";
-import { headers } from "next/headers";
-
+import { mantineHtmlProps } from "@mantine/core";
+import AndroidSmartBanner from "@omenai/shared-ui-components/components/smartBanner/AndroidSmartBanner";
 export const metadata: Metadata = {
   title: "Omenai - Discover and collect contemporary African Art",
   description:
@@ -53,6 +52,10 @@ export default async function RootLayout({
     <html lang="en" {...mantineHtmlProps}>
       <head>
         <meta name="color-scheme" content="light" />
+        <meta
+          name="apple-itunes-app"
+          content="app-id=6748387089, app-argument=omenaimobile://"
+        />
 
         <link rel="icon" href="/favicon.ico" />
         <link rel="shortcut icon" href="/favicon.ico" />
@@ -62,6 +65,7 @@ export default async function RootLayout({
       <body
         className={`${work_sans.variable} bg-white ${pt_serif.variable} font-sans flex flex-col justify-center`}
       >
+        <AndroidSmartBanner />
         {/* 3. Providers must be INSIDE body */}
         <RollbarProvider config={clientConfig}>
           <HighRiskProvider>
