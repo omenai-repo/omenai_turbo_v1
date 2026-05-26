@@ -2,6 +2,7 @@ import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
 import SupportTicket from "@omenai/shared-models/models/support/SupportTicketSchema";
 import { NextResponse } from "next/server";
 import { handleErrorEdgeCases } from "../../../../../custom/errors/handler/errorHandler";
+import { NotFoundError } from "../../../../../custom/errors/dictionary/errorDictionary";
 import {
   createErrorRollbarReport,
   validateGetRouteParams,
@@ -54,6 +55,8 @@ export const PATCH = withRateLimitHighlightAndCsrf(config)(async function PATCH(
       },
       { new: true },
     );
+
+    if (!updatedTicket) throw new NotFoundError("Support ticket not found");
 
     return NextResponse.json({ success: true, data: updatedTicket });
   } catch (error) {
