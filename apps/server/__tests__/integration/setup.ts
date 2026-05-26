@@ -48,6 +48,19 @@ vi.mock("@omenai/shared-lib/payments/stripe/stripe", () => ({
   },
 }));
 
+// Redis (Upstash) — always simulate a cold cache so routes fall back to MongoDB.
+vi.mock("@omenai/upstash-config", () => ({
+  redis: {
+    mget: vi.fn().mockImplementation((...keys: string[]) =>
+      Promise.resolve(Array(keys.length).fill(null)),
+    ),
+    get: vi.fn().mockResolvedValue(null),
+    set: vi.fn().mockResolvedValue("OK"),
+    del: vi.fn().mockResolvedValue(1),
+    scan: vi.fn().mockResolvedValue([0, []]),
+  },
+}));
+
 // Replace connectMongoDB with one that targets the in-memory server.
 // The real implementation throws at import time when MONGODB_URI is absent,
 // so we must intercept the whole module rather than set an env var.
