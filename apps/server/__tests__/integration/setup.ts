@@ -58,6 +58,7 @@ vi.mock("@omenai/upstash-config", () => ({
     set: vi.fn().mockResolvedValue("OK"),
     del: vi.fn().mockResolvedValue(1),
     scan: vi.fn().mockResolvedValue([0, []]),
+    smembers: vi.fn().mockResolvedValue([]),
   },
 }));
 
