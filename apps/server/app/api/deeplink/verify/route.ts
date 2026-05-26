@@ -1,9 +1,9 @@
 import { withRateLimit } from "@omenai/shared-lib/auth/middleware/rate_limit_middleware";
 import { NextResponse } from "next/server";
 import { decryptLinkData } from "@omenai/shared-utils/src/deeplinkCrypto";
-import { strictRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
+import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_configs";
 
-export const POST = withRateLimit(strictRateLimit)(async function POST(
+export const POST = withRateLimit(standardRateLimit)(async function POST(
   request: Request,
 ) {
   try {

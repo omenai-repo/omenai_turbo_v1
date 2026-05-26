@@ -82,7 +82,7 @@ const CreateOrderSchema = z.object({
     stateCode: z.string(),
     zip: z.string(),
   }),
-  designation: z.string(),
+  designation: z.enum(["artist", "gallery"]),
 });
 
 export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
@@ -299,7 +299,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
 
     // Run all side effects concurrently
     const artworkUrl = generateArtworkDeeplink(art_id);
-    const orderUrl = generateDashboardDeeplink("gallery", "orders");
+    const orderUrl = generateDashboardDeeplink(designation, "orders");
     const date = getCurrentDate();
     await Promise.all([
       sendOrderRequestToGalleryMail({

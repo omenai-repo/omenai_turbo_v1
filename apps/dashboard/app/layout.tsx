@@ -62,6 +62,10 @@ export default async function DashboardRootLayout({
         <html lang="en" {...mantineHtmlProps}>
           <head>
             <meta name="color-scheme" content="light" />
+            <meta
+              name="apple-itunes-app"
+              content="app-id=6748387089, app-argument=omenaimobile://"
+            />
             <link rel="icon" href="/favicon.ico" />
             <link rel="shortcut icon" href="/favicon.ico" />
             <link rel="apple-touch-icon" href="/apple-touch-icon.png" />

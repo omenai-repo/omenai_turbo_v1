@@ -61,6 +61,10 @@ export default async function RootLayout({
         <html lang="en" {...mantineHtmlProps}>
           <head>
             <meta name="color-scheme" content="light" />
+            <meta
+              name="apple-itunes-app"
+              content="app-id=6748387089, app-argument=omenaimobile://"
+            />
             <ColorSchemeScript defaultColorScheme="light" nonce={nonce} />
 
             {/* Favicon fallback for localhost/dev */}

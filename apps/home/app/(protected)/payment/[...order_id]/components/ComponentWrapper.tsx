@@ -34,9 +34,9 @@ export default function ComponentWrapper({
         );
 
         return { order: data.data, locked: lock_status?.data.locked };
-      } else {
-        throw new Error("Uh oh! Something went wrong!");
       }
+
+      return undefined;
     },
     refetchOnWindowFocus: false,
   });
@@ -49,20 +49,19 @@ export default function ComponentWrapper({
       </div>
     );
   }
+  if (!data) throw new Error("Unable to load order details.");
 
-  if (data!.order.buyer_details.id !== user_id_key) notFound();
-
-  if (data!.order === null) throw new Error("Something went wrong");
+  if (data.order.buyer_details.id !== user_id_key) notFound();
 
   if (
-    data!.order.payment_information.status === "completed" ||
-    data!.order.order_accepted.status === "" ||
-    data!.order.order_accepted.status === "declined"
+    data.order.payment_information.status === "completed" ||
+    data.order.order_accepted.status === "" ||
+    data.order.order_accepted.status === "declined"
   )
     notFound();
 
   // Polished "Unavailable" State
-  if (!data!.order.availability) {
+  if (!data.order.availability) {
     return (
       <div className="w-full h-screen flex flex-col items-center justify-center bg-gray-50 px-6">
         <div className="max-w-md text-center space-y-3">
