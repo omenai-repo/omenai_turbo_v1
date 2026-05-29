@@ -25,7 +25,7 @@ const mockGallery = {
 
 function makeGetRequest(id?: string): unknown {
   const url = `http://localhost/api/requests/gallery/fetchProfile${id ? `?id=${id}` : ""}`;
-  return { nextUrl: new URL(url) };
+  return { nextUrl: new URL(url), url };
 }
 
 function mockFindOne(value: typeof mockGallery | null) {

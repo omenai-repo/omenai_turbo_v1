@@ -84,17 +84,17 @@ describe("POST /api/notifications/createNotification", () => {
     expect(response.status).toBe(500);
   });
 
-  it("returns 500 when body has an invalid type enum value", async () => {
+  it("returns 400 when body has an invalid type enum value", async () => {
     const response = await POST(
       makeRequest({ ...validBody, data: { ...validBody.data, type: "invalid_type" } }),
     );
 
-    expect(response.status).toBe(500);
+    expect(response.status).toBe(400);
   });
 
-  it("returns 500 when required fields are missing", async () => {
+  it("returns 400 when required fields are missing", async () => {
     const response = await POST(makeRequest({ title: "Test" }));
 
-    expect(response.status).toBe(500);
+    expect(response.status).toBe(400);
   });
 });

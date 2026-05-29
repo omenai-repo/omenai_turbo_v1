@@ -26,7 +26,7 @@ const mockArtist = {
 
 function makeGetRequest(id?: string): unknown {
   const url = `http://localhost/api/requests/artist/fetchProfile${id ? `?id=${id}` : ""}`;
-  return { nextUrl: new URL(url) };
+  return { nextUrl: new URL(url), url };
 }
 
 function mockFindOne(value: typeof mockArtist | null) {

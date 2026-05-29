@@ -25,7 +25,7 @@ const mockUser = {
 
 function makeGetRequest(id?: string): unknown {
   const url = `http://localhost/api/requests/individual/getUser${id ? `?id=${id}` : ""}`;
-  return { nextUrl: new URL(url) };
+  return { nextUrl: new URL(url), url };
 }
 
 function mockFindOne(value: typeof mockUser | null) {

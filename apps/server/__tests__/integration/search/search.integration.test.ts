@@ -14,14 +14,26 @@ import { POST } from "../../../app/api/search/route";
 // ── Fixture factories ─────────────────────────────────────────────────────────
 
 function makeArtwork(overrides: Record<string, any> = {}) {
+  const uid = Math.random().toString(36).slice(2, 10);
   return {
-    art_id: "art-001",
-    title: "Sunset Horizon",
+    art_id: `art-${uid}`,
+    title: `Sunset Horizon ${uid}`,
     artist: "Jane Doe",
     author_id: "artist-001",
     role_access: { role: "gallery" },
     like_IDs: [],
-    url: "https://example.com/art.jpg",
+    url: `https://example.com/art-${uid}.jpg`,
+    year: 2020,
+    medium: "Oil on canvas",
+    rarity: "unique",
+    materials: "Canvas",
+    dimensions: { height: "50", width: "40" },
+    pricing: { price: 1000, usd_price: 1000, currency: "USD", shouldShowPrice: "yes" },
+    artist_birthyear: "1990",
+    artist_country_origin: "US",
+    certificate_of_authenticity: "yes",
+    signature: "yes",
+    packaging_type: "rolled",
     ...overrides,
   };
 }

@@ -52,7 +52,9 @@ function makeOrder(overrides: Record<string, any> = {}) {
       title: "Test Artwork",
       url: "img.jpg",
       artist: "Test Artist",
-      pricing: { usd_price: 1000 },
+      pricing: { usd_price: 1000, shouldShowPrice: "yes" },
+      dimensions: { width: 50, height: 70 },
+      packaging_type: "rolled",
     },
     shipping_details: {
       addresses: {

@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
   try {
     await connectMongoDB();
 
-    const searchParams = request.nextUrl.searchParams;
+    const searchParams = new URL(request.url).searchParams;
     const idParams = searchParams.get("id");
     const { id } = validateGetRouteParams(GetOrderByFilterSchema, {
       id: idParams,

@@ -2,6 +2,7 @@ import { standardRateLimit } from "@omenai/shared-lib/auth/configs/rate_limit_co
 import { withRateLimitHighlightAndCsrf } from "@omenai/shared-lib/auth/middleware/combined_middleware";
 import { CombinedConfig } from "@omenai/shared-types";
 import { NextRequest, NextResponse } from "next/server";
+import { BadRequestError } from "../../../../custom/errors/dictionary/errorDictionary";
 import { Follow } from "@omenai/shared-models/models/follows/FollowSchema";
 import { AccountGallery } from "@omenai/shared-models/models/auth/GallerySchema";
 import { AccountIndividual } from "@omenai/shared-models/models/auth/IndividualSchema";
@@ -66,9 +67,11 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
     });
   } catch (error: any) {
     console.log(error);
-    // Catch duplicate key error (11000) if they are already following
     if (error.code === 11000) {
       return NextResponse.json({ error: "Already following" }, { status: 400 });
+    }
+    if (error instanceof BadRequestError) {
+      return NextResponse.json({ message: error.message }, { status: 400 });
     }
     return NextResponse.json(
       { error: "Internal Server Error" },

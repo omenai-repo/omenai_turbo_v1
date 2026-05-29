@@ -21,9 +21,15 @@ const { mockRatelimitInstance } = vi.hoisted(() => ({
   },
 }));
 
-vi.mock("@upstash/ratelimit", () => ({
-  Ratelimit: vi.fn(() => mockRatelimitInstance),
-}));
+vi.mock("@upstash/ratelimit", () => {
+  function MockRatelimit() {
+    return mockRatelimitInstance;
+  }
+  MockRatelimit.slidingWindow = function () {
+    return {};
+  };
+  return { Ratelimit: MockRatelimit };
+});
 
 vi.mock("@ai-sdk/google", () => ({
   google: vi.fn(() => ({})),

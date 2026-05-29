@@ -13,7 +13,7 @@ const GetUserSchema = z.object({
   user_id: z.string(),
 });
 export async function GET(request: NextRequest) {
-  const searchParams = request.nextUrl.searchParams;
+  const searchParams = new URL(request.url).searchParams;
   const user_idParams = searchParams.get("id");
 
   try {

@@ -19,6 +19,7 @@ const errorStatusMap: { [key: string]: number } = {
   BadRequestError: BAD_REQUEST_STATUS,
   RateLimitExceededError: RATE_LIMIT_EXCEEDED_STATUS,
   ServiceUnavailableError: SERVICE_UNAVAILABLE_STATUS,
+  ZodError: BAD_REQUEST_STATUS,
 };
 
 const createErrorObject = (message: string, status: number) => {

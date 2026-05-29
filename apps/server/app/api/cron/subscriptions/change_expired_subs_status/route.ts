@@ -14,16 +14,6 @@ import { verifyAuthVercel } from "../../utils";
 export const revalidate = 0;
 export const dynamic = "force-dynamic";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
-const now = toUTCDate(new Date());
-
-const threeDaysAgo = new Date(now);
-threeDaysAgo.setDate(now.getDate() - 3);
-
-const sixDaysAgo = new Date(now);
-sixDaysAgo.setDate(now.getDate() - 6);
-
 // NOTE: Run every hour - cancels subscriptions that have been expired for 3+ days
 export const GET = withRateLimit(lenientRateLimit)(async function GET(
   request: Request,
@@ -32,6 +22,14 @@ export const GET = withRateLimit(lenientRateLimit)(async function GET(
     await verifyAuthVercel(request);
 
     await connectMongoDB();
+
+    const resend = new Resend(process.env.RESEND_API_KEY);
+
+    const now = toUTCDate(new Date());
+    const threeDaysAgo = new Date(now);
+    threeDaysAgo.setDate(now.getDate() - 3);
+    const sixDaysAgo = new Date(now);
+    sixDaysAgo.setDate(now.getDate() - 6);
 
     const result = await Subscriptions.updateMany(
       {
@@ -78,7 +76,7 @@ export const GET = withRateLimit(lenientRateLimit)(async function GET(
         message: "Subscription cancellation failed",
         error: error instanceof Error ? error.message : "Unknown error",
       },
-      { status: 500 },
+      { status: error_response.status },
     );
   }
 });

@@ -132,11 +132,11 @@ describe("GET /api/shipment/shipment_tracking", () => {
     expect(getDHLTracking).not.toHaveBeenCalled();
   });
 
-  it("returns 500 with error message when order_id is missing", async () => {
+  it("returns 400 with error message when order_id is missing", async () => {
     const response = await GET(makeRequest());
     const body = await response.json();
 
-    expect(response.status).toBe(500);
+    expect(response.status).toBe(400);
     expect(body.success).toBe(false);
     expect(body.error).toBeDefined();
   });

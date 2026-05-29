@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { z } from "zod";
 import { CreateOrder } from "@omenai/shared-models/models/orders/CreateOrderSchema";
 import { connectMongoDB } from "@omenai/shared-lib/mongo_connect/mongoConnect";
@@ -8,6 +8,7 @@ import {
   BadRequestError,
   NotFoundError,
 } from "../../../../custom/errors/dictionary/errorDictionary";
+import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
 import { getUPSTracking } from "../../services/ups_service";
 import { getLatLng } from "../resources";
 import { CreateOrderModelTypes } from "@omenai/shared-types";
@@ -26,8 +27,7 @@ export const GET = withRateLimit(standardRateLimit)(async function GET(
   req: Request,
 ) {
   try {
-    const nextRequest = new NextRequest(req);
-    const searchParams = nextRequest.nextUrl.searchParams;
+    const searchParams = new URL(req.url).searchParams;
 
     const query = { order_id: searchParams.get("order_id") };
     const validation = TrackingQuerySchema.safeParse(query);
@@ -101,10 +101,10 @@ export const GET = withRateLimit(standardRateLimit)(async function GET(
     );
   } catch (error: any) {
     console.error("Tracking Controller Error:", error);
-    const status = error.statusCode || 500;
+    const error_response = handleErrorEdgeCases(error);
     return NextResponse.json(
-      { success: false, error: error.message },
-      { status },
+      { success: false, error: error.message || error_response.message },
+      { status: error_response.status },
     );
   }
 });

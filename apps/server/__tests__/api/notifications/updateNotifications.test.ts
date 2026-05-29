@@ -136,9 +136,9 @@ describe("PATCH /api/notifications/updateNotifications", () => {
     expect(response.status).toBe(500);
   });
 
-  it("returns 500 when body is missing required fields", async () => {
+  it("returns 400 when body is missing required fields", async () => {
     const response = await PATCH(makeRequest({ read: true }));
 
-    expect(response.status).toBe(500);
+    expect(response.status).toBe(400);
   });
 });

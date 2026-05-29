@@ -140,6 +140,7 @@ const artistSchemaDef = new Schema<ArtistSchemaTypes>(
       }),
     },
     followerCount: { type: Number, default: 0 },
+    status: { type: String, default: null },
   },
   { timestamps: true },
 );
