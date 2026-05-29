@@ -13,7 +13,7 @@ const FetchProfileSchema = z.object({
   artist_id: z.string(),
 });
 export async function GET(request: NextRequest) {
-  const searchParams = request.nextUrl.searchParams;
+  const searchParams = new URL(request.url).searchParams;
   const id = searchParams.get("id");
 
   try {

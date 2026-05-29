@@ -1,0 +1,61 @@
+import { describe, it, expect, vi, beforeEach } from "vitest";
+
+vi.mock("@omenai/shared-models/models/artworks/UploadArtworkSchema", () => ({
+  Artworkuploads: { updateOne: vi.fn() },
+}));
+vi.mock("../../../app/api/util", async () => {
+  const { buildValidateRequestBodyMock } = await import("../../helpers/util-mock");
+  return buildValidateRequestBodyMock();
+});
+
+import { POST } from "../../../app/api/artworks/updateArtworkPrice/route";
+import { Artworkuploads } from "@omenai/shared-models/models/artworks/UploadArtworkSchema";
+
+function makeRequest(body: object): Request {
+  return new Request("http://localhost/api/artworks/updateArtworkPrice", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+}
+
+describe("POST /api/artworks/updateArtworkPrice", () => {
+  beforeEach(() => vi.clearAllMocks());
+
+  it("returns 200 when artwork price is successfully updated", async () => {
+    vi.mocked(Artworkuploads.updateOne).mockResolvedValue({ modifiedCount: 1 } as any);
+
+    const response = await POST(makeRequest({ art_id: "art-123", filter: { price: 1000 } }));
+    const body = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(body.message).toBe("Successful");
+  });
+
+  it("calls Artworkuploads.updateOne with the correct query and price payload", async () => {
+    vi.mocked(Artworkuploads.updateOne).mockResolvedValue({ modifiedCount: 1 } as any);
+
+    await POST(makeRequest({ art_id: "art-123", filter: { price: 1000 } }));
+
+    expect(Artworkuploads.updateOne).toHaveBeenCalledWith(
+      { art_id: "art-123" },
+      { $set: { price: 1000 } },
+    );
+  });
+
+  it("returns 500 when no document was modified", async () => {
+    vi.mocked(Artworkuploads.updateOne).mockResolvedValue({ modifiedCount: 0 } as any);
+
+    const response = await POST(makeRequest({ art_id: "art-123", filter: { price: 1000 } }));
+
+    expect(response.status).toBe(500);
+  });
+
+  it("returns 400 when art_id is missing", async () => {
+    const response = await POST(makeRequest({ filter: { price: 1000 } }));
+    const body = await response.json();
+
+    expect(response.status).toBe(400);
+    expect(body.message).toMatch(/Validation Failed/i);
+  });
+});

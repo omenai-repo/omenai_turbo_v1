@@ -1,0 +1,96 @@
+import { describe, it, expect, vi, beforeEach } from "vitest";
+
+vi.mock("@omenai/shared-models/models/artworks/UploadArtworkSchema", () => ({
+  Artworkuploads: { find: vi.fn(), countDocuments: vi.fn().mockResolvedValue(60) },
+}));
+vi.mock("../../../app/api/artworks/utils", () => ({
+  fetchArtworksFromCache: vi.fn(),
+  getCachedGalleryIds: vi.fn().mockResolvedValue(["gallery-1"]),
+}));
+vi.mock("@omenai/shared-utils/src/buildMongoFilterQuery", () => ({
+  buildMongoQuery: vi.fn().mockReturnValue({}),
+}));
+vi.mock("../../../app/api/util", async () => {
+  const { buildValidateRequestBodyMock } = await import("../../helpers/util-mock");
+  return buildValidateRequestBodyMock();
+});
+
+import { POST } from "../../../app/api/artworks/getArtworksByCriteria/route";
+import { Artworkuploads } from "@omenai/shared-models/models/artworks/UploadArtworkSchema";
+import { fetchArtworksFromCache } from "../../../app/api/artworks/utils";
+import { buildMongoQuery } from "@omenai/shared-utils/src/buildMongoFilterQuery";
+
+const mockArtworks = [{ art_id: "art-1" }];
+
+function makeRequest(body: object): Request {
+  return new Request("http://localhost/api/artworks/getArtworksByCriteria", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+}
+
+function mockFindChain(docs: any[]) {
+  const chain = {
+    sort: vi.fn().mockReturnThis(),
+    skip: vi.fn().mockReturnThis(),
+    limit: vi.fn().mockReturnThis(),
+    select: vi.fn().mockReturnThis(),
+    lean: vi.fn().mockReturnThis(),
+    exec: vi.fn().mockResolvedValue(docs),
+  };
+  vi.mocked(Artworkuploads.find).mockReturnValue(chain as any);
+}
+
+describe("POST /api/artworks/getArtworksByCriteria", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    mockFindChain([{ art_id: "art-1" }]);
+    vi.mocked(fetchArtworksFromCache).mockResolvedValue(mockArtworks);
+  });
+
+  it("returns 200 with artworks, pagination, and total", async () => {
+    const response = await POST(makeRequest({ page: 1, medium: "Photography", filters: {} }));
+    const body = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(body.message).toBe("Successful");
+    expect(body.data).toEqual(mockArtworks);
+    expect(body.pageCount).toBe(2);
+    expect(body.total).toBe(60);
+  });
+
+  it("returns 400 when medium is missing", async () => {
+    const response = await POST(makeRequest({ page: 1, filters: {} }));
+    const body = await response.json();
+
+    expect(response.status).toBe(400);
+    expect(body.message).toMatch(/Validation Failed/i);
+  });
+
+  it("calls fetchArtworksFromCache with extracted art IDs", async () => {
+    await POST(makeRequest({ page: 1, medium: "Photography", filters: {} }));
+
+    expect(fetchArtworksFromCache).toHaveBeenCalledWith(["art-1"]);
+  });
+
+  it("calls buildMongoQuery with the provided filters", async () => {
+    await POST(makeRequest({ page: 1, medium: "Photography", filters: { priceMin: 100 } }));
+
+    expect(buildMongoQuery).toHaveBeenCalledWith(expect.objectContaining({ priceMin: 100 }));
+  });
+
+  it("calls Artworkuploads.countDocuments for pagination total", async () => {
+    await POST(makeRequest({ page: 1, medium: "Photography", filters: {} }));
+
+    expect(Artworkuploads.countDocuments).toHaveBeenCalledOnce();
+  });
+
+  it("returns 400 when page is missing", async () => {
+    const response = await POST(makeRequest({ medium: "Photography", filters: {} }));
+    const body = await response.json();
+
+    expect(response.status).toBe(400);
+    expect(body.message).toMatch(/Validation Failed/i);
+  });
+});

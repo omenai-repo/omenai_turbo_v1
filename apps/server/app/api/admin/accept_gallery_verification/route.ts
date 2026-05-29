@@ -37,7 +37,7 @@ export const POST = withRateLimitHighlightAndCsrf(config)(async function POST(
 
     const get_gallery = await AccountGallery.findOne(
       { gallery_id },
-      "name, email",
+      { name: 1, email: 1 },
     );
     if (!get_gallery)
       throw new NotFoundError("Gallery not found for the given gallery ID");

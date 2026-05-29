@@ -57,6 +57,7 @@ const createOrder = new Schema<CreateOrderModelTypes>(
     },
     availability: { type: Boolean, default: () => true },
     expiresAt: { type: Date || null, default: null },
+    lock_purchase: { type: String, default: null },
   },
   { timestamps: true },
 );

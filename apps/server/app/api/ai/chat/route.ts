@@ -5,6 +5,8 @@ import { Ratelimit } from "@upstash/ratelimit";
 import { redis } from "@omenai/upstash-config";
 import z from "zod";
 import { validateRequestBody } from "../../util";
+import { handleErrorEdgeCases } from "../../../../custom/errors/handler/errorHandler";
+import { NextResponse } from "next/server";
 
 // Allow streaming responses up to 30 seconds
 export const maxDuration = 30;
@@ -41,23 +43,30 @@ export async function POST(req: Request) {
     );
   }
 
-  // 2. Extract Data
-  // const { messages, pageContext } = await req.json();
-  const { messages, pageContext } = await validateRequestBody(req, AiSchema);
+  try {
+    // 2. Extract Data
+    const { messages, pageContext } = await validateRequestBody(req, AiSchema);
 
-  // 3. Context Injection
-  const systemContext = await getOmenaiContext(pageContext || "general");
+    // 3. Context Injection
+    const systemContext = await getOmenaiContext(pageContext || "general");
 
-  // 4. Memory Optimization (Only keep last 6 messages to save tokens)
-  const recentMessages = messages.slice(-6);
+    // 4. Memory Optimization (Only keep last 6 messages to save tokens)
+    const recentMessages = messages.slice(-6);
 
-  // 5. Generate Response
-  const result = streamText({
-    model: google("gemini-2.5-flash"),
-    system: systemContext,
-    messages: recentMessages,
-    temperature: 1,
-  });
+    // 5. Generate Response
+    const result = streamText({
+      model: google("gemini-2.5-flash"),
+      system: systemContext,
+      messages: recentMessages,
+      temperature: 1,
+    });
 
-  return result.toTextStreamResponse();
+    return result.toTextStreamResponse();
+  } catch (error) {
+    const error_response = handleErrorEdgeCases(error);
+    return NextResponse.json(
+      { message: error_response.message },
+      { status: error_response.status },
+    );
+  }
 }

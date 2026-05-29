@@ -1,0 +1,65 @@
+import { describe, it, expect, vi, beforeEach } from "vitest";
+
+vi.mock("@omenai/shared-models/models/auth/ArtistSchema", () => ({
+  AccountArtist: {
+    find: vi.fn(),
+  },
+}));
+
+vi.mock("../../../app/api/util", () => ({
+  createErrorRollbarReport: vi.fn(),
+}));
+
+import { GET } from "../../../app/api/admin/get_artist_on_verif_status/route";
+import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
+
+const mockArtists = [
+  {
+    artist_id: "artist-1",
+    name: "Alice",
+    email: "alice@example.com",
+    artist_verified: false,
+  },
+  {
+    artist_id: "artist-2",
+    name: "Bob",
+    email: "bob@example.com",
+    artist_verified: true,
+  },
+];
+
+describe("GET /api/admin/get_artist_on_verif_status", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("returns 200 with artists on verification status", async () => {
+    vi.mocked(AccountArtist.find).mockResolvedValue(mockArtists as any);
+
+    const response = await GET();
+    const body = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(body.message).toBe("Data retrieved");
+    expect(body.data).toEqual(mockArtists);
+  });
+
+  it("queries AccountArtist with onboarding filter and selected fields", async () => {
+    vi.mocked(AccountArtist.find).mockResolvedValue(mockArtists as any);
+
+    await GET();
+
+    expect(AccountArtist.find).toHaveBeenCalledWith(
+      { isOnboardingCompleted: true },
+      "name logo email artist_verified artist_id",
+    );
+  });
+
+  it("returns 500 when AccountArtist.find throws", async () => {
+    vi.mocked(AccountArtist.find).mockRejectedValue(new Error("DB error"));
+
+    const response = await GET();
+
+    expect(response.status).toBe(500);
+  });
+});
