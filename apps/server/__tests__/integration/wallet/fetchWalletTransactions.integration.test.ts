@@ -24,7 +24,7 @@ function makeRequest(params: Record<string, string | undefined>) {
 }
 
 function makeTx(overrides: Record<string, any> = {}) {
-  const flwId = Math.random().toString(36).slice(2, 12);
+  const flwId = crypto.randomUUID();
   return {
     wallet_id: WALLET_ID,
     trans_amount: 100,

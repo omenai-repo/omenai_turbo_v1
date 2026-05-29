@@ -28,7 +28,7 @@ import {
 // ── Fixtures ────────────────────────────────────────────────────────────────
 
 function makeWallet(overrides: Record<string, any> = {}) {
-  const id = Math.random().toString(36).slice(2, 10);
+  const id = crypto.randomUUID();
   return {
     owner_id: `artist-${id}`,
     wallet_id: `wallet-${id}`,
@@ -41,7 +41,7 @@ function makeWallet(overrides: Record<string, any> = {}) {
 }
 
 function makeArtwork(overrides: Record<string, any> = {}) {
-  const id = Math.random().toString(36).slice(2, 10);
+  const id = crypto.randomUUID();
   return {
     artist: "Test Artist",
     year: 2024,

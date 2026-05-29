@@ -16,7 +16,7 @@ function makeRequest(ownerId?: string) {
 }
 
 function makeWallet(overrides: Record<string, any> = {}) {
-  const uid = Math.random().toString(36).slice(2, 10);
+  const uid = crypto.randomUUID();
   return {
     owner_id: `artist-${uid}`,
     wallet_id: `wallet-${uid}`,
