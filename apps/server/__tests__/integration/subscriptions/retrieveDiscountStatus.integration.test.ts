@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Integration tests for POST /api/subscriptions/retrieveDiscountStatus
  *
  * Seeds AccountGallery documents and verifies the route correctly reads the
@@ -13,7 +13,7 @@ import { POST } from "../../../app/api/subscriptions/retrieveDiscountStatus/rout
 // ── Fixture factory ──────────────────────────────────────────────────────────
 
 function makeGallery(overrides: Record<string, any> = {}) {
-  const id = Math.random().toString(36).slice(2, 10);
+  const id = crypto.randomUUID();
   return {
     name: `Gallery ${id}`,
     address: { street: "1 Art Lane", city: "Lagos", country: "Nigeria" },

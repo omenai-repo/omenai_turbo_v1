@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Integration tests for POST /api/update/individual/profile
  *
  * Like the artist route, this uses `updateOne` which always returns a truthy
@@ -21,7 +21,7 @@ function makeRequest(body: object) {
 }
 
 function makeIndividual(overrides: Record<string, any> = {}) {
-  const uid = Math.random().toString(36).slice(2, 10);
+  const uid = crypto.randomUUID();
   return {
     name: `Test User ${uid}`,
     email: `user-${uid}@test.com`,

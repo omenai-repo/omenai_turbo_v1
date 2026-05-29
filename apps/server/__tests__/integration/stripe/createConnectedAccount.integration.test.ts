@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Integration tests for POST /api/stripe/createConnectedAccount
  *
  * Verifies that the route calls stripe.accounts.create, then updates the
@@ -35,7 +35,7 @@ import { POST } from "../../../app/api/stripe/createConnectedAccount/route";
 // ── Fixture factories ─────────────────────────────────────────────────────────
 
 function makeGallery(overrides: Record<string, any> = {}) {
-  const uid = Math.random().toString(36).slice(2, 10);
+  const uid = crypto.randomUUID();
   return {
     name: `Gallery ${uid}`,
     address: { city: "NY", country: "US" },

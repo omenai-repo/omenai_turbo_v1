@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Integration tests for POST /api/auth/artist/register
  *
  * Seeds AccountArtist and VerificationCodes documents and verifies the route
@@ -158,7 +158,7 @@ describe("POST /api/auth/artist/register — successful registration", () => {
     mockParseRegisterData.mockImplementation(async (data: any) => ({
       ...data,
       password: "hashed-password",
-      artist_id: `artist-${Math.random().toString(36).slice(2, 8)}`,
+      artist_id: `artist-${crypto.randomUUID()}`,
       role: "artist",
     }));
 

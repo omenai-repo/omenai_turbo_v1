@@ -1,4 +1,4 @@
-import { describe, it, expect, afterEach, vi } from "vitest";
+﻿import { describe, it, expect, afterEach, vi } from "vitest";
 import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
 import { PriceReview } from "@omenai/shared-models/models/artworks/ArtworkPriceReviewSchema";
 import { POST } from "../../../app/api/artworks/createPriceReviewRequest/route";
@@ -17,7 +17,7 @@ vi.mock("../../../app/api/services/uploadArtwork.service", () => ({
 // ── Fixtures ─────────────────────────────────────────────────────────────────
 
 function makeArtist(overrides: Record<string, any> = {}) {
-  const uid = Math.random().toString(36).slice(2, 8);
+  const uid = crypto.randomUUID();
   return {
     name: "Test Artist",
     profile_status: "ghost",

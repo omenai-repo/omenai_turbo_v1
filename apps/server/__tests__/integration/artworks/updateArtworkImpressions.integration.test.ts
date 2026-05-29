@@ -1,11 +1,11 @@
-import { describe, it, expect, afterEach } from "vitest";
+﻿import { describe, it, expect, afterEach } from "vitest";
 import { Artworkuploads } from "@omenai/shared-models/models/artworks/UploadArtworkSchema";
 import { POST } from "../../../app/api/artworks/updateArtworkImpressions/route";
 
 // ── Fixtures ─────────────────────────────────────────────────────────────────
 
 function makeArtwork(overrides: Record<string, any> = {}) {
-  const uid = Math.random().toString(36).slice(2, 8);
+  const uid = crypto.randomUUID();
   return {
     artist: "Test Artist",
     year: 2024,

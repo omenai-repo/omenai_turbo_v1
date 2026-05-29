@@ -1,4 +1,4 @@
-import { describe, it, expect, afterEach } from "vitest";
+﻿import { describe, it, expect, afterEach } from "vitest";
 import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
 import { PriceReview } from "@omenai/shared-models/models/artworks/ArtworkPriceReviewSchema";
 import { GET } from "../../../app/api/artworks/fetchPriceReviewRequests/route";
@@ -6,7 +6,7 @@ import { GET } from "../../../app/api/artworks/fetchPriceReviewRequests/route";
 // ── Fixtures ─────────────────────────────────────────────────────────────────
 
 function makeArtist(overrides: Record<string, any> = {}) {
-  const uid = Math.random().toString(36).slice(2, 8);
+  const uid = crypto.randomUUID();
   return {
     name: "Test Artist",
     profile_status: "ghost",

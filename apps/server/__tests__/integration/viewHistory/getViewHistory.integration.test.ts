@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Integration tests for POST /api/viewHistory/getViewHistory
  *
  * Key behaviours under test:
@@ -23,7 +23,7 @@ function makeRequest(body: object) {
 }
 
 function makeView(overrides: Record<string, any> = {}) {
-  const uid = Math.random().toString(36).slice(2, 8);
+  const uid = crypto.randomUUID();
   return {
     artwork: `Artwork ${uid}`,
     artist: `Artist ${uid}`,

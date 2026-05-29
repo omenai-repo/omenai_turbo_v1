@@ -1,4 +1,4 @@
-import { describe, it, expect, afterEach, beforeAll, vi } from "vitest";
+﻿import { describe, it, expect, afterEach, beforeAll, vi } from "vitest";
 import { NotificationHistory } from "@omenai/shared-models/models/notifications/NotificationHistorySchema";
 import { PATCH } from "../../../app/api/notifications/updateNotifications/route";
 
@@ -12,7 +12,7 @@ beforeAll(() => {
 // ── Fixtures ─────────────────────────────────────────────────────────────────
 
 function makeNotification(overrides: Record<string, any> = {}) {
-  const uid = Math.random().toString(36).slice(2, 10);
+  const uid = crypto.randomUUID();
   return {
     title: "Test Notification",
     body: "This is a test notification body",

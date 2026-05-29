@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Integration tests for GET /api/invoices/fetchInvoice
  * Validates invoiceNumber query param, fetches invoice by number, returns invoice data.
  */
@@ -8,7 +8,7 @@ import { GET } from "../../../app/api/invoices/fetchInvoice/route";
 
 function makeInvoice(overrides: Record<string, any> = {}) {
   return {
-    invoiceNumber: `OMENAI-INV-${Math.random().toString(36).slice(2, 8).toUpperCase()}`,
+    invoiceNumber: `OMENAI-INV-${crypto.randomUUID().slice(0, 8).toUpperCase()}`,
     recipient: {
       userId: "user-001",
       address: { city: "NY" },

@@ -1,11 +1,11 @@
-import { describe, it, expect, afterEach } from "vitest";
+﻿import { describe, it, expect, afterEach } from "vitest";
 import { CreateOrder } from "@omenai/shared-models/models/orders/CreateOrderSchema";
 import { POST } from "../../../app/api/orders/updateOrderTrackingData/route";
 
 // ── Fixtures ─────────────────────────────────────────────────────────────────
 
 function makeOrder(overrides: Record<string, any> = {}) {
-  const uid = Math.random().toString(36).slice(2, 10);
+  const uid = crypto.randomUUID();
   return {
     artwork_data: {
       title: "Test Artwork",

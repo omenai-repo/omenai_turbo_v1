@@ -1,4 +1,4 @@
-import { describe, it, expect, afterEach, vi, beforeEach } from "vitest";
+﻿import { describe, it, expect, afterEach, vi, beforeEach } from "vitest";
 import { AccountArtist } from "@omenai/shared-models/models/auth/ArtistSchema";
 import { GET } from "../../../app/api/artworks/getArtworkPriceForArtist/route";
 import { redis } from "@omenai/upstash-config";
@@ -11,7 +11,7 @@ vi.mock("@omenai/shared-lib/configcat/configCatFetch", () => ({
 // ── Fixtures ─────────────────────────────────────────────────────────────────
 
 function makeArtist(overrides: Record<string, any> = {}) {
-  const uid = Math.random().toString(36).slice(2, 8);
+  const uid = crypto.randomUUID();
   return {
     name: "Test Artist",
     profile_status: "ghost",

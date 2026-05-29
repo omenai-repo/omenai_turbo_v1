@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+﻿import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { CreateOrder } from "@omenai/shared-models/models/orders/CreateOrderSchema";
 
 // ── Module-level mocks ───────────────────────────────────────────────────────
@@ -33,7 +33,7 @@ import { GET } from "../../../app/api/shipment/shipment_tracking/route";
 // ── Fixtures ─────────────────────────────────────────────────────────────────
 
 function makeOrder(overrides: Record<string, any> = {}) {
-  const id = Math.random().toString(36).slice(2, 10);
+  const id = crypto.randomUUID();
   return {
     order_id: `order-${id}`,
     buyer_details: {

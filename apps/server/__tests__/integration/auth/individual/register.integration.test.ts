@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Integration tests for POST /api/auth/individual/register
  *
  * Seeds AccountIndividual and VerificationCodes documents and verifies the route
@@ -142,7 +142,7 @@ describe("POST /api/auth/individual/register — successful registration", () =>
     mockParseRegisterData.mockImplementation(async (data: any) => ({
       ...data,
       password: "hashed",
-      user_id: `user-${Math.random().toString(36).slice(2, 8)}`,
+      user_id: `user-${crypto.randomUUID()}`,
       role: "user",
     }));
 

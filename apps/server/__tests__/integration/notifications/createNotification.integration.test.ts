@@ -1,11 +1,11 @@
-import { describe, it, expect, afterEach, vi } from "vitest";
+﻿import { describe, it, expect, afterEach, vi } from "vitest";
 import { NotificationHistory } from "@omenai/shared-models/models/notifications/NotificationHistorySchema";
 import { POST } from "../../../app/api/notifications/createNotification/route";
 
 // ── Fixtures ─────────────────────────────────────────────────────────────────
 
 function makeNotification(overrides: Record<string, any> = {}) {
-  const uid = Math.random().toString(36).slice(2, 10);
+  const uid = crypto.randomUUID();
   return {
     title: "Test Notification",
     body: "This is a test notification body",

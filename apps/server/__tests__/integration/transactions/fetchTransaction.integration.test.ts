@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Integration tests for POST /api/transactions/fetchTransaction
  *
  * Seeds PurchaseTransactions directly and verifies the route returns the
@@ -21,7 +21,7 @@ function makeRequest(body: object): Request {
 }
 
 function makeTx(overrides: Record<string, any> = {}) {
-  const id = Math.random().toString(36).slice(2, 10);
+  const id = crypto.randomUUID();
   return {
     trans_reference: `ref-${id}`,
     trans_pricing: { amount_total: 1000, unit_price: 800, commission: 100, shipping_cost: 80, tax_fees: 20, currency: "USD" },

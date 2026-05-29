@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Integration tests for POST /api/update/gallery/profile
  *
  * Unlike the artist route (updateOne), this route uses `findOneAndUpdate`,
@@ -20,7 +20,7 @@ function makeRequest(body: object) {
 }
 
 function makeGallery(overrides: Record<string, any> = {}) {
-  const uid = Math.random().toString(36).slice(2, 10);
+  const uid = crypto.randomUUID();
   return {
     name: `Gallery ${uid}`,
     email: `gallery-${uid}@test.com`,

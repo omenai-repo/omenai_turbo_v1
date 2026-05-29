@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Integration tests for POST /api/stripe/getAccountId
  *
  * Verifies that the route fetches the connected_account_id and gallery_verified
@@ -14,7 +14,7 @@ import { POST } from "../../../app/api/stripe/getAccountId/route";
 // ── Fixture factory ───────────────────────────────────────────────────────────
 
 function makeGallery(overrides: Record<string, any> = {}) {
-  const uid = Math.random().toString(36).slice(2, 10);
+  const uid = crypto.randomUUID();
   return {
     name: `Gallery ${uid}`,
     address: { city: "NY", country: "US" },

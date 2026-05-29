@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Integration tests for POST /api/auth/gallery/register
  *
  * Seeds AccountGallery, RejectedGallery, and VerificationCodes documents and
@@ -161,7 +161,7 @@ describe("POST /api/auth/gallery/register — successful registration", () => {
     mockParseRegisterData.mockImplementation(async (data: any) => ({
       ...data,
       password: "hashed",
-      gallery_id: `gallery-${Math.random().toString(36).slice(2, 8)}`,
+      gallery_id: `gallery-${crypto.randomUUID()}`,
       role: "gallery",
     }));
 

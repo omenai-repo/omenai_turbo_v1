@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Integration tests for POST /api/analytics/survey-stats
  *
  * Seeds WaitlistLead documents with survey data and verifies the aggregation
@@ -26,7 +26,7 @@ function makeRequest(body: object = {}): Request {
 
 function makeLeadWithSurvey(overrides: Record<string, any> = {}) {
   return {
-    email: `lead-${Date.now()}-${Math.random()}@test.com`,
+    email: `lead-${Date.now()}-${crypto.randomUUID()}@test.com`,
     name: "Test Lead",
     entity: "artist",
     kpi: {},

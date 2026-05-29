@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Integration tests for GET /api/requests/artist/fetchFeaturedArtistData
  *
  * Seeds AccountArtist and Artworkuploads documents and verifies the route
@@ -44,7 +44,7 @@ function makeArtist(overrides: Record<string, any> = {}) {
 }
 
 function makeArtwork(overrides: Record<string, any> = {}) {
-  const uid = Math.random().toString(36).slice(2, 10);
+  const uid = crypto.randomUUID();
   return {
     art_id: `art-${uid}`,
     title: `Test Artwork ${uid}`,

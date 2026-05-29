@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Integration tests for POST /api/update/artist/profile
  *
  * The route performs an `updateOne({ artist_id: data.id }, { $set: { ...data } })`.
@@ -22,7 +22,7 @@ function makeRequest(body: object) {
 }
 
 function makeArtist(overrides: Record<string, any> = {}) {
-  const uid = Math.random().toString(36).slice(2, 10);
+  const uid = crypto.randomUUID();
   return {
     name: `Test Artist ${uid}`,
     profile_status: "ghost" as const,

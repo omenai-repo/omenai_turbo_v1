@@ -1,4 +1,4 @@
-import { describe, it, expect, afterEach, vi } from "vitest";
+﻿import { describe, it, expect, afterEach, vi } from "vitest";
 import { Artworkuploads } from "@omenai/shared-models/models/artworks/UploadArtworkSchema";
 import { RecentView } from "@omenai/shared-models/models/artworks/RecentlyViewed";
 import { POST } from "../../../app/api/artworks/deleteArtwork/route";
@@ -17,7 +17,7 @@ vi.mock("@omenai/shared-lib/workflow_runs/createFailedWorkflowJobs", () => ({
 // ── Fixtures ─────────────────────────────────────────────────────────────────
 
 function makeArtwork(overrides: Record<string, any> = {}) {
-  const uid = Math.random().toString(36).slice(2, 8);
+  const uid = crypto.randomUUID();
   return {
     artist: "Test Artist",
     year: 2024,

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Integration tests for POST /api/stripe/createCheckoutSession
  *
  * Verifies the route's feature-flag gate, DB validation (gallery + active
@@ -46,7 +46,7 @@ import { POST } from "../../../app/api/stripe/createCheckoutSession/route";
 // ── Fixture factories ─────────────────────────────────────────────────────────
 
 function makeGallery(overrides: Record<string, any> = {}) {
-  const uid = Math.random().toString(36).slice(2, 10);
+  const uid = crypto.randomUUID();
   return {
     name: `Gallery ${uid}`,
     address: { city: "NY", country: "US" },

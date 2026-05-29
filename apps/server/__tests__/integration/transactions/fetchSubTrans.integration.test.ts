@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Integration tests for POST /api/transactions/fetchSubTrans
  *
  * Seeds SubscriptionTransactions directly and verifies the route returns
@@ -21,7 +21,7 @@ function makeRequest(body: object): Request {
 }
 
 function makeSubTx(overrides: Record<string, any> = {}) {
-  const id = Math.random().toString(36).slice(2, 10);
+  const id = crypto.randomUUID();
   return {
     payment_ref: `ref-${id}`,
     amount: 49,
